@@ -1,0 +1,123 @@
+/* ==========================================================================
+   ADRASTIA - BASE CSS (Global Variables, Resets, and Typography)
+   ========================================================================== */
+
+:root {
+    /* Color Palette */
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --border-color: #ffffff;
+    --accent-green: #ccff00; /* Acid Green */
+    --accent-pink: #ff00ff; /* Hot Pink */
+    
+    /* Typography */
+    --font-heading: 'Syncopate', sans-serif;
+    --font-body: 'Space Mono', monospace;
+    
+    /* Brutalist Variables */
+    --border-thickness: 2px;
+}
+
+/* --- Resets & Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: none; /* Hides default cursor for our custom one */
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --- Typography --- */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+/* --- Global Utilities & Brutalist Elements --- */
+.border-bottom {
+    border-bottom: var(--border-thickness) solid var(--border-color);
+}
+
+.border-top {
+    border-top: var(--border-thickness) solid var(--border-color);
+}
+
+.neon-pink {
+    color: var(--accent-pink);
+}
+
+.neon-green {
+    color: var(--accent-green);
+}
+
+/* --- Static Noise Overlay --- */
+.noise-overlay {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    z-index: 9999;
+    /* Generates an SVG noise pattern via data URI */
+    background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+    opacity: 0.12;
+    mix-blend-mode: overlay;
+    animation: noise 0.2s infinite steps(2);
+}
+
+@keyframes noise {
+    0% { transform: translate(0,0); }
+    10% { transform: translate(-5%,-5%); }
+    20% { transform: translate(-10%,5%); }
+    30% { transform: translate(5%,-10%); }
+    40% { transform: translate(-5%,15%); }
+    50% { transform: translate(-10%,5%); }
+    60% { transform: translate(15%,0); }
+    70% { transform: translate(0,10%); }
+    80% { transform: translate(-15%,0); }
+    90% { transform: translate(10%,5%); }
+    100% { transform: translate(5%,0); }
+}
+
+/* --- Custom Cursor --- */
+.custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    background-color: var(--text-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: width 0.15s ease, height 0.15s ease, background-color 0.15s ease, border-radius 0.15s ease;
+    mix-blend-mode: difference;
+}
+
+.custom-cursor.hovered {
+    width: 60px;
+    height: 60px;
+    background-color: var(--accent-green);
+    mix-blend-mode: normal;
+    /* Brutalist crosshair effect on hover */
+    border-radius: 0; 
+    clip-path: polygon(40% 0, 60% 0, 60% 40%, 100% 40%, 100% 60%, 60% 60%, 60% 100%, 40% 100%, 40% 60%, 0 60%, 0 40%, 40% 40%);
+}

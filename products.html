@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOP ALL | ADRASTIA</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/products.css">
+</head>
+<body>
+    <!-- Global UI Overlays -->
+    <div class="noise-overlay"></div>
+    <div class="custom-cursor"></div>
+
+    <!-- Navigation (Reused) -->
+    <nav class="brutalist-nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand-logo glitch-hover" data-text="ADRASTIA">ADRASTIA</a>
+        </div>
+        <div class="nav-center hidden-mobile">
+            <a href="products.html" class="nav-link neon-green">SHOP_ALL</a>
+            <a href="collection.html" class="nav-link">NEW_DROP</a>
+            <a href="lookbook.html" class="nav-link">ARCHIVE</a>
+        </div>
+        <div class="nav-right">
+            <a href="about.html" class="nav-link hidden-mobile">MANIFESTO</a>
+            <button class="cart-toggle">
+                CART [<span class="cart-count">0</span>]
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="products-header">
+        <h1 class="massive-title glitch" data-text="ALL_PRODUCTS">ALL_PRODUCTS</h1>
+        <p class="sub-headline">// GEAR UP. STAND OUT. // SYSTEM OVERRIDE INITIATED.</p>
+    </header>
+
+    <!-- Industrial Filter Section -->
+    <section class="filter-section border-top border-bottom">
+        <div class="filter-group">
+            <span class="filter-label">COLLECTION:</span>
+            <button class="filter-btn active">ALL</button>
+            <button class="filter-btn">DIGITAL_DECAY</button>
+            <button class="filter-btn">VOID_CORE</button>
+        </div>
+        <div class="filter-group">
+            <span class="filter-label">SIZE:</span>
+            <button class="filter-btn">S</button>
+            <button class="filter-btn">M</button>
+            <button class="filter-btn">L</button>
+            <button class="filter-btn">XL</button>
+        </div>
+    </section>
+
+    <!-- Full-Width Chaotic Grid -->
+    <section class="products-full-grid">
+        <!-- Grid Item 1 -->
+        <a href="product.html" class="grid-product-card">
+            <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000&auto=format&fit=crop" alt="Acid Wash Graphic Tee">
+            <div class="card-overlay">
+                <h3 class="glitch-hover" data-text="ACID_WASH TEE">ACID_WASH TEE</h3>
+                <span class="price">$45.00</span>
+                <button class="quick-add-btn">ADD_TO_CART</button>
+            </div>
+        </a>
+
+        <!-- Grid Item 2 -->
+        <a href="product.html" class="grid-product-card">
+            <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000&auto=format&fit=crop" alt="Cyber Skull Hoodie">
+            <div class="card-overlay">
+                <h3 class="glitch-hover" data-text="CYBER_SKULL HOODIE">CYBER_SKULL HOODIE</h3>
+                <span class="price">$85.00</span>
+                <button class="quick-add-btn">ADD_TO_CART</button>
+            </div>
+        </a>
+
+        <!-- Grid Item 3 -->
+        <a href="product.html" class="grid-product-card">
+            <img src="https://images.unsplash.com/photo-1503342394128-c104d54dba01?q=80&w=1000&auto=format&fit=crop" alt="Static Noise Longsleeve">
+            <div class="card-overlay">
+                <h3 class="glitch-hover" data-text="STATIC LONGSLEEVE">STATIC LONGSLEEVE</h3>
+                <span class="price neon-pink">SOLD_OUT</span>
+            </div>
+        </a>
+
+        <!-- Grid Item 4 -->
+        <a href="product.html" class="grid-product-card">
+            <img src="https://images.unsplash.com/photo-1601115867451-24874b7117fa?q=80&w=1000&auto=format&fit=crop" alt="Utility Cargo Pants">
+            <div class="card-overlay">
+                <h3 class="glitch-hover" data-text="VOID_CARGO PANTS">VOID_CARGO PANTS</h3>
+                <span class="price">$110.00</span>
+                <button class="quick-add-btn">ADD_TO_CART</button>
+            </div>
+        </a>
+
+        <!-- Grid Item 5 -->
+        <a href="product.html" class="grid-product-card">
+            <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1000&auto=format&fit=crop" alt="Distressed Denim Jacket">
+            <div class="card-overlay">
+                <h3 class="glitch-hover" data-text="DECAY_DENIM">DECAY_DENIM</h3>
+                <span class="price">$130.00</span>
+                <button class="quick-add-btn">ADD_TO_CART</button>
+            </div>
+        </a>
+
+        <!-- Grid Item 6 -->
+        <a href="product.html" class="grid-product-card">
+            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop" alt="Heavy Metal Tee">
+            <div class="card-overlay">
+                <h3 class="glitch-hover" data-text="METALLURGY TEE">METALLURGY TEE</h3>
+                <span class="price">$40.00</span>
+                <button class="quick-add-btn">ADD_TO_CART</button>
+            </div>
+        </a>
+    </section>
+
+    <!-- Footer (Reused) -->
+    <footer class="brutalist-footer border-top">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h2>ADRASTIA</h2>
+                <p>EST. 2024 // SYSTEM OVERRIDE</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">INSTAGRAM</a>
+                <a href="#">TIKTOK</a>
+                <a href="#">DISCORD</a>
+            </div>
+            <div class="footer-legal">
+                <a href="#">SHIPPING & RETURNS</a>
+                <a href="#">TERMS OF SERVICE</a>
+                <p>&copy; 2024 ADRASTIA.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="js/global.js"></script>
+    <script src="js/glitch.js"></script>
+</body>
+</html>

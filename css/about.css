@@ -1,0 +1,303 @@
+/* ==========================================================================
+   ADRASTIA - ABOUT / MANIFESTO CSS
+   ========================================================================== */
+
+/* --- Lo-Fi Header --- */
+.about-header {
+    position: relative;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    padding-top: 80px;
+}
+
+.header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.header-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Heavy distress filter on the background */
+    filter: grayscale(100%) contrast(200%) brightness(0.4) sepia(20%) hue-rotate(180deg);
+}
+
+.about-header h1 {
+    font-size: 8vw;
+    line-height: 1;
+    margin-bottom: 1rem;
+    text-shadow: 4px 4px 0px var(--accent-green);
+}
+
+.about-subtext {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+}
+
+/* --- Global Section Heading --- */
+.section-heading {
+    font-size: 3rem;
+    margin-bottom: 3rem;
+    border-bottom: 2px solid #333;
+    padding-bottom: 1rem;
+}
+
+/* --- Origin Story --- */
+.origin-section {
+    padding: 6rem 2rem;
+}
+
+.origin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: stretch;
+}
+
+.origin-text h2 {
+    font-size: 5rem;
+    line-height: 0.9;
+    margin-bottom: 2rem;
+}
+
+.origin-text p {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-family: var(--font-body);
+}
+
+.origin-image {
+    border: var(--border-thickness) solid var(--border-color);
+    padding: 1rem;
+    /* Offset brutalist look */
+    box-shadow: -15px 15px 0px var(--accent-pink);
+}
+
+.origin-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.5);
+}
+
+/* --- Design-to-Drop Process --- */
+.process-section {
+    padding: 6rem 2rem;
+    background-color: #050505;
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.process-step {
+    border: 1px solid #333;
+    padding: 2rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.process-step:hover {
+    border-color: var(--accent-green);
+    background-color: #111;
+}
+
+.step-num {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    color: #222;
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+}
+
+.process-step:hover .step-num {
+    color: var(--accent-green);
+}
+
+.process-step h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.process-step p {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: #aaa;
+    line-height: 1.5;
+}
+
+/* --- Zine-Style Team Section --- */
+.team-section {
+    padding: 6rem 2rem;
+}
+
+.zine-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.zine-card {
+    border: var(--border-thickness) solid var(--border-color);
+    background-color: var(--bg-color);
+    transition: transform 0.2s ease;
+}
+
+.zine-card.offset {
+    transform: translateY(40px); /* Creates the uneven layout */
+}
+
+.zine-card:hover {
+    transform: scale(1.02) rotate(-2deg);
+    border-color: var(--accent-pink);
+    z-index: 2;
+}
+
+.zine-img-wrap {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-bottom: var(--border-thickness) solid var(--border-color);
+    overflow: hidden;
+}
+
+.zine-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* High contrast flash photography look */
+    filter: grayscale(100%) contrast(200%) brightness(1.2);
+}
+
+.zine-info {
+    padding: 1.5rem;
+}
+
+.zine-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.2rem;
+}
+
+.zine-info .role {
+    font-family: var(--font-body);
+    color: var(--accent-green);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.zine-info .bio {
+    font-size: 1rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    border-left: 2px solid #555;
+    padding-left: 1rem;
+}
+
+.zine-info .meta {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* --- Photocopied Press Logos --- */
+.press-section {
+    padding: 6rem 2rem;
+    background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E'), var(--text-color);
+    background-blend-mode: multiply;
+}
+
+.press-section .section-heading {
+    color: var(--bg-color);
+    border-color: #ccc;
+}
+
+.press-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    gap: 3rem;
+}
+
+.photocopy {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--bg-color);
+    /* Distressed photocopy effect */
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.3), -1px -1px 0px rgba(0,0,0,0.5);
+    transform: rotate(calc(-3deg + 6deg * var(--rand, 0.5)));
+    opacity: 0.8;
+}
+
+.photocopy:nth-child(even) {
+    transform: rotate(2deg);
+}
+.photocopy:nth-child(odd) {
+    transform: rotate(-2deg);
+}
+
+/* --- Aggressive Community CTA --- */
+.community-cta {
+    padding: 10rem 2rem;
+    text-align: center;
+}
+
+.community-cta .massive-text {
+    font-size: 6vw;
+    margin-bottom: 3rem;
+}
+
+.cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.btn-primary.inverted {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    border-color: var(--text-color);
+}
+
+.btn-primary.inverted:hover {
+    background-color: var(--accent-pink);
+    border-color: var(--accent-pink);
+    color: var(--text-color);
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+    .origin-grid { grid-template-columns: 1fr; }
+    .origin-image { box-shadow: -10px 10px 0px var(--accent-pink); margin-top: 2rem;}
+    
+    .process-grid { grid-template-columns: 1fr; }
+    
+    .zine-grid { grid-template-columns: repeat(2, 1fr); }
+    .zine-card.offset { transform: none; }
+}
+
+@media (max-width: 600px) {
+    .zine-grid { grid-template-columns: 1fr; }
+    .cta-actions { flex-direction: column; }
+    .photocopy { font-size: 1.8rem; }
+}

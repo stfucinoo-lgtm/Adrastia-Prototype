@@ -1,0 +1,274 @@
+/* ==========================================================================
+   ADRASTIA - SINGLE PRODUCT & ARCHIVE CSS
+   ========================================================================== */
+
+/* --- Single Product Section --- */
+.single-product-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    padding-top: 80px; /* Offset for nav */
+}
+
+/* Visual Left Side */
+.product-visual {
+    position: relative;
+    border-right: var(--border-thickness) solid var(--border-color);
+    background-color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.product-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(120%) grayscale(20%);
+    transition: filter 0.2s steps(3), transform 0.2s steps(3);
+}
+
+/* Hover glitch effect on the main product image */
+.product-visual:hover img {
+    filter: contrast(200%) grayscale(100%) invert(10%);
+    transform: scale(1.02) translate(5px, 5px);
+}
+
+.visual-tag {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--text-color);
+    color: var(--bg-color);
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* Info Right Side */
+.product-info {
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stock-status {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+}
+
+.product-title {
+    font-size: 5rem;
+    line-height: 0.9;
+    margin-bottom: 1rem;
+    word-break: break-word;
+}
+
+.product-price {
+    font-size: 2.5rem;
+    font-family: var(--font-body);
+    font-weight: 700;
+    margin-bottom: 3rem;
+    color: var(--accent-pink);
+}
+
+.currency {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.product-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    border-left: 4px solid var(--accent-green);
+    padding-left: 1.5rem;
+    opacity: 0.9;
+}
+
+/* Raw Form Elements */
+.add-to-cart-form {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.size-selector .label {
+    display: block;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+}
+
+.size-options {
+    display: flex;
+    gap: 1rem;
+}
+
+.size-options input[type="radio"] {
+    display: none; /* Hide default radio */
+}
+
+.size-options label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border: var(--border-thickness) solid var(--border-color);
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    transition: all 0.1s steps(2);
+}
+
+.size-options input[type="radio"]:checked + label {
+    background-color: var(--accent-green);
+    color: var(--bg-color);
+    border-color: var(--accent-green);
+}
+
+.size-options label:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.massive-add-btn {
+    width: 100%;
+    padding: 1.5rem;
+    font-size: 2rem;
+    font-family: var(--font-heading);
+    background-color: transparent;
+    color: var(--text-color);
+    border: var(--border-thickness) solid var(--border-color);
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+}
+
+.massive-add-btn:hover {
+    background-color: var(--accent-pink);
+    color: var(--bg-color);
+    border-color: var(--accent-pink);
+    transform: translateY(-5px);
+    box-shadow: 10px 10px 0px var(--text-color);
+}
+
+/* --- Archive Header --- */
+.archive-header {
+    padding: 4rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.archive-title {
+    font-size: 4rem;
+}
+
+.brutalist-filter button {
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--border-color);
+    margin-left: 0.5rem;
+    transition: all 0.2s;
+}
+
+.brutalist-filter button:hover, .brutalist-filter button.active {
+    background: var(--accent-green);
+    color: var(--bg-color);
+    border-color: var(--accent-green);
+}
+
+/* --- Chaotic Grid Layout --- */
+.chaotic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-auto-rows: 300px;
+    grid-auto-flow: dense; /* Packs items tightly, creating the chaotic look */
+    gap: var(--border-thickness);
+    background-color: var(--border-color); /* Creates the grid lines */
+}
+
+.chaotic-card {
+    position: relative;
+    display: block;
+    background-color: var(--bg-color);
+    overflow: hidden;
+}
+
+/* Specific spans to create irregularity */
+.chaotic-card.span-2 { grid-column: span 2; }
+.chaotic-card.row-span-2 { grid-row: span 2; }
+
+.chaotic-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    transition: filter 0.3s, transform 0.5s;
+}
+
+.chaotic-overlay {
+    position: absolute;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem;
+    background: rgba(0,0,0,0.9);
+    border-top: 2px solid var(--accent-green);
+    transition: bottom 0.3s ease;
+}
+
+.chaotic-card:hover img {
+    filter: grayscale(0%);
+    transform: scale(1.05);
+}
+
+.chaotic-card:hover .chaotic-overlay {
+    bottom: 0;
+}
+
+.chaotic-overlay h3 { font-size: 1.5rem; color: var(--text-color); }
+.chaotic-overlay span { color: var(--accent-pink); font-family: var(--font-body); }
+
+/* --- Raw Textural CTA --- */
+.raw-cta-section {
+    padding: 8rem 2rem;
+    text-align: center;
+    /* Noise texture overlay */
+    background: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E'), var(--bg-color);
+    background-blend-mode: color-burn;
+}
+
+.raw-cta-section h2 {
+    font-size: 5vw;
+    margin-bottom: 1rem;
+    text-shadow: 5px 5px 0 var(--accent-green);
+}
+
+.raw-cta-section p {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+    .single-product-section { grid-template-columns: 1fr; }
+    .product-visual { border-right: none; border-bottom: var(--border-thickness) solid var(--border-color); height: 60vh;}
+    .product-info { padding: 2rem; }
+    .product-title { font-size: 3rem; }
+}
+
+@media (max-width: 600px) {
+    .chaotic-card.span-2 { grid-column: span 1; }
+    .size-options label { width: 50px; height: 50px; }
+}
