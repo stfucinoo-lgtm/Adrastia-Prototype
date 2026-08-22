@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL // ADRASTIA ADMIN</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/admin.css">
+    
+    <!-- Chart.js for Tech Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="admin-body">
+    <!-- Global UI Overlays -->
+    <div class="noise-overlay"></div>
+    <div class="custom-cursor"></div>
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar border-right">
+            <div class="sidebar-header border-bottom">
+                <h1 class="glitch" data-text="SYSTEM_ROOT">SYSTEM_ROOT</h1>
+                <p class="status-online blink">[ STATUS: ONLINE ]</p>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-tab active" data-target="dashboard">01. SYSTEM_OVERVIEW</button>
+                <button class="nav-tab" data-target="inventory">02. HARDWARE_INVENTORY</button>
+                <button class="nav-tab" data-target="orders">03. DISPATCH_LOG</button>
+                <a href="index.html" class="nav-tab exit-link">< EXIT TO STOREFRONT</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="admin-main">
+            
+            <!-- SECTION 1: SYSTEM OVERVIEW (Dashboard) -->
+            <section id="dashboard" class="admin-section active">
+                <h2 class="section-title border-bottom">OVERVIEW // LIVE METRICS</h2>
+                
+                <!-- KPIs -->
+                <div class="kpi-grid border-bottom">
+                    <div class="kpi-card border-right">
+                        <span class="kpi-label">TOTAL REVENUE (24H)</span>
+                        <span class="kpi-value neon-green">$4,250</span>
+                    </div>
+                    <div class="kpi-card border-right">
+                        <span class="kpi-label">NEW ORDERS</span>
+                        <span class="kpi-value">47</span>
+                    </div>
+                    <div class="kpi-card border-right">
+                        <span class="kpi-label">LIVE VISITORS</span>
+                        <span class="kpi-value neon-green blink">128</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label">STOCK CRITICAL ITEMS</span>
+                        <span class="kpi-value neon-pink">3</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-split">
+                    <!-- Analytics Chart -->
+                    <div class="chart-container border-right">
+                        <h3>TRAFFIC & SALES TENDENCY</h3>
+                        <canvas id="salesChart"></canvas>
+                    </div>
+
+                    <!-- Critical Alerts Feed -->
+                    <div class="alerts-container">
+                        <h3>CRITICAL_ALERTS_FEED</h3>
+                        <div class="alert-box">
+                            <p class="alert-item critical">
+                                <span class="timestamp">[10:42:01]</span> [STOCK CRITICAL: V-02 IS AT 3 REMAINING]
+                            </p>
+                            <p class="alert-item warning">
+                                <span class="timestamp">[10:15:22]</span> [TRAFFIC SPIKE DETECTED: +45% in 10 mins]
+                            </p>
+                            <p class="alert-item soldout">
+                                <span class="timestamp">[09:05:11]</span> [SOLD OUT: STATIC_BEANIE HIT ZERO]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: INVENTORY MANAGEMENT -->
+            <section id="inventory" class="admin-section">
+                <div class="header-flex border-bottom">
+                    <h2 class="section-title">HARDWARE // INVENTORY CONTROL</h2>
+                    <button class="btn-primary" id="open-add-modal">+ INITIALIZE NEW DROP</button>
+                </div>
+
+                <!-- Add Product Form (Hidden by default, acts as a drop-down/modal) -->
+                <div class="add-drop-panel border-bottom hidden" id="addDropForm">
+                    <h3>// CREATE NEW HARDWARE</h3>
+                    <form class="admin-form">
+                        <div class="input-group">
+                            <label>PRODUCT_NAME</label>
+                            <input type="text" placeholder="e.g. VOID_CORE TEE">
+                        </div>
+                        <div class="input-group">
+                            <label>MAX_QUANTITY (SCARCITY CAP)</label>
+                            <input type="number" placeholder="50">
+                        </div>
+                        <div class="input-group">
+                            <label>PRICE ($)</label>
+                            <input type="number" placeholder="45">
+                        </div>
+                        <div class="input-group">
+                            <label>UPLOAD_IMAGE</label>
+                            <input type="file">
+                        </div>
+                        <button type="submit" class="btn-primary inverted">DEPLOY TO STORE</button>
+                    </form>
+                </div>
+
+                <!-- Inventory Table -->
+                <div class="table-responsive">
+                    <table class="brutalist-table">
+                        <thead>
+                            <tr>
+                                <th>IMG</th>
+                                <th>HARDWARE_NAME</th>
+                                <th>PRICE</th>
+                                <th>STOCK</th>
+                                <th>STATUS</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=100&auto=format&fit=crop" class="table-img"></td>
+                                <td>V-01 // NULL_TEE</td>
+                                <td>$50</td>
+                                <td>12 / 50</td>
+                                <td class="status-instock">IN_STOCK</td>
+                                <td><button class="btn-kill">KILL_DROP</button></td>
+                            </tr>
+                            <tr>
+                                <td><img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=100&auto=format&fit=crop" class="table-img"></td>
+                                <td>V-02 // SYSTEM_HOODIE</td>
+                                <td>$95</td>
+                                <td class="neon-pink">03 / 50</td>
+                                <td class="status-critical blink">CRITICAL</td>
+                                <td><button class="btn-kill">KILL_DROP</button></td>
+                            </tr>
+                            <tr class="row-dead">
+                                <td><img src="https://images.unsplash.com/photo-1601115867451-24874b7117fa?q=80&w=100&auto=format&fit=crop" class="table-img"></td>
+                                <td>V-03 // HEAVY_CARGO</td>
+                                <td>$120</td>
+                                <td>0 / 50</td>
+                                <td class="status-soldout">SOLD_OUT</td>
+                                <td><button class="btn-kill disabled" disabled>DEAD</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION 3: ORDERS & DISPATCH LOG -->
+            <section id="orders" class="admin-section">
+                <div class="header-flex border-bottom">
+                    <h2 class="section-title">DISPATCH_LOG // ORDERS</h2>
+                    <button class="btn-primary inverted" id="exportCsvBtn">EXPORT DATA [CSV]</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="brutalist-table">
+                        <thead>
+                            <tr>
+                                <th>ORDER_ID</th>
+                                <th>CUSTOMER</th>
+                                <th>ITEM(S)</th>
+                                <th>SIZE</th>
+                                <th>SHIPPING_ADDRESS</th>
+                                <th>STATUS_TRACKER</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#ADR-9042</td>
+                                <td>
+                                    <strong>Zane K.</strong><br>
+                                    <span class="sub-data">zane.k@void.net</span><br>
+                                    <span class="sub-data">555-019-234</span>
+                                </td>
+                                <td>V-02 // SYSTEM_HOODIE</td>
+                                <td>XL</td>
+                                <td class="sub-data">101 Cyber Ave, Neo-Tokyo, 100-0001</td>
+                                <td>
+                                    <select class="status-select processing">
+                                        <option value="processing" selected>PROCESSING</option>
+                                        <option value="packaged">PACKAGED</option>
+                                        <option value="dispatched">SYS_DISPATCHED</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#ADR-9041</td>
+                                <td>
+                                    <strong>Sarah M.</strong><br>
+                                    <span class="sub-data">sarah.m@gmail.com</span><br>
+                                    <span class="sub-data">555-982-111</span>
+                                </td>
+                                <td>ACID_WASH TEE</td>
+                                <td>M</td>
+                                <td class="sub-data">44 Grunge St, Berlin, 10115</td>
+                                <td>
+                                    <select class="status-select packaged">
+                                        <option value="processing">PROCESSING</option>
+                                        <option value="packaged" selected>PACKAGED</option>
+                                        <option value="dispatched">SYS_DISPATCHED</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#ADR-9040</td>
+                                <td>
+                                    <strong>Lex 0.</strong><br>
+                                    <span class="sub-data">lex0@proton.me</span><br>
+                                    <span class="sub-data">555-777-999</span>
+                                </td>
+                                <td>V-03 // HEAVY_CARGO</td>
+                                <td>S</td>
+                                <td class="sub-data">P.O. Box 404, London, E1 6AN</td>
+                                <td>
+                                    <select class="status-select dispatched">
+                                        <option value="processing">PROCESSING</option>
+                                        <option value="packaged">PACKAGED</option>
+                                        <option value="dispatched" selected>SYS_DISPATCHED</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Custom Scripts -->
+    <script src="js/global.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
