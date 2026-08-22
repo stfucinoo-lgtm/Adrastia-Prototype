@@ -10,63 +10,582 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- Stylesheets -->
+    <!-- Base Stylesheet (if present) -->
     <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/admin.css">
+
+    <style>
+        /* === RESET & VARIABLES === */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-black: #080808;
+            --bg-card: #0f0f12;
+            --border-dim: #222226;
+            --border-active: #ff0055;
+            --neon-pink: #ff0055;
+            --neon-green: #00ff66;
+            --neon-cyan: #00f0ff;
+            --text-main: #ffffff;
+            --text-dim: #777780;
+            --font-display: 'Syncopate', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+        }
+
+        body.admin-body {
+            background-color: var(--bg-black);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(rgba(255, 0, 85, 0.05) 1px, transparent 1px),
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px, 60px 60px;
+        }
+
+        /* === LAYOUT GRID === */
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        @media (max-width: 900px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* === SIDEBAR === */
+        .admin-sidebar {
+            background: #0a0a0d;
+            border-right: 2px solid var(--border-dim);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 30px 24px;
+            border-bottom: 2px solid var(--border-dim);
+        }
+
+        .sidebar-header h1 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .status-online {
+            font-size: 0.75rem;
+            color: var(--neon-green);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+
+        .nav-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            text-align: left;
+            padding: 16px 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+        }
+
+        .nav-tab:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+            border-left-color: var(--neon-cyan);
+            padding-left: 30px;
+        }
+
+        .nav-tab.active {
+            color: #fff;
+            background: rgba(255, 0, 85, 0.08);
+            border-left-color: var(--neon-pink);
+            font-weight: 700;
+        }
+
+        .exit-link {
+            margin-top: auto;
+            border-top: 1px solid var(--border-dim);
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+
+        .exit-link:hover {
+            color: var(--neon-pink);
+            border-left-color: var(--neon-pink);
+        }
+
+        /* === MAIN CONTENT === */
+        .admin-main {
+            padding: 40px;
+            max-width: 1400px;
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 600px) {
+            .admin-main { padding: 20px; }
+        }
+
+        .section-header-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-dim);
+            padding-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* === KPIS GRID === */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .kpi-card:hover {
+            border-color: #444;
+            transform: translateY(-2px);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #333;
+        }
+
+        .kpi-card.highlight::before {
+            background: var(--neon-pink);
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .kpi-value {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .neon-green { color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,102,0.3); }
+        .neon-pink { color: var(--neon-pink); text-shadow: 0 0 10px rgba(255,0,85,0.3); }
+        .neon-cyan { color: var(--neon-cyan); text-shadow: 0 0 10px rgba(0,240,255,0.3); }
+
+        /* === SPLIT SECTION (CHART & ALERTS) === */
+        .dashboard-split {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1000px) {
+            .dashboard-split { grid-template-columns: 1fr; }
+        }
+
+        .panel-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            padding: 24px;
+        }
+
+        .panel-title {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            color: #bbb;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Pure CSS Chart */
+        .css-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 180px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border-dim);
+        }
+
+        .bar-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .bar {
+            width: 28px;
+            background: #25252d;
+            border-top: 2px solid #555;
+            transition: all 0.3s ease;
+        }
+
+        .bar:hover {
+            background: var(--neon-pink);
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+
+        .bar.b1 { height: 35%; }
+        .bar.b2 { height: 20%; }
+        .bar.b3 { height: 50%; }
+        .bar.b4 { height: 85%; background: rgba(0, 240, 255, 0.4); border-color: var(--neon-cyan); }
+        .bar.b5 { height: 60%; }
+        .bar.b6 { height: 75%; }
+        .bar.b7 { height: 95%; background: var(--neon-pink); border-color: #fff; box-shadow: 0 0 12px var(--neon-pink); }
+
+        .bar-wrap span {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        /* Alerts Feed */
+        .alert-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .alert-item {
+            padding: 12px 14px;
+            background: #141419;
+            border-left: 3px solid #444;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .alert-item.critical {
+            border-left-color: var(--neon-pink);
+            background: rgba(255, 0, 85, 0.06);
+            color: #ff88a3;
+        }
+
+        .alert-item.warning {
+            border-left-color: #ffaa00;
+            background: rgba(255, 170, 0, 0.06);
+            color: #ffcc66;
+        }
+
+        .alert-item.soldout {
+            border-left-color: var(--neon-cyan);
+            background: rgba(0, 240, 255, 0.06);
+            color: #80f5ff;
+        }
+
+        .timestamp {
+            color: #666;
+            margin-right: 6px;
+            font-weight: 700;
+        }
+
+        /* === BRUTALIST BUTTONS & FORMS === */
+        .btn-primary {
+            background: #fff;
+            color: #000;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 10px 20px;
+            border: 1px solid #fff;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--neon-pink);
+            border-color: var(--neon-pink);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
+        }
+
+        .btn-primary.inverted {
+            background: transparent;
+            color: #fff;
+            border-color: #444;
+        }
+
+        .btn-primary.inverted:hover {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .add-drop-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .add-drop-panel h3 {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            color: var(--neon-cyan);
+        }
+
+        .admin-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            align-items: flex-end;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border-dim);
+            padding: 12px;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 8px rgba(255,0,85,0.3);
+        }
+
+        /* === DATA TABLES === */
+        .table-responsive {
+            overflow-x: auto;
+            border: 1px solid var(--border-dim);
+            background: var(--bg-card);
+        }
+
+        .brutalist-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.8rem;
+        }
+
+        .brutalist-table th {
+            background: #141419;
+            padding: 16px;
+            color: var(--text-dim);
+            letter-spacing: 1.5px;
+            border-bottom: 2px solid var(--border-dim);
+            font-weight: 700;
+        }
+
+        .brutalist-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-dim);
+            vertical-align: middle;
+        }
+
+        .brutalist-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .table-img {
+            width: 44px;
+            height: 44px;
+            object-fit: cover;
+            border: 1px solid #333;
+            display: block;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border: 1px solid currentColor;
+        }
+
+        .status-instock { color: var(--neon-green); border-color: var(--neon-green); }
+        .status-critical { color: var(--neon-pink); border-color: var(--neon-pink); animation: pulse 1.2s infinite; }
+        .status-soldout { color: #666; border-color: #444; background: rgba(255,255,255,0.02); }
+
+        .btn-kill {
+            background: transparent;
+            border: 1px solid #444;
+            color: #aaa;
+            padding: 6px 12px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-kill:hover {
+            background: var(--neon-pink);
+            color: #fff;
+            border-color: var(--neon-pink);
+        }
+
+        .btn-kill.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: #333;
+        }
+
+        /* === ANIMATIONS & UTILITIES === */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden { display: none !important; }
+        .blink { animation: pulse 1.5s infinite; }
+    </style>
 </head>
 <body class="admin-body">
-    <!-- Global UI Overlays -->
-    <div class="noise-overlay"></div>
-    <div class="custom-cursor"></div>
 
     <div class="admin-layout">
         <!-- Sidebar -->
-        <aside class="admin-sidebar border-right">
-            <div class="sidebar-header border-bottom">
-                <h1 class="glitch" data-text="SYSTEM_ROOT">SYSTEM_ROOT</h1>
-                <p class="status-online blink">[ STATUS: ONLINE ]</p>
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h1>SYSTEM_ROOT</h1>
+                <p class="status-online">
+                    <span class="status-dot"></span>
+                    [ STATUS: LIVE_ONLINE ]
+                </p>
             </div>
             <nav class="sidebar-nav">
                 <button class="nav-tab active" data-target="dashboard">01. SYSTEM_OVERVIEW</button>
                 <button class="nav-tab" data-target="inventory">02. HARDWARE_INVENTORY</button>
                 <button class="nav-tab" data-target="orders">03. DISPATCH_LOG</button>
-                <a href="index.html" class="nav-tab exit-link">< EXIT TO STOREFRONT</a>
+                <a href="index.html" class="nav-tab exit-link">&lt; EXIT TO STOREFRONT</a>
             </nav>
         </aside>
 
         <!-- Main Content Area -->
         <main class="admin-main">
             
-            <!-- SECTION 1: SYSTEM OVERVIEW (Dashboard) -->
+            <!-- SECTION 1: SYSTEM OVERVIEW -->
             <section id="dashboard" class="admin-section active">
-                <h2 class="section-title border-bottom">OVERVIEW // LIVE METRICS</h2>
+                <div class="section-header-wrap">
+                    <h2 class="section-title">OVERVIEW // LIVE METRICS</h2>
+                    <span style="font-size: 0.75rem; color: #666;">SERVER_UPTIME: 99.98%</span>
+                </div>
                 
                 <!-- KPIs -->
-                <div class="kpi-grid border-bottom">
-                    <div class="kpi-card border-right">
+                <div class="kpi-grid">
+                    <div class="kpi-card highlight">
                         <span class="kpi-label">TOTAL REVENUE (24H)</span>
-                        <span class="kpi-value neon-green">$4,250</span>
+                        <span class="kpi-value neon-green">$4,250.00</span>
                     </div>
-                    <div class="kpi-card border-right">
+                    <div class="kpi-card">
                         <span class="kpi-label">NEW ORDERS</span>
                         <span class="kpi-value">47</span>
                     </div>
-                    <div class="kpi-card border-right">
-                        <span class="kpi-label">LIVE VISITORS</span>
-                        <span class="kpi-value neon-green blink">128</span>
-                    </div>
                     <div class="kpi-card">
+                        <span class="kpi-label">LIVE VISITORS</span>
+                        <span class="kpi-value neon-cyan blink">128</span>
+                    </div>
+                    <div class="kpi-card highlight">
                         <span class="kpi-label">STOCK CRITICAL ITEMS</span>
-                        <span class="kpi-value neon-pink">3</span>
+                        <span class="kpi-value neon-pink">03</span>
                     </div>
                 </div>
 
+                <!-- Dashboard Charts & Alerts -->
                 <div class="dashboard-split">
-                    <!-- REPLACED CHART: Pure CSS Terminal Bars -->
-                    <div class="chart-container border-right">
-                        <h3>SERVER_LOAD // TRAFFIC TENDENCY</h3>
+                    <div class="panel-box">
+                        <div class="panel-title">
+                            <span>// SERVER_LOAD & TRAFFIC TENDENCY</span>
+                            <span class="neon-cyan">LIVE STREAM</span>
+                        </div>
                         <div class="css-chart">
                             <div class="bar-wrap"><div class="bar b1"></div><span>00:00</span></div>
                             <div class="bar-wrap"><div class="bar b2"></div><span>04:00</span></div>
@@ -74,23 +593,25 @@
                             <div class="bar-wrap"><div class="bar b4"></div><span>12:00</span></div>
                             <div class="bar-wrap"><div class="bar b5"></div><span>16:00</span></div>
                             <div class="bar-wrap"><div class="bar b6"></div><span>20:00</span></div>
-                            <div class="bar-wrap"><div class="bar b7 neon-pulse"></div><span class="neon-pink">NOW</span></div>
+                            <div class="bar-wrap"><div class="bar b7"></div><span class="neon-pink">NOW</span></div>
                         </div>
                     </div>
 
-                    <!-- Critical Alerts Feed -->
-                    <div class="alerts-container">
-                        <h3>CRITICAL_ALERTS_FEED</h3>
+                    <div class="panel-box">
+                        <div class="panel-title">
+                            <span>// CRITICAL_ALERTS_FEED</span>
+                            <span class="status-badge status-critical">LIVE</span>
+                        </div>
                         <div class="alert-box">
-                            <p class="alert-item critical">
+                            <div class="alert-item critical">
                                 <span class="timestamp">[10:42:01]</span> [STOCK CRITICAL: V-02 IS AT 3 REMAINING]
-                            </p>
-                            <p class="alert-item warning">
+                            </div>
+                            <div class="alert-item warning">
                                 <span class="timestamp">[10:15:22]</span> [TRAFFIC SPIKE DETECTED: +45% in 10 mins]
-                            </p>
-                            <p class="alert-item soldout">
+                            </div>
+                            <div class="alert-item soldout">
                                 <span class="timestamp">[09:05:11]</span> [SOLD OUT: STATIC_BEANIE HIT ZERO]
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -98,21 +619,21 @@
 
             <!-- SECTION 2: INVENTORY MANAGEMENT -->
             <section id="inventory" class="admin-section">
-                <div class="header-flex border-bottom">
+                <div class="section-header-wrap">
                     <h2 class="section-title">HARDWARE // INVENTORY CONTROL</h2>
                     <button class="btn-primary" id="open-add-modal">+ INITIALIZE NEW DROP</button>
                 </div>
 
-                <!-- Add Product Form -->
-                <div class="add-drop-panel border-bottom hidden" id="addDropForm">
-                    <h3>// CREATE NEW HARDWARE</h3>
+                <!-- Add Product Form (Collapsible) -->
+                <div class="add-drop-panel hidden" id="addDropForm">
+                    <h3>// CREATE NEW HARDWARE ITEM</h3>
                     <form id="newHardwareForm" class="admin-form">
                         <div class="input-group">
                             <label>PRODUCT_NAME</label>
                             <input type="text" id="prodName" placeholder="e.g. VOID_CORE TEE" required>
                         </div>
                         <div class="input-group">
-                            <label>MAX_QUANTITY (SCARCITY CAP)</label>
+                            <label>MAX_QUANTITY</label>
                             <input type="number" id="prodQty" placeholder="50" required>
                         </div>
                         <div class="input-group">
@@ -120,10 +641,10 @@
                             <input type="number" id="prodPrice" placeholder="45" required>
                         </div>
                         <div class="input-group">
-                            <label>IMAGE_URL (For testing)</label>
-                            <input type="text" id="prodImg" placeholder="https://images.unsplash.com/..." required>
+                            <label>IMAGE_URL</label>
+                            <input type="text" id="prodImg" placeholder="https://..." required>
                         </div>
-                        <button type="submit" class="btn-primary inverted">DEPLOY TO STORE</button>
+                        <button type="submit" class="btn-primary">DEPLOY DROP</button>
                     </form>
                 </div>
 
@@ -132,7 +653,7 @@
                     <table class="brutalist-table" id="inventoryTable">
                         <thead>
                             <tr>
-                                <th>IMG</th>
+                                <th>PREVIEW</th>
                                 <th>HARDWARE_NAME</th>
                                 <th>PRICE</th>
                                 <th>STOCK</th>
@@ -142,46 +663,113 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=100&auto=format&fit=crop" class="table-img"></td>
-                                <td>V-01 // NULL_TEE</td>
-                                <td>$50</td>
-                                <td>12 / 50</td>
-                                <td class="status-instock">IN_STOCK</td>
+                                <td><img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=100&auto=format&fit=crop" class="table-img" alt="Item"></td>
+                                <td><strong>V-01 // ACID_WASH TEE</strong></td>
+                                <td>$45.00</td>
+                                <td>24 / 50</td>
+                                <td><span class="status-badge status-instock">IN_STOCK</span></td>
                                 <td><button class="btn-kill">KILL_DROP</button></td>
                             </tr>
                             <tr>
-                                <td><img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=100&auto=format&fit=crop" class="table-img"></td>
-                                <td>V-02 // SYSTEM_HOODIE</td>
-                                <td>$95</td>
+                                <td><img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=100&auto=format&fit=crop" class="table-img" alt="Item"></td>
+                                <td><strong>V-02 // CYBER_SKULL HOODIE</strong></td>
+                                <td>$85.00</td>
                                 <td class="neon-pink">03 / 50</td>
-                                <td class="status-critical blink">CRITICAL</td>
+                                <td><span class="status-badge status-critical">CRITICAL</span></td>
                                 <td><button class="btn-kill">KILL_DROP</button></td>
                             </tr>
-                            <tr class="row-dead">
-                                <td><img src="https://images.unsplash.com/photo-1601115867451-24874b7117fa?q=80&w=100&auto=format&fit=crop" class="table-img"></td>
-                                <td>V-03 // HEAVY_CARGO</td>
-                                <td>$120</td>
-                                <td>0 / 50</td>
-                                <td class="status-soldout">SOLD_OUT</td>
+                            <tr>
+                                <td><img src="https://images.unsplash.com/photo-1503342394128-c104d54dba01?q=80&w=100&auto=format&fit=crop" class="table-img" alt="Item"></td>
+                                <td><strong>V-03 // STATIC LONGSLEEVE</strong></td>
+                                <td>$55.00</td>
+                                <td>00 / 50</td>
+                                <td><span class="status-badge status-soldout">SOLD_OUT</span></td>
                                 <td><button class="btn-kill disabled" disabled>DEAD</button></td>
+                            </tr>
+                            <tr>
+                                <td><img src="https://images.unsplash.com/photo-1601115867451-24874b7117fa?q=80&w=100&auto=format&fit=crop" class="table-img" alt="Item"></td>
+                                <td><strong>V-04 // VOID_CARGO PANTS</strong></td>
+                                <td>$110.00</td>
+                                <td>18 / 50</td>
+                                <td><span class="status-badge status-instock">IN_STOCK</span></td>
+                                <td><button class="btn-kill">KILL_DROP</button></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </section>
 
-            <!-- SECTION 3: ORDERS & DISPATCH LOG (Remains unchanged) -->
+            <!-- SECTION 3: ORDERS & DISPATCH LOG -->
             <section id="orders" class="admin-section">
-                <div class="header-flex border-bottom">
-                    <h2 class="section-title">DISPATCH_LOG // ORDERS</h2>
-                    <button class="btn-primary inverted" id="exportCsvBtn">EXPORT DATA [CSV]</button>
+                <div class="section-header-wrap">
+                    <h2 class="section-title">DISPATCH_LOG // RECENT ORDERS</h2>
+                    <button class="btn-primary inverted" onclick="alert('Exporting order manifest [CSV]...')">EXPORT DATA [CSV]</button>
                 </div>
-                <!-- ... order table omitted for brevity, keep what you had here! ... -->
+                
+                <div class="table-responsive">
+                    <table class="brutalist-table">
+                        <thead>
+                            <tr>
+                                <th>ORDER_ID</th>
+                                <th>DISPATCH_TO</th>
+                                <th>ITEMS</th>
+                                <th>TOTAL</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#ORD-9021</td>
+                                <td>alex.v@cyber.io</td>
+                                <td>1x CYBER_SKULL HOODIE (L)</td>
+                                <td>$85.00</td>
+                                <td><span class="status-badge status-instock">DISPATCHED</span></td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-9020</td>
+                                <td>neo_tokyo@mesh.net</td>
+                                <td>2x ACID_WASH TEE (M)</td>
+                                <td>$90.00</td>
+                                <td><span class="status-badge status-critical">PROCESSING</span></td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-9019</td>
+                                <td>ghost_k@void.org</td>
+                                <td>1x VOID_CARGO PANTS (32)</td>
+                                <td>$110.00</td>
+                                <td><span class="status-badge status-instock">DELIVERED</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </main>
     </div>
 
-    <script src="js/global.js"></script>
-    <script src="js/admin.js"></script>
+    <!-- Interactive Navigation Scripts -->
+    <script>
+        // Sidebar tab switching
+        document.querySelectorAll('.nav-tab[data-target]').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+
+                button.classList.add('active');
+                const targetId = button.getAttribute('data-target');
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) targetSection.classList.add('active');
+            });
+        });
+
+        // Toggle add drop form
+        const toggleBtn = document.getElementById('open-add-modal');
+        const formPanel = document.getElementById('addDropForm');
+        if (toggleBtn && formPanel) {
+            toggleBtn.addEventListener('click', () => {
+                formPanel.classList.toggle('hidden');
+                toggleBtn.textContent = formPanel.classList.contains('hidden') ? '+ INITIALIZE NEW DROP' : '- CANCEL DROP';
+            });
+        }
+    </script>
 </body>
 </html>
