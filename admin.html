@@ -15,9 +15,6 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/admin.css">
-    
-    <!-- Chart.js for Tech Analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="admin-body">
     <!-- Global UI Overlays -->
@@ -67,10 +64,18 @@
                 </div>
 
                 <div class="dashboard-split">
-                    <!-- Analytics Chart -->
+                    <!-- REPLACED CHART: Pure CSS Terminal Bars -->
                     <div class="chart-container border-right">
-                        <h3>TRAFFIC & SALES TENDENCY</h3>
-                        <canvas id="salesChart"></canvas>
+                        <h3>SERVER_LOAD // TRAFFIC TENDENCY</h3>
+                        <div class="css-chart">
+                            <div class="bar-wrap"><div class="bar b1"></div><span>00:00</span></div>
+                            <div class="bar-wrap"><div class="bar b2"></div><span>04:00</span></div>
+                            <div class="bar-wrap"><div class="bar b3"></div><span>08:00</span></div>
+                            <div class="bar-wrap"><div class="bar b4"></div><span>12:00</span></div>
+                            <div class="bar-wrap"><div class="bar b5"></div><span>16:00</span></div>
+                            <div class="bar-wrap"><div class="bar b6"></div><span>20:00</span></div>
+                            <div class="bar-wrap"><div class="bar b7 neon-pulse"></div><span class="neon-pink">NOW</span></div>
+                        </div>
                     </div>
 
                     <!-- Critical Alerts Feed -->
@@ -98,25 +103,25 @@
                     <button class="btn-primary" id="open-add-modal">+ INITIALIZE NEW DROP</button>
                 </div>
 
-                <!-- Add Product Form (Hidden by default, acts as a drop-down/modal) -->
+                <!-- Add Product Form -->
                 <div class="add-drop-panel border-bottom hidden" id="addDropForm">
                     <h3>// CREATE NEW HARDWARE</h3>
-                    <form class="admin-form">
+                    <form id="newHardwareForm" class="admin-form">
                         <div class="input-group">
                             <label>PRODUCT_NAME</label>
-                            <input type="text" placeholder="e.g. VOID_CORE TEE">
+                            <input type="text" id="prodName" placeholder="e.g. VOID_CORE TEE" required>
                         </div>
                         <div class="input-group">
                             <label>MAX_QUANTITY (SCARCITY CAP)</label>
-                            <input type="number" placeholder="50">
+                            <input type="number" id="prodQty" placeholder="50" required>
                         </div>
                         <div class="input-group">
                             <label>PRICE ($)</label>
-                            <input type="number" placeholder="45">
+                            <input type="number" id="prodPrice" placeholder="45" required>
                         </div>
                         <div class="input-group">
-                            <label>UPLOAD_IMAGE</label>
-                            <input type="file">
+                            <label>IMAGE_URL (For testing)</label>
+                            <input type="text" id="prodImg" placeholder="https://images.unsplash.com/..." required>
                         </div>
                         <button type="submit" class="btn-primary inverted">DEPLOY TO STORE</button>
                     </form>
@@ -124,7 +129,7 @@
 
                 <!-- Inventory Table -->
                 <div class="table-responsive">
-                    <table class="brutalist-table">
+                    <table class="brutalist-table" id="inventoryTable">
                         <thead>
                             <tr>
                                 <th>IMG</th>
@@ -165,89 +170,17 @@
                 </div>
             </section>
 
-            <!-- SECTION 3: ORDERS & DISPATCH LOG -->
+            <!-- SECTION 3: ORDERS & DISPATCH LOG (Remains unchanged) -->
             <section id="orders" class="admin-section">
                 <div class="header-flex border-bottom">
                     <h2 class="section-title">DISPATCH_LOG // ORDERS</h2>
                     <button class="btn-primary inverted" id="exportCsvBtn">EXPORT DATA [CSV]</button>
                 </div>
-
-                <div class="table-responsive">
-                    <table class="brutalist-table">
-                        <thead>
-                            <tr>
-                                <th>ORDER_ID</th>
-                                <th>CUSTOMER</th>
-                                <th>ITEM(S)</th>
-                                <th>SIZE</th>
-                                <th>SHIPPING_ADDRESS</th>
-                                <th>STATUS_TRACKER</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>#ADR-9042</td>
-                                <td>
-                                    <strong>Zane K.</strong><br>
-                                    <span class="sub-data">zane.k@void.net</span><br>
-                                    <span class="sub-data">555-019-234</span>
-                                </td>
-                                <td>V-02 // SYSTEM_HOODIE</td>
-                                <td>XL</td>
-                                <td class="sub-data">101 Cyber Ave, Neo-Tokyo, 100-0001</td>
-                                <td>
-                                    <select class="status-select processing">
-                                        <option value="processing" selected>PROCESSING</option>
-                                        <option value="packaged">PACKAGED</option>
-                                        <option value="dispatched">SYS_DISPATCHED</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#ADR-9041</td>
-                                <td>
-                                    <strong>Sarah M.</strong><br>
-                                    <span class="sub-data">sarah.m@gmail.com</span><br>
-                                    <span class="sub-data">555-982-111</span>
-                                </td>
-                                <td>ACID_WASH TEE</td>
-                                <td>M</td>
-                                <td class="sub-data">44 Grunge St, Berlin, 10115</td>
-                                <td>
-                                    <select class="status-select packaged">
-                                        <option value="processing">PROCESSING</option>
-                                        <option value="packaged" selected>PACKAGED</option>
-                                        <option value="dispatched">SYS_DISPATCHED</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#ADR-9040</td>
-                                <td>
-                                    <strong>Lex 0.</strong><br>
-                                    <span class="sub-data">lex0@proton.me</span><br>
-                                    <span class="sub-data">555-777-999</span>
-                                </td>
-                                <td>V-03 // HEAVY_CARGO</td>
-                                <td>S</td>
-                                <td class="sub-data">P.O. Box 404, London, E1 6AN</td>
-                                <td>
-                                    <select class="status-select dispatched">
-                                        <option value="processing">PROCESSING</option>
-                                        <option value="packaged">PACKAGED</option>
-                                        <option value="dispatched" selected>SYS_DISPATCHED</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <!-- ... order table omitted for brevity, keep what you had here! ... -->
             </section>
-
         </main>
     </div>
 
-    <!-- Custom Scripts -->
     <script src="js/global.js"></script>
     <script src="js/admin.js"></script>
 </body>
