@@ -30,6 +30,7 @@
             <a href="products.html" class="nav-link">SHOP_ALL</a>
             <a href="collection.html" class="nav-link">NEW_DROP</a>
             <a href="lookbook.html" class="nav-link neon-pink">ARCHIVE</a>
+            <a href="admin.html" class="nav-link">DASHBOARD</a>
         </div>
         <div class="nav-right">
             <a href="about.html" class="nav-link hidden-mobile">MANIFESTO</a>
@@ -42,8 +43,7 @@
     <!-- Editorial Header -->
     <header class="editorial-header">
         <div class="editorial-img-container">
-            <!-- High contrast hero image -->
-            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Lookbook Hero">
+            <img id="lookbookHeroImage" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Lookbook Hero">
         </div>
         <div class="editorial-title-wrapper">
             <h1 class="glitch" data-text="// VOL.2: DIGITAL_DECAY">// VOL.2: DIGITAL_DECAY</h1>
@@ -51,24 +51,9 @@
         </div>
     </header>
 
-    <!-- Masonry / Scattered Gallery 1 -->
-    <section class="gallery-scattered border-bottom">
-        <div class="gallery-item item-1">
-            <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=1000&auto=format&fit=crop" alt="Lookbook shot 1">
-            <div class="img-caption">[SYS.LOG: 001]</div>
-        </div>
-        <div class="gallery-item item-2">
-            <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1000&auto=format&fit=crop" alt="Lookbook shot 2">
-            <div class="img-caption">[SYS.LOG: 002]</div>
-        </div>
-        <div class="gallery-item item-3">
-            <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1000&auto=format&fit=crop" alt="Lookbook shot 3">
-            <div class="img-caption">[SYS.LOG: 003]</div>
-        </div>
-        <div class="gallery-item item-4">
-            <img src="https://images.unsplash.com/photo-1517502699925-502a9446f7ff?q=80&w=1000&auto=format&fit=crop" alt="Lookbook shot 4">
-            <div class="img-caption">[SYS.LOG: 004]</div>
-        </div>
+    <!-- Dynamic Masonry / Scattered Gallery -->
+    <section class="gallery-scattered border-bottom" id="scatteredGallery">
+        <!-- Rendered dynamically from published products -->
     </section>
 
     <!-- Narrative Break Feature -->
@@ -82,47 +67,19 @@
         </div>
     </section>
 
-    <!-- Full Bleed Diptych Gallery -->
-    <section class="diptych-gallery border-bottom">
-        <div class="diptych-side">
-            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1200&auto=format&fit=crop" alt="Detail shot 1">
-        </div>
-        <div class="diptych-side">
-            <img src="https://images.unsplash.com/photo-1503342394128-c104d54dba01?q=80&w=1200&auto=format&fit=crop" alt="Detail shot 2">
-        </div>
+    <!-- Dynamic Full Bleed Diptych Gallery -->
+    <section class="diptych-gallery border-bottom" id="diptychGallery">
+        <!-- Rendered dynamically from published products -->
     </section>
 
-    <!-- Shop the Look (E-commerce Integration) -->
+    <!-- Shop the Look (Dynamic E-commerce Integration) -->
     <section class="shop-the-look border-bottom">
         <div class="stl-header">
             <h2>SHOP_THE_LOOK</h2>
             <p>// ACQUIRE THE HARDWARE</p>
         </div>
-        <div class="stl-grid">
-            <!-- STL Item 1 -->
-            <div class="stl-card">
-                <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800&auto=format&fit=crop" alt="Acid Wash Graphic Tee">
-                <div class="stl-meta">
-                    <h4>ACID_WASH TEE</h4>
-                    <button class="quick-add-btn">ADD [ $45 ]</button>
-                </div>
-            </div>
-            <!-- STL Item 2 -->
-            <div class="stl-card">
-                <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop" alt="Cyber Skull Hoodie">
-                <div class="stl-meta">
-                    <h4>CYBER HOODIE</h4>
-                    <button class="quick-add-btn">ADD [ $85 ]</button>
-                </div>
-            </div>
-            <!-- STL Item 3 -->
-            <div class="stl-card">
-                <img src="https://images.unsplash.com/photo-1601115867451-24874b7117fa?q=80&w=800&auto=format&fit=crop" alt="Cargo Pants">
-                <div class="stl-meta">
-                    <h4>VOID_CARGOS</h4>
-                    <button class="quick-add-btn">ADD [ $110 ]</button>
-                </div>
-            </div>
+        <div class="stl-grid" id="stlGrid">
+            <!-- Rendered dynamically from published products -->
         </div>
     </section>
 
@@ -141,9 +98,9 @@
                 <p>EST. 2024 // SYSTEM OVERRIDE</p>
             </div>
             <div class="footer-links">
-                <a href="#">INSTAGRAM</a>
-                <a href="#">TIKTOK</a>
-                <a href="#">DISCORD</a>
+                <a href="products.html">SHOP ALL</a>
+                <a href="collection.html">NEW DROP</a>
+                <a href="lookbook.html">ARCHIVE</a>
             </div>
             <div class="footer-legal">
                 <a href="#">SHIPPING & RETURNS</a>
@@ -157,8 +114,92 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <!-- Custom Scripts -->
+    <!-- Central Store and Global Scripts -->
+    <script src="js/store.js"></script>
     <script src="js/global.js"></script>
     <script src="js/glitch.js"></script>
+
+    <!-- Dynamic Archive & Lookbook Engine -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            'use strict';
+
+            const scatteredContainer = document.getElementById("scatteredGallery");
+            const diptychContainer = document.getElementById("diptychGallery");
+            const stlGridContainer = document.getElementById("stlGrid");
+            const heroImg = document.getElementById("lookbookHeroImage");
+
+            const renderLookbook = () => {
+                if (!window.AdrastiaStore) return;
+                const products = window.AdrastiaStore.getActiveProducts();
+
+                if (products.length === 0) return;
+
+                // 1. Update Hero Image if first product exists
+                if (heroImg && products[0] && products[0].image) {
+                    heroImg.src = products[0].image;
+                }
+
+                // 2. Hydrate Scattered Gallery (Up to 4 slots)
+                if (scatteredContainer) {
+                    const scatteredItems = products.slice(0, 4);
+                    scatteredContainer.innerHTML = scatteredItems.map((prod, idx) => `
+                        <div class="gallery-item item-${idx + 1}">
+                            <a href="product.html?id=${prod.id}">
+                                <img src="${prod.image}" alt="${prod.name}">
+                            </a>
+                            <div class="img-caption">[SYS.LOG: 00${idx + 1} // ${prod.name.toUpperCase()}]</div>
+                        </div>
+                    `).join("");
+                }
+
+                // 3. Hydrate Diptych Gallery (2 Slots)
+                if (diptychContainer) {
+                    const diptychItems = products.slice(0, 2);
+                    diptychContainer.innerHTML = diptychItems.map(prod => `
+                        <div class="diptych-side">
+                            <a href="product.html?id=${prod.id}">
+                                <img src="${prod.image}" alt="${prod.name}">
+                            </a>
+                        </div>
+                    `).join("");
+                }
+
+                // 4. Hydrate Shop The Look Grid
+                if (stlGridContainer) {
+                    const stlItems = products.slice(0, 6);
+                    stlGridContainer.innerHTML = stlItems.map(prod => {
+                        const isDead = prod.isSoldOut || prod.totalStock <= 0;
+                        const priceDisplay = isDead ? 'SOLD OUT' : window.AdrastiaStore.formatMoney(prod.price);
+
+                        return `
+                            <div class="stl-card">
+                                <a href="product.html?id=${prod.id}">
+                                    <img src="${prod.image}" alt="${prod.name}">
+                                </a>
+                                <div class="stl-meta">
+                                    <h4>${prod.name}</h4>
+                                    ${!isDead ? `
+                                        <button class="quick-add-btn" data-product-id="${prod.id}">
+                                            ADD [ ${priceDisplay} ]
+                                        </button>
+                                    ` : `
+                                        <span class="price neon-pink" style="font-size:0.75rem; font-weight:700;">SOLD OUT</span>
+                                    `}
+                                </div>
+                            </div>
+                        `;
+                    }).join("");
+                }
+
+                if (window.attachCursorHoverListeners) window.attachCursorHoverListeners();
+            };
+
+            renderLookbook();
+
+            // Re-render when products change in storage
+            window.addEventListener("adr:products-updated", renderLookbook);
+        });
+    </script>
 </body>
 </html>
