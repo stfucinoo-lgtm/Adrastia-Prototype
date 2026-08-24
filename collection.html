@@ -104,7 +104,7 @@
             <div class="footer-legal">
                 <a href="#">SHIPPING & RETURNS</a>
                 <a href="#">TERMS OF SERVICE</a>
-                <p>&copy; 2024 ADRASTIA.</p>
+                <p>&copy; 2024 ADRASTIA REPOSITORY.</p>
             </div>
         </div>
     </footer>
@@ -113,10 +113,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <!-- Central Store and Global Scripts -->
+    <!-- Central Store, Audio and Global Scripts -->
     <script src="js/store.js"></script>
     <script src="js/global.js"></script>
     <script src="js/glitch.js"></script>
+    <script src="js/audio.js"></script>
 
     <!-- Dynamic Collection Grid Engine -->
     <script>
@@ -127,12 +128,12 @@
             if (!gridContainer || !window.AdrastiaStore) return;
 
             const renderDropGrid = () => {
-                const allProducts = window.AdrastiaStore.getProducts();
+                // Fetch ONLY active products
+                const activeProducts = window.AdrastiaStore.getActiveProducts();
                 
-                // Filter for VOID_CORE collection or display first 4 items
-                let dropItems = allProducts.filter(p => p.collection === "VOID_CORE");
+                let dropItems = activeProducts.filter(p => p.collection === "VOID_CORE");
                 if (dropItems.length === 0) {
-                    dropItems = allProducts.slice(0, 4);
+                    dropItems = activeProducts.slice(0, 4);
                 }
 
                 gridContainer.innerHTML = dropItems.map(prod => {
@@ -140,7 +141,6 @@
                     const isCritical = prod.totalStock > 0 && prod.totalStock <= 5;
                     const maxCap = prod.maxStock || 50;
 
-                    // Badge Logic
                     let badgeHtml = `<div class="stock-badge">[ ${prod.totalStock} / ${maxCap} REMAINING ]</div>`;
                     if (isDead) {
                         badgeHtml = `<div class="stock-badge empty">[ SOLD OUT ]</div>`;
@@ -164,7 +164,7 @@
                                     <h3>${prod.name}</h3>
                                 </a>
                                 <span class="price ${isDead ? 'neon-pink' : ''}">
-                                    ${isDead ? 'SOLD OUT' : '$' + prod.price.toFixed(2)}
+                                    ${isDead ? 'SOLD OUT' : window.AdrastiaStore.formatMoney(prod.price)}
                                 </span>
                             </div>
                         </div>
@@ -176,7 +176,6 @@
 
             renderDropGrid();
 
-            // Re-render when stock or store updates
             window.addEventListener("adr:products-updated", renderDropGrid);
         });
     </script>
