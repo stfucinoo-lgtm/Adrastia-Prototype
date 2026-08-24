@@ -77,14 +77,14 @@
                 <p>EST. 2024 // SYSTEM OVERRIDE</p>
             </div>
             <div class="footer-links">
-                <a href="#">INSTAGRAM</a>
-                <a href="#">TIKTOK</a>
-                <a href="#">DISCORD</a>
+                <a href="products.html">SHOP ALL</a>
+                <a href="collection.html">NEW DROP</a>
+                <a href="lookbook.html">ARCHIVE</a>
             </div>
             <div class="footer-legal">
                 <a href="#">SHIPPING & RETURNS</a>
                 <a href="#">TERMS OF SERVICE</a>
-                <p>&copy; 2024 ADRASTIA.</p>
+                <p>&copy; 2024 ADRASTIA REPOSITORY.</p>
             </div>
         </div>
     </footer>
@@ -93,10 +93,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <!-- Central Store and Global Scripts -->
+    <!-- Central Store, Audio and Global Scripts -->
     <script src="js/store.js"></script>
     <script src="js/global.js"></script>
     <script src="js/glitch.js"></script>
+    <script src="js/audio.js"></script>
 
     <!-- Dynamic Catalog Engine -->
     <script>
@@ -110,18 +111,16 @@
             let activeCollection = "ALL";
             let activeSize = "ALL";
 
-            // Render Products from Central Store
             const renderCatalog = () => {
                 if (!window.AdrastiaStore || !gridContainer) return;
 
-                const allProducts = window.AdrastiaStore.getProducts();
+                // Fetches ONLY active products (Killed products are filtered out)
+                const activeProducts = window.AdrastiaStore.getActiveProducts();
 
                 // Apply Filters
-                const filtered = allProducts.filter(prod => {
-                    // Filter by Collection
+                const filtered = activeProducts.filter(prod => {
                     const matchesCollection = (activeCollection === "ALL") || (prod.collection === activeCollection);
                     
-                    // Filter by Size availability
                     let matchesSize = true;
                     if (activeSize !== "ALL" && prod.stock) {
                         matchesSize = (prod.stock[activeSize] && prod.stock[activeSize] > 0);
@@ -130,7 +129,6 @@
                     return matchesCollection && matchesSize;
                 });
 
-                // Empty State
                 if (filtered.length === 0) {
                     gridContainer.innerHTML = `
                         <div style="grid-column: 1 / -1; padding: 6rem 2rem; text-align: center; color: #888;">
@@ -141,7 +139,6 @@
                     return;
                 }
 
-                // Render Cards
                 gridContainer.innerHTML = filtered.map(prod => {
                     const isSoldOut = prod.isSoldOut || prod.totalStock <= 0;
                     
@@ -155,7 +152,7 @@
                                     <h3 class="glitch-hover" data-text="${prod.name}">${prod.name}</h3>
                                 </a>
                                 <span class="price ${isSoldOut ? 'neon-pink' : ''}">
-                                    ${isSoldOut ? 'SOLD_OUT [EXHAUSTED]' : '$' + prod.price.toFixed(2)}
+                                    ${isSoldOut ? 'SOLD_OUT [EXHAUSTED]' : window.AdrastiaStore.formatMoney(prod.price)}
                                 </span>
                                 ${!isSoldOut ? `
                                     <button class="quick-add-btn" data-product-id="${prod.id}">
@@ -171,11 +168,9 @@
                     `;
                 }).join("");
 
-                // Reattach cursor and scramble listeners
                 if (window.attachCursorHoverListeners) window.attachCursorHoverListeners();
             };
 
-            // Collection Filter Buttons
             collectionBtns.forEach(btn => {
                 btn.addEventListener("click", () => {
                     collectionBtns.forEach(b => b.classList.remove("active"));
@@ -185,7 +180,6 @@
                 });
             });
 
-            // Size Filter Buttons
             sizeBtns.forEach(btn => {
                 btn.addEventListener("click", () => {
                     sizeBtns.forEach(b => b.classList.remove("active"));
@@ -195,10 +189,8 @@
                 });
             });
 
-            // Initial Execution
             renderCatalog();
 
-            // Reactive update if items change in store
             window.addEventListener("adr:products-updated", renderCatalog);
         });
     </script>
