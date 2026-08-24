@@ -482,12 +482,16 @@
                     <span>02. HARDWARE / DROPS</span>
                     <span>&gt;</span>
                 </button>
+                <button class="nav-btn" data-target="collection-config">
+                    <span>03. NEW DROP // HERO</span>
+                    <span>&gt;</span>
+                </button>
                 <button class="nav-btn" data-target="orders">
-                    <span>03. DISPATCH LOG</span>
+                    <span>04. DISPATCH LOG</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="settings">
-                    <span>04. SYSTEM OVERRIDE</span>
+                    <span>05. SYSTEM OVERRIDE</span>
                     <span>&gt;</span>
                 </button>
 
@@ -602,8 +606,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label>UNIT PRICE ($ USD) *</label>
-                                <input type="number" id="prodPrice" class="form-input" placeholder="85.00" step="0.01" required>
+                                <label>UNIT PRICE (DA) *</label>
+                                <input type="number" id="prodPrice" class="form-input" placeholder="4500" step="1" required>
                             </div>
 
                             <div class="form-group">
@@ -664,7 +668,63 @@
                 </div>
             </section>
 
-            <!-- SECTION 3: DISPATCH LOG / ORDERS -->
+            <!-- SECTION 3: COLLECTION DROP // HERO CONTROLLER -->
+            <section id="view-collection-config" class="view-section">
+                <div class="top-bar">
+                    <div>
+                        <h1 class="page-headline">COLLECTION_HERO // CONTROLLER</h1>
+                        <p class="page-tag">CUSTOMIZE VOID_CORE DROP TITLE, BADGE, DESCRIPTION & HERO VISUAL</p>
+                    </div>
+                    <button class="btn-ghost" id="btnResetCollectionMeta">&#x21bb; RESTORE DEFAULT HERO</button>
+                </div>
+
+                <div style="background:var(--bg-card); border:1px solid var(--neon-pink); padding:2rem; box-shadow:0 0 20px rgba(255,0,85,0.1); margin-bottom:2rem;">
+                    <form id="collectionMetaForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>COLLECTION / DROP TITLE *</label>
+                                <input type="text" id="collMetaTitle" class="form-input" placeholder="VOID_CORE" value="VOID_CORE" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>DROP STATUS BADGE *</label>
+                                <input type="text" id="collMetaStatus" class="form-input" placeholder="// STATUS: LIVE // INVENTORY: CRITICAL" value="// STATUS: LIVE // INVENTORY: CRITICAL" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>DROP MANIFESTO / DESCRIPTION *</label>
+                            <textarea id="collMetaDesc" class="form-textarea" rows="3" placeholder="A brutalist exploration of the empty spaces..." required>A brutalist exploration of the empty spaces between the digital and physical worlds. Limited to 50 pieces per garment. No restocks.</textarea>
+                        </div>
+
+                        <!-- Drop Hero Image Upload -->
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>DROP HERO IMAGE (UPLOAD FILE OR PASTE DIRECT URL) *</label>
+                            
+                            <div class="upload-dropzone" id="collDropzone">
+                                <input type="file" id="collMetaImgFile" accept="image/*" style="display:none;">
+                                <p style="font-size:0.85rem; color:#aaa; margin-bottom:8px;">
+                                    <strong>CLICK TO SELECT HERO IMAGE</strong> OR DRAG & DROP
+                                </p>
+                                <span style="font-size:0.7rem; color:#666;">(STORED DIRECTLY IN SYSTEM REPOSITORY)</span>
+                                <div>
+                                    <img id="collImgPreview" class="upload-preview" style="display:inline-block; max-width:200px; max-height:200px;" alt="Hero Preview" src="https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop">
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top:8px;">
+                                <input type="url" id="collMetaImgUrl" class="form-input" placeholder="Or enter direct image URL (https://...)" style="width:100%;">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-glitch" style="width:100%; justify-content:center; padding:16px;">
+                            SAVE COLLECTION HERO CONFIG [OVERRIDE]
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- SECTION 4: DISPATCH LOG / ORDERS -->
             <section id="view-orders" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -694,7 +754,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 4: SYSTEM OVERRIDE / SETTINGS -->
+            <!-- SECTION 5: SYSTEM OVERRIDE / SETTINGS -->
             <section id="view-settings" class="view-section">
                 <div class="top-bar">
                     <div>
