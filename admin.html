@@ -516,12 +516,16 @@
                     <span>04. ARCHIVE // LOOKBOOK</span>
                     <span>&gt;</span>
                 </button>
+                <button class="nav-btn" data-target="manifesto-config">
+                    <span>05. MANIFESTO // ABOUT</span>
+                    <span>&gt;</span>
+                </button>
                 <button class="nav-btn" data-target="orders">
-                    <span>05. DISPATCH LOG</span>
+                    <span>06. DISPATCH LOG</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="settings">
-                    <span>06. SYSTEM OVERRIDE</span>
+                    <span>07. SYSTEM OVERRIDE</span>
                     <span>&gt;</span>
                 </button>
 
@@ -814,7 +818,112 @@
                 </div>
             </section>
 
-            <!-- SECTION 5: DISPATCH LOG / ORDERS -->
+            <!-- SECTION 5: MANIFESTO // ABOUT CONTROLLER -->
+            <section id="view-manifesto-config" class="view-section">
+                <div class="top-bar">
+                    <div>
+                        <h1 class="page-headline">MANIFESTO_STORY // CONTROLLER</h1>
+                        <p class="page-tag">OVERRIDE BRAND MANIFESTO, ORIGIN STORY & TEXTURES</p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <a href="about.html" target="_blank" class="btn-ghost" style="color:var(--neon-green); border-color:var(--neon-green);">
+                            [ VIEW LIVE MANIFESTO ↗ ]
+                        </a>
+                        <button type="button" class="btn-ghost" id="btnResetManifestoMeta">
+                            &#x21bb; RESTORE DEFAULTS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Success Toast Notification -->
+                <div id="manifestoToast" class="toast-msg">
+                    // SUCCESS: MANIFESTO & ORIGIN STORY COMMITTED TO STORAGE!
+                </div>
+
+                <div style="background:var(--bg-card); border:1px solid var(--neon-green); padding:2rem; box-shadow:0 0 20px rgba(0,255,102,0.1); margin-bottom:2rem;">
+                    <form id="manifestoMetaForm">
+                        
+                        <!-- Header Section Settings -->
+                        <h3 style="font-family:var(--font-head); font-size:0.95rem; color:var(--neon-green); margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:0.5rem;">
+                            // 01. LO-FI HERO HEADER
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>HERO TITLE (GLITCH HEADLINE) *</label>
+                                <input type="text" id="manHeroTitleInput" class="form-input" placeholder="SYSTEM_FAILURE" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>HERO SUBTEXT *</label>
+                                <input type="text" id="manHeroSubtextInput" class="form-input" placeholder="[ WE ARE NOT A FASHION BRAND. WE ARE A GLITCH. ]" required>
+                            </div>
+                        </div>
+
+                        <!-- Header BG Texture Upload -->
+                        <div class="form-group" style="margin-bottom:2rem;">
+                            <label>HERO HEADER BACKGROUND TEXTURE *</label>
+                            <div class="upload-box" id="manHeaderBgDropBox">
+                                <label for="manHeaderBgFileInput" class="btn-upload-file">
+                                    [ 📁 CHOOSE HEADER TEXTURE IMAGE ]
+                                </label>
+                                <input type="file" id="manHeaderBgFileInput" accept="image/*" style="display:none;">
+                                <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP FILE DIRECTLY HERE</p>
+                                <div class="preview-img-wrap">
+                                    <img id="manHeaderBgPreview" src="https://images.unsplash.com/photo-1508807526345-15e9b5f4eaff?q=80&w=2564&auto=format&fit=crop" alt="Header Texture Preview">
+                                </div>
+                            </div>
+                            <div style="margin-top:8px;">
+                                <input type="url" id="manHeaderBgUrlInput" class="form-input" placeholder="Or paste direct image URL (https://...)" style="width:100%;">
+                            </div>
+                        </div>
+
+                        <!-- Origin Story Section Settings -->
+                        <h3 style="font-family:var(--font-head); font-size:0.95rem; color:var(--neon-pink); margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:0.5rem;">
+                            // 02. ORIGIN STORY & TEXTURE
+                        </h3>
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>ORIGIN TITLE (SUPPORTS HTML TAGS) *</label>
+                            <input type="text" id="manOriginTitleInput" class="form-input" placeholder='BORN IN <br><span class="neon-pink">STATIC.</span>' required>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>ORIGIN PARAGRAPH 1 *</label>
+                                <textarea id="manOriginP1Input" class="form-textarea" rows="4" placeholder="Adrastia started in a damp basement in 2024..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>ORIGIN PARAGRAPH 2 *</label>
+                                <textarea id="manOriginP2Input" class="form-textarea" rows="4" placeholder="We don't design for the masses..." required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Origin Image Upload -->
+                        <div class="form-group" style="margin-bottom:2rem;">
+                            <label>ORIGIN FEATURE IMAGE / CONCRETE TEXTURE *</label>
+                            <div class="upload-box" id="manOriginImgDropBox">
+                                <label for="manOriginImgFileInput" class="btn-upload-file">
+                                    [ 📁 CHOOSE ORIGIN FEATURE IMAGE ]
+                                </label>
+                                <input type="file" id="manOriginImgFileInput" accept="image/*" style="display:none;">
+                                <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP FILE DIRECTLY HERE</p>
+                                <div class="preview-img-wrap">
+                                    <img id="manOriginImgPreview" src="https://images.unsplash.com/photo-1606240212005-cb6757b320d7?q=80&w=1000&auto=format&fit=crop" alt="Origin Texture Preview">
+                                </div>
+                            </div>
+                            <div style="margin-top:8px;">
+                                <input type="url" id="manOriginImgUrlInput" class="form-input" placeholder="Or paste direct image URL (https://...)" style="width:100%;">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-glitch" style="width:100%; justify-content:center; padding:16px;">
+                            COMMIT & SAVE MANIFESTO CONFIG [OVERRIDE]
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- SECTION 6: DISPATCH LOG / ORDERS -->
             <section id="view-orders" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -842,7 +951,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 6: SYSTEM OVERRIDE / SETTINGS -->
+            <!-- SECTION 7: SYSTEM OVERRIDE / SETTINGS -->
             <section id="view-settings" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -883,7 +992,7 @@
     <script src="js/store.js"></script>
     <script src="js/admin.js"></script>
 
-    <!-- Native Direct Controller for Collection Hero & Archive Lookbook -->
+    <!-- Native Direct Controller for Collection Hero, Archive Lookbook & Manifesto -->
     <script>
         (function() {
             // === 1. COLLECTION HERO CONTROLLER ===
@@ -895,7 +1004,7 @@
                 image: "https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop"
             };
 
-            let activeImageSource = "";
+            let activeCollImageSource = "";
 
             const collTitleIn = document.getElementById('collTitleInput');
             const collStatusIn = document.getElementById('collStatusInput');
@@ -920,7 +1029,7 @@
                 if (collDescIn) collDescIn.value = data.description;
                 if (collPreviewImg) collPreviewImg.src = data.image;
                 
-                activeImageSource = data.image;
+                activeCollImageSource = data.image;
 
                 if (collUrlIn) {
                     collUrlIn.value = data.image.startsWith('data:') ? '' : data.image;
@@ -934,8 +1043,8 @@
 
                     const reader = new FileReader();
                     reader.onload = function(evt) {
-                        activeImageSource = evt.target.result;
-                        if (collPreviewImg) collPreviewImg.src = activeImageSource;
+                        activeCollImageSource = evt.target.result;
+                        if (collPreviewImg) collPreviewImg.src = activeCollImageSource;
                         if (collUrlIn) collUrlIn.value = '';
                     };
                     reader.readAsDataURL(file);
@@ -957,8 +1066,8 @@
                     if (file && file.type.startsWith('image/')) {
                         const reader = new FileReader();
                         reader.onload = function(evt) {
-                            activeImageSource = evt.target.result;
-                            if (collPreviewImg) collPreviewImg.src = activeImageSource;
+                            activeCollImageSource = evt.target.result;
+                            if (collPreviewImg) collPreviewImg.src = activeCollImageSource;
                             if (collUrlIn) collUrlIn.value = '';
                         };
                         reader.readAsDataURL(file);
@@ -970,7 +1079,7 @@
                 collUrlIn.addEventListener('input', function(e) {
                     const val = e.target.value.trim();
                     if (val) {
-                        activeImageSource = val;
+                        activeCollImageSource = val;
                         if (collPreviewImg) collPreviewImg.src = val;
                     }
                 });
@@ -984,7 +1093,7 @@
                         title: collTitleIn ? collTitleIn.value.trim() : DEFAULT_COLL_META.title,
                         status: collStatusIn ? collStatusIn.value.trim() : DEFAULT_COLL_META.status,
                         description: collDescIn ? collDescIn.value.trim() : DEFAULT_COLL_META.description,
-                        image: activeImageSource || (collPreviewImg ? collPreviewImg.src : DEFAULT_COLL_META.image)
+                        image: activeCollImageSource || (collPreviewImg ? collPreviewImg.src : DEFAULT_COLL_META.image)
                     };
 
                     localStorage.setItem(STORAGE_KEY_COLL, JSON.stringify(payload));
@@ -1088,9 +1197,199 @@
                 });
             }
 
+            // === 3. MANIFESTO // ABOUT CONTROLLER ===
+            const STORAGE_KEY_MAN = 'adrastia_manifesto_meta';
+            const DEFAULT_MAN_META = {
+                heroTitle: "SYSTEM_FAILURE",
+                heroSubtext: "[ WE ARE NOT A FASHION BRAND. WE ARE A GLITCH. ]",
+                headerBg: "https://images.unsplash.com/photo-1508807526345-15e9b5f4eaff?q=80&w=2564&auto=format&fit=crop",
+                originTitle: 'BORN IN <br><span class="neon-pink">STATIC.</span>',
+                originP1: "Adrastia started in a damp basement in 2024, born out of pure exhaustion with algorithm-dictated trends and fast-fashion waste.",
+                originP2: "We don't design for the masses. We design for the digital ghosts, the underground, and the youth who see the decay of modern culture and choose to wear it as armor.",
+                originImage: "https://images.unsplash.com/photo-1606240212005-cb6757b320d7?q=80&w=1000&auto=format&fit=crop"
+            };
+
+            let activeManHeaderBgSource = "";
+            let activeManOriginImgSource = "";
+
+            const manHeroTitleIn = document.getElementById('manHeroTitleInput');
+            const manHeroSubtextIn = document.getElementById('manHeroSubtextInput');
+            const manHeaderBgFileIn = document.getElementById('manHeaderBgFileInput');
+            const manHeaderBgUrlIn = document.getElementById('manHeaderBgUrlInput');
+            const manHeaderBgPreview = document.getElementById('manHeaderBgPreview');
+            const manHeaderBgDropBox = document.getElementById('manHeaderBgDropBox');
+
+            const manOriginTitleIn = document.getElementById('manOriginTitleInput');
+            const manOriginP1In = document.getElementById('manOriginP1Input');
+            const manOriginP2In = document.getElementById('manOriginP2Input');
+            const manOriginImgFileIn = document.getElementById('manOriginImgFileInput');
+            const manOriginImgUrlIn = document.getElementById('manOriginImgUrlInput');
+            const manOriginImgPreview = document.getElementById('manOriginImgPreview');
+            const manOriginImgDropBox = document.getElementById('manOriginImgDropBox');
+
+            const manForm = document.getElementById('manifestoMetaForm');
+            const manResetBtn = document.getElementById('btnResetManifestoMeta');
+            const manToast = document.getElementById('manifestoToast');
+
+            function loadManData() {
+                let data = DEFAULT_MAN_META;
+                const raw = localStorage.getItem(STORAGE_KEY_MAN);
+                if (raw) {
+                    try { data = { ...DEFAULT_MAN_META, ...JSON.parse(raw) }; } catch(e) {}
+                }
+
+                if (manHeroTitleIn) manHeroTitleIn.value = data.heroTitle;
+                if (manHeroSubtextIn) manHeroSubtextIn.value = data.heroSubtext;
+                if (manHeaderBgPreview) manHeaderBgPreview.src = data.headerBg;
+                activeManHeaderBgSource = data.headerBg;
+                if (manHeaderBgUrlIn) manHeaderBgUrlIn.value = data.headerBg.startsWith('data:') ? '' : data.headerBg;
+
+                if (manOriginTitleIn) manOriginTitleIn.value = data.originTitle;
+                if (manOriginP1In) manOriginP1In.value = data.originP1;
+                if (manOriginP2In) manOriginP2In.value = data.originP2;
+                if (manOriginImgPreview) manOriginImgPreview.src = data.originImage;
+                activeManOriginImgSource = data.originImage;
+                if (manOriginImgUrlIn) manOriginImgUrlIn.value = data.originImage.startsWith('data:') ? '' : data.originImage;
+            }
+
+            // Header BG File Upload
+            if (manHeaderBgFileIn) {
+                manHeaderBgFileIn.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        activeManHeaderBgSource = evt.target.result;
+                        if (manHeaderBgPreview) manHeaderBgPreview.src = activeManHeaderBgSource;
+                        if (manHeaderBgUrlIn) manHeaderBgUrlIn.value = '';
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Header BG Drop Box
+            if (manHeaderBgDropBox) {
+                manHeaderBgDropBox.addEventListener('dragover', function(e) { e.preventDefault(); manHeaderBgDropBox.style.borderColor = 'var(--neon-green)'; });
+                manHeaderBgDropBox.addEventListener('dragleave', function() { manHeaderBgDropBox.style.borderColor = '#333'; });
+                manHeaderBgDropBox.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    manHeaderBgDropBox.style.borderColor = '#333';
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            activeManHeaderBgSource = evt.target.result;
+                            if (manHeaderBgPreview) manHeaderBgPreview.src = activeManHeaderBgSource;
+                            if (manHeaderBgUrlIn) manHeaderBgUrlIn.value = '';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            if (manHeaderBgUrlIn) {
+                manHeaderBgUrlIn.addEventListener('input', function(e) {
+                    const val = e.target.value.trim();
+                    if (val) {
+                        activeManHeaderBgSource = val;
+                        if (manHeaderBgPreview) manHeaderBgPreview.src = val;
+                    }
+                });
+            }
+
+            // Origin Image File Upload
+            if (manOriginImgFileIn) {
+                manOriginImgFileIn.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        activeManOriginImgSource = evt.target.result;
+                        if (manOriginImgPreview) manOriginImgPreview.src = activeManOriginImgSource;
+                        if (manOriginImgUrlIn) manOriginImgUrlIn.value = '';
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Origin Image Drop Box
+            if (manOriginImgDropBox) {
+                manOriginImgDropBox.addEventListener('dragover', function(e) { e.preventDefault(); manOriginImgDropBox.style.borderColor = 'var(--neon-green)'; });
+                manOriginImgDropBox.addEventListener('dragleave', function() { manOriginImgDropBox.style.borderColor = '#333'; });
+                manOriginImgDropBox.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    manOriginImgDropBox.style.borderColor = '#333';
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            activeManOriginImgSource = evt.target.result;
+                            if (manOriginImgPreview) manOriginImgPreview.src = activeManOriginImgSource;
+                            if (manOriginImgUrlIn) manOriginImgUrlIn.value = '';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            if (manOriginImgUrlIn) {
+                manOriginImgUrlIn.addEventListener('input', function(e) {
+                    const val = e.target.value.trim();
+                    if (val) {
+                        activeManOriginImgSource = val;
+                        if (manOriginImgPreview) manOriginImgPreview.src = val;
+                    }
+                });
+            }
+
+            // Save Manifesto Form
+            if (manForm) {
+                manForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const payload = {
+                        heroTitle: manHeroTitleIn ? manHeroTitleIn.value.trim() : DEFAULT_MAN_META.heroTitle,
+                        heroSubtext: manHeroSubtextIn ? manHeroSubtextIn.value.trim() : DEFAULT_MAN_META.heroSubtext,
+                        headerBg: activeManHeaderBgSource || (manHeaderBgPreview ? manHeaderBgPreview.src : DEFAULT_MAN_META.headerBg),
+                        originTitle: manOriginTitleIn ? manOriginTitleIn.value.trim() : DEFAULT_MAN_META.originTitle,
+                        originP1: manOriginP1In ? manOriginP1In.value.trim() : DEFAULT_MAN_META.originP1,
+                        originP2: manOriginP2In ? manOriginP2In.value.trim() : DEFAULT_MAN_META.originP2,
+                        originImage: activeManOriginImgSource || (manOriginImgPreview ? manOriginImgPreview.src : DEFAULT_MAN_META.originImage)
+                    };
+
+                    localStorage.setItem(STORAGE_KEY_MAN, JSON.stringify(payload));
+                    window.dispatchEvent(new CustomEvent('adr:manifesto-updated', { detail: payload }));
+
+                    if (manToast) {
+                        manToast.classList.add('show');
+                        setTimeout(() => manToast.classList.remove('show'), 3500);
+                    }
+                });
+            }
+
+            // Reset Manifesto Defaults
+            if (manResetBtn) {
+                manResetBtn.addEventListener('click', function() {
+                    if (confirm("Restore original Manifesto & Origin Story text and visuals?")) {
+                        localStorage.setItem(STORAGE_KEY_MAN, JSON.stringify(DEFAULT_MAN_META));
+                        loadManData();
+                        window.dispatchEvent(new CustomEvent('adr:manifesto-updated', { detail: DEFAULT_MAN_META }));
+                        if (manToast) {
+                            manToast.textContent = "// MANIFESTO RESTORED TO FACTORY DEFAULTS.";
+                            manToast.classList.add('show');
+                            setTimeout(() => {
+                                manToast.textContent = "// SUCCESS: MANIFESTO & ORIGIN STORY COMMITTED TO STORAGE!";
+                                manToast.classList.remove('show');
+                            }, 3000);
+                        }
+                    }
+                });
+            }
+
             // Initial Load
             loadCollData();
             loadLbData();
+            loadManData();
         })();
     </script>
 </body>
