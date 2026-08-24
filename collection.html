@@ -30,6 +30,7 @@
             <a href="products.html" class="nav-link">SHOP_ALL</a>
             <a href="collection.html" class="nav-link neon-green">NEW_DROP</a>
             <a href="lookbook.html" class="nav-link">ARCHIVE</a>
+            <a href="admin.html" class="nav-link">DASHBOARD</a>
         </div>
         <div class="nav-right">
             <a href="about.html" class="nav-link hidden-mobile">MANIFESTO</a>
@@ -51,59 +52,10 @@
         </div>
     </header>
 
-    <!-- Scarcity E-Commerce Grid -->
+    <!-- Scarcity E-Commerce Grid (Dynamic Hydration) -->
     <section class="collection-products border-bottom">
-        <div class="grid-layout">
-            <!-- Product 1 -->
-            <div class="drop-product">
-                <div class="stock-badge">[ 12 / 50 REMAINING ]</div>
-                <div class="img-wrap">
-                    <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800&auto=format&fit=crop" alt="Void Tee">
-                    <button class="quick-add-btn">QUICK ADD +</button>
-                </div>
-                <div class="product-info">
-                    <h3>V-01 // NULL_TEE</h3>
-                    <span class="price">$50.00</span>
-                </div>
-            </div>
-            
-            <!-- Product 2 -->
-            <div class="drop-product">
-                <div class="stock-badge critical">[ 03 / 50 REMAINING ]</div>
-                <div class="img-wrap">
-                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop" alt="Void Hoodie">
-                    <button class="quick-add-btn">QUICK ADD +</button>
-                </div>
-                <div class="product-info">
-                    <h3>V-02 // SYSTEM_HOODIE</h3>
-                    <span class="price">$95.00</span>
-                </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="drop-product">
-                <div class="stock-badge empty">[ SOLD OUT ]</div>
-                <div class="img-wrap">
-                    <img src="https://images.unsplash.com/photo-1601115867451-24874b7117fa?q=80&w=800&auto=format&fit=crop" alt="Void Cargo">
-                </div>
-                <div class="product-info">
-                    <h3>V-03 // HEAVY_CARGO</h3>
-                    <span class="price">$120.00</span>
-                </div>
-            </div>
-
-            <!-- Product 4 -->
-            <div class="drop-product">
-                <div class="stock-badge">[ 24 / 50 REMAINING ]</div>
-                <div class="img-wrap">
-                    <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800&auto=format&fit=crop" alt="Void Jacket">
-                    <button class="quick-add-btn">QUICK ADD +</button>
-                </div>
-                <div class="product-info">
-                    <h3>V-04 // DECAY_JACKET</h3>
-                    <span class="price">$150.00</span>
-                </div>
-            </div>
+        <div class="grid-layout" id="dropProductsGrid">
+            <!-- Injected dynamically via JS from AdrastiaStore -->
         </div>
     </section>
 
@@ -133,7 +85,7 @@
         <div class="cta-banner">
             <h2>DROPPING NOW — <span class="neon-pink">DON'T SLEEP</span></h2>
             <p>ONCE IT'S GONE, IT'S GONE FOREVER. SECURE YOUR HARDWARE BEFORE THE BOTS DO.</p>
-            <a href="#top" class="btn-primary" onclick="window.scrollTo(0,0); return false;">BACK TO COLLECTION ^</a>
+            <a href="#top" class="btn-primary" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;">BACK TO COLLECTION ^</a>
         </div>
     </section>
 
@@ -145,9 +97,9 @@
                 <p>EST. 2024 // SYSTEM OVERRIDE</p>
             </div>
             <div class="footer-links">
-                <a href="#">INSTAGRAM</a>
-                <a href="#">TIKTOK</a>
-                <a href="#">DISCORD</a>
+                <a href="products.html">SHOP ALL</a>
+                <a href="collection.html">NEW DROP</a>
+                <a href="lookbook.html">ARCHIVE</a>
             </div>
             <div class="footer-legal">
                 <a href="#">SHIPPING & RETURNS</a>
@@ -161,8 +113,72 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <!-- Custom Scripts -->
+    <!-- Central Store and Global Scripts -->
+    <script src="js/store.js"></script>
     <script src="js/global.js"></script>
     <script src="js/glitch.js"></script>
+
+    <!-- Dynamic Collection Grid Engine -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            'use strict';
+
+            const gridContainer = document.getElementById("dropProductsGrid");
+            if (!gridContainer || !window.AdrastiaStore) return;
+
+            const renderDropGrid = () => {
+                const allProducts = window.AdrastiaStore.getProducts();
+                
+                // Filter for VOID_CORE collection or display first 4 items
+                let dropItems = allProducts.filter(p => p.collection === "VOID_CORE");
+                if (dropItems.length === 0) {
+                    dropItems = allProducts.slice(0, 4);
+                }
+
+                gridContainer.innerHTML = dropItems.map(prod => {
+                    const isDead = prod.isSoldOut || prod.totalStock <= 0;
+                    const isCritical = prod.totalStock > 0 && prod.totalStock <= 5;
+                    const maxCap = prod.maxStock || 50;
+
+                    // Badge Logic
+                    let badgeHtml = `<div class="stock-badge">[ ${prod.totalStock} / ${maxCap} REMAINING ]</div>`;
+                    if (isDead) {
+                        badgeHtml = `<div class="stock-badge empty">[ SOLD OUT ]</div>`;
+                    } else if (isCritical) {
+                        badgeHtml = `<div class="stock-badge critical">[ 0${prod.totalStock} / ${maxCap} REMAINING ]</div>`;
+                    }
+
+                    return `
+                        <div class="drop-product">
+                            ${badgeHtml}
+                            <div class="img-wrap">
+                                <a href="product.html?id=${prod.id}">
+                                    <img src="${prod.image}" alt="${prod.name}">
+                                </a>
+                                ${!isDead ? `
+                                    <button class="quick-add-btn" data-product-id="${prod.id}">QUICK ADD +</button>
+                                ` : ''}
+                            </div>
+                            <div class="product-info">
+                                <a href="product.html?id=${prod.id}">
+                                    <h3>${prod.name}</h3>
+                                </a>
+                                <span class="price ${isDead ? 'neon-pink' : ''}">
+                                    ${isDead ? 'SOLD OUT' : '$' + prod.price.toFixed(2)}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+
+                if (window.attachCursorHoverListeners) window.attachCursorHoverListeners();
+            };
+
+            renderDropGrid();
+
+            // Re-render when stock or store updates
+            window.addEventListener("adr:products-updated", renderDropGrid);
+        });
+    </script>
 </body>
 </html>
