@@ -8,11 +8,12 @@
     <!-- Fonts: Syncopate (Brutalist Headers) & Space Mono (Technical Details) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700;900&display=swap" rel="stylesheet">
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
@@ -20,7 +21,7 @@
     <div class="noise-overlay"></div>
     <div class="custom-cursor"></div>
 
-    <!-- Navigation -->
+    <!-- Brutalist Navigation -->
     <nav class="brutalist-nav">
         <div class="nav-left">
             <a href="index.html" class="brand-logo glitch-hover" data-text="ADRASTIA">ADRASTIA</a>
@@ -50,7 +51,6 @@
     <!-- Hero Section -->
     <header class="hero-section">
         <div class="hero-video-bg">
-            <!-- Placeholder for high-energy Y2K glitch video -->
             <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Abstract glitch background" class="glitch-img">
         </div>
         <div class="hero-content">
@@ -73,68 +73,22 @@
         </div>
     </section>
 
-    <!-- Ecommerce Products List Section -->
+    <!-- Ecommerce Products List Section (Dynamic Hydration) -->
     <section class="product-grid-section border-bottom">
         <div class="section-header">
             <h2 class="section-title">LATEST_HARDWARE</h2>
-            <a href="products.html" class="view-all-link">[VIEW ALL]</a>
+            <a href="products.html" class="view-all-link">[VIEW ALL CATALOG]</a>
         </div>
         
-        <div class="product-grid">
-            <!-- Product 1 -->
-            <article class="product-card">
-                <div class="product-image-container">
-                    <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000&auto=format&fit=crop" alt="Acid Wash Graphic Tee">
-                    <button class="quick-add-btn">ADD TO CART +</button>
-                </div>
-                <div class="product-meta">
-                    <h3 class="product-name">ACID_WASH TEE</h3>
-                    <span class="product-price">$45.00</span>
-                </div>
-            </article>
-
-            <!-- Product 2 -->
-            <article class="product-card">
-                <div class="product-image-container">
-                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000&auto=format&fit=crop" alt="Cyber Skull Hoodie">
-                    <button class="quick-add-btn">ADD TO CART +</button>
-                </div>
-                <div class="product-meta">
-                    <h3 class="product-name">CYBER_SKULL HOODIE</h3>
-                    <span class="product-price">$85.00</span>
-                </div>
-            </article>
-            
-            <!-- Product 3 -->
-            <article class="product-card">
-                <div class="product-image-container">
-                    <img src="https://images.unsplash.com/photo-1503342394128-c104d54dba01?q=80&w=1000&auto=format&fit=crop" alt="Static Noise Longsleeve">
-                    <div class="sold-out-badge">SOLD OUT</div>
-                </div>
-                <div class="product-meta">
-                    <h3 class="product-name">STATIC LONGSLEEVE</h3>
-                    <span class="product-price">$55.00</span>
-                </div>
-            </article>
-
-            <!-- Product 4 -->
-            <article class="product-card">
-                <div class="product-image-container">
-                    <img src="https://images.unsplash.com/photo-1601115867451-24874b7117fa?q=80&w=1000&auto=format&fit=crop" alt="Utility Cargo Pants">
-                    <button class="quick-add-btn">ADD TO CART +</button>
-                </div>
-                <div class="product-meta">
-                    <h3 class="product-name">VOID_CARGO PANTS</h3>
-                    <span class="product-price">$110.00</span>
-                </div>
-            </article>
+        <div class="product-grid" id="homeProductsGrid">
+            <!-- Injected dynamically from AdrastiaStore via JavaScript -->
         </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- Newsletter CTA Section -->
     <section class="cta-section">
         <h2 class="massive-text glitch" data-text="JOIN THE UNDERGROUND">JOIN THE UNDERGROUND</h2>
-        <form class="newsletter-form">
+        <form class="newsletter-form" onsubmit="alert('SYSTEM: Comms frequency recorded. Expect encrypted transmissions.'); this.reset(); return false;">
             <input type="email" placeholder="ENTER_EMAIL_FOR_EARLY_ACCESS" required>
             <button type="submit" class="btn-primary">SUBMIT</button>
         </form>
@@ -148,14 +102,14 @@
                 <p>EST. 2024 // SYSTEM OVERRIDE</p>
             </div>
             <div class="footer-links">
-                <a href="#">INSTAGRAM</a>
-                <a href="#">TIKTOK</a>
-                <a href="#">DISCORD</a>
+                <a href="products.html">SHOP ALL</a>
+                <a href="collection.html">NEW DROP</a>
+                <a href="lookbook.html">ARCHIVE</a>
             </div>
             <div class="footer-legal">
                 <a href="#">SHIPPING & RETURNS</a>
                 <a href="#">TERMS OF SERVICE</a>
-                <p>&copy; 2024 ADRASTIA.</p>
+                <p>&copy; 2024 ADRASTIA REPOSITORY.</p>
             </div>
         </div>
     </footer>
@@ -164,8 +118,60 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <!-- Custom Scripts -->
+    <!-- Central Store and Global Scripts -->
+    <script src="js/store.js"></script>
     <script src="js/global.js"></script>
     <script src="js/glitch.js"></script>
+
+    <!-- Dynamic Home Grid Engine -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            'use strict';
+
+            const homeGrid = document.getElementById("homeProductsGrid");
+            if (!homeGrid || !window.AdrastiaStore) return;
+
+            const renderHomeProducts = () => {
+                const products = window.AdrastiaStore.getProducts().slice(0, 4);
+
+                homeGrid.innerHTML = products.map(prod => {
+                    const isDead = prod.isSoldOut || prod.totalStock <= 0;
+
+                    return `
+                        <article class="product-card">
+                            <div class="product-image-container">
+                                <a href="product.html?id=${prod.id}">
+                                    <img src="${prod.image}" alt="${prod.name}" loading="lazy">
+                                </a>
+                                ${!isDead ? `
+                                    <button class="quick-add-btn" data-product-id="${prod.id}">
+                                        ADD TO CART +
+                                    </button>
+                                ` : `
+                                    <div class="sold-out-badge">SOLD OUT</div>
+                                `}
+                            </div>
+                            <div class="product-meta">
+                                <a href="product.html?id=${prod.id}">
+                                    <h3 class="product-name">${prod.name}</h3>
+                                </a>
+                                <span class="product-price ${isDead ? 'neon-pink' : ''}">
+                                    ${isDead ? 'EXHAUSTED' : '$' + prod.price.toFixed(2)}
+                                </span>
+                            </div>
+                        </article>
+                    `;
+                }).join("");
+
+                // Reattach custom cursor listeners
+                if (window.attachCursorHoverListeners) window.attachCursorHoverListeners();
+            };
+
+            renderHomeProducts();
+
+            // Re-render if products update in store
+            window.addEventListener("adr:products-updated", renderHomeProducts);
+        });
+    </script>
 </body>
 </html>
