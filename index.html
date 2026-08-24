@@ -60,15 +60,15 @@
         </div>
     </header>
 
-    <!-- Manifesto Feature Section -->
+    <!-- Manifesto Feature Section (Dynamic Hydration) -->
     <section class="manifesto-section border-bottom">
         <div class="grid-2-col">
             <div class="manifesto-text">
-                <h2>WE ARE <br><span class="neon-pink">THE GLITCH</span> <br>IN THE SYSTEM.</h2>
-                <p>Born from digital static and concrete. Adrastia isn't just clothing; it's a rejection of polished, algorithmic fashion. Wear the chaos.</p>
+                <h2 id="homeManifestoTitle">WE ARE <br><span class="neon-pink">THE GLITCH</span> <br>IN THE SYSTEM.</h2>
+                <p id="homeManifestoDesc">Born from digital static and concrete. Adrastia isn't just clothing; it's a rejection of polished, algorithmic fashion. Wear the chaos.</p>
             </div>
             <div class="manifesto-image-wrapper">
-                <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=2000&auto=format&fit=crop" alt="Streetwear model" class="raw-image">
+                <img id="homeManifestoImage" src="https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=2000&auto=format&fit=crop" alt="Streetwear model" class="raw-image">
             </div>
         </div>
     </section>
@@ -124,16 +124,37 @@
     <script src="js/glitch.js"></script>
     <script src="js/audio.js"></script>
 
-    <!-- Dynamic Home Grid Engine -->
+    <!-- Dynamic Home Grid & Manifesto Feature Engine -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             'use strict';
 
+            // 1. Hydrate Manifesto Feature Section
+            const hydrateHomeManifesto = () => {
+                const titleEl = document.getElementById("homeManifestoTitle");
+                const descEl = document.getElementById("homeManifestoDesc");
+                const imgEl = document.getElementById("homeManifestoImage");
+
+                const raw = localStorage.getItem("adrastia_home_manifesto_meta");
+                if (raw) {
+                    try {
+                        const meta = JSON.parse(raw);
+                        if (meta.title && titleEl) titleEl.innerHTML = meta.title;
+                        if (meta.desc && descEl) descEl.textContent = meta.desc;
+                        if (meta.image && imgEl) imgEl.src = meta.image;
+                    } catch (e) {
+                        console.error("[ADRASTIA] Error loading home manifesto meta:", e);
+                    }
+                }
+            };
+
+            hydrateHomeManifesto();
+
+            // 2. Hydrate Hardware Products Grid
             const homeGrid = document.getElementById("homeProductsGrid");
             if (!homeGrid || !window.AdrastiaStore) return;
 
             const renderHomeProducts = () => {
-                // Fetch ONLY active products
                 const products = window.AdrastiaStore.getActiveProducts().slice(0, 4);
 
                 homeGrid.innerHTML = products.map(prod => {
@@ -170,7 +191,9 @@
 
             renderHomeProducts();
 
+            // Event Listeners for Live Updates
             window.addEventListener("adr:products-updated", renderHomeProducts);
+            window.addEventListener("adr:home-manifesto-updated", hydrateHomeManifesto);
         });
     </script>
 </body>
