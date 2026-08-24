@@ -389,6 +389,14 @@
             object-fit: cover;
         }
 
+        /* Sub-card styling for nested blocks */
+        .sub-card {
+            background: rgba(8, 8, 12, 0.9);
+            border: 1px solid #222;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
         /* Buttons */
         .btn-glitch {
             background: #fff;
@@ -705,7 +713,6 @@
                     </div>
                 </div>
 
-                <!-- Live Success Toast Notification -->
                 <div id="collToast" class="toast-msg">
                     // SUCCESS: COLLECTION HERO DATA OVERRIDDEN & SAVED TO STORAGE!
                 </div>
@@ -729,22 +736,18 @@
                             <textarea id="collDescInput" class="form-textarea" rows="3" placeholder="A brutalist exploration of the empty spaces..." required></textarea>
                         </div>
 
-                        <!-- Drop Hero Image Upload -->
                         <div class="form-group" style="margin-bottom:1.5rem;">
                             <label>COLLECTION HERO IMAGE (UPLOAD FILE OR URL) *</label>
-                            
                             <div class="upload-box" id="collDropBox">
                                 <label for="collFileInput" class="btn-upload-file">
                                     [ 📁 SELECT NEW HERO IMAGE FROM DEVICE ]
                                 </label>
                                 <input type="file" id="collFileInput" accept="image/*" style="display:none;">
                                 <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP ANY IMAGE FILE HERE</p>
-                                
                                 <div class="preview-img-wrap">
                                     <img id="collImagePreview" src="https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop" alt="Hero Preview">
                                 </div>
                             </div>
-                            
                             <div style="margin-top:10px;">
                                 <label style="font-size:0.7rem; color:#888;">OR PASTE DIRECT WEB URL:</label>
                                 <input type="url" id="collDirectUrlInput" class="form-input" placeholder="https://..." style="width:100%; margin-top:4px;">
@@ -775,7 +778,6 @@
                     </div>
                 </div>
 
-                <!-- Live Success Toast Notification -->
                 <div id="lbToast" class="toast-msg">
                     // SUCCESS: ARCHIVE / LOOKBOOK EDITORIAL TEXTS SAVED & COMMITTED!
                 </div>
@@ -818,12 +820,12 @@
                 </div>
             </section>
 
-            <!-- SECTION 5: MANIFESTO // ABOUT CONTROLLER -->
+            <!-- SECTION 5: MANIFESTO // ABOUT CONTROLLER (FULL EDITING SUITE) -->
             <section id="view-manifesto-config" class="view-section">
                 <div class="top-bar">
                     <div>
                         <h1 class="page-headline">MANIFESTO_STORY // CONTROLLER</h1>
-                        <p class="page-tag">OVERRIDE BRAND MANIFESTO, ORIGIN STORY & TEXTURES</p>
+                        <p class="page-tag">OVERRIDE BRAND MANIFESTO, ORIGIN STORY, PROCESS & THE CREW</p>
                     </div>
                     <div style="display:flex; gap:10px;">
                         <a href="about.html" target="_blank" class="btn-ghost" style="color:var(--neon-green); border-color:var(--neon-green);">
@@ -835,15 +837,14 @@
                     </div>
                 </div>
 
-                <!-- Live Success Toast Notification -->
                 <div id="manifestoToast" class="toast-msg">
-                    // SUCCESS: MANIFESTO & ORIGIN STORY COMMITTED TO STORAGE!
+                    // SUCCESS: MANIFESTO, PROCESS & THE CREW COMMITTED TO STORAGE!
                 </div>
 
                 <div style="background:var(--bg-card); border:1px solid var(--neon-green); padding:2rem; box-shadow:0 0 20px rgba(0,255,102,0.1); margin-bottom:2rem;">
                     <form id="manifestoMetaForm">
                         
-                        <!-- Header Section Settings -->
+                        <!-- 01. Header Section Settings -->
                         <h3 style="font-family:var(--font-head); font-size:0.95rem; color:var(--neon-green); margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:0.5rem;">
                             // 01. LO-FI HERO HEADER
                         </h3>
@@ -859,25 +860,22 @@
                             </div>
                         </div>
 
-                        <!-- Header BG Texture Upload -->
                         <div class="form-group" style="margin-bottom:2rem;">
                             <label>HERO HEADER BACKGROUND TEXTURE *</label>
                             <div class="upload-box" id="manHeaderBgDropBox">
-                                <label for="manHeaderBgFileInput" class="btn-upload-file">
-                                    [ 📁 CHOOSE HEADER TEXTURE IMAGE ]
-                                </label>
+                                <label for="manHeaderBgFileInput" class="btn-upload-file">[ 📁 CHOOSE HEADER TEXTURE ]</label>
                                 <input type="file" id="manHeaderBgFileInput" accept="image/*" style="display:none;">
-                                <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP FILE DIRECTLY HERE</p>
+                                <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP FILE HERE</p>
                                 <div class="preview-img-wrap">
                                     <img id="manHeaderBgPreview" src="https://images.unsplash.com/photo-1508807526345-15e9b5f4eaff?q=80&w=2564&auto=format&fit=crop" alt="Header Texture Preview">
                                 </div>
                             </div>
                             <div style="margin-top:8px;">
-                                <input type="url" id="manHeaderBgUrlInput" class="form-input" placeholder="Or paste direct image URL (https://...)" style="width:100%;">
+                                <input type="url" id="manHeaderBgUrlInput" class="form-input" placeholder="Or direct image URL (https://...)" style="width:100%;">
                             </div>
                         </div>
 
-                        <!-- Origin Story Section Settings -->
+                        <!-- 02. Origin Story Settings -->
                         <h3 style="font-family:var(--font-head); font-size:0.95rem; color:var(--neon-pink); margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:0.5rem;">
                             // 02. ORIGIN STORY & TEXTURE
                         </h3>
@@ -889,7 +887,7 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>ORIGIN PARAGRAPH 1 *</label>
-                                <textarea id="manOriginP1Input" class="form-textarea" rows="4" placeholder="Adrastia started in a damp basement in 2024..." required></textarea>
+                                <textarea id="manOriginP1Input" class="form-textarea" rows="4" placeholder="Adrastia started in a damp basement..." required></textarea>
                             </div>
 
                             <div class="form-group">
@@ -898,26 +896,187 @@
                             </div>
                         </div>
 
-                        <!-- Origin Image Upload -->
                         <div class="form-group" style="margin-bottom:2rem;">
                             <label>ORIGIN FEATURE IMAGE / CONCRETE TEXTURE *</label>
                             <div class="upload-box" id="manOriginImgDropBox">
-                                <label for="manOriginImgFileInput" class="btn-upload-file">
-                                    [ 📁 CHOOSE ORIGIN FEATURE IMAGE ]
-                                </label>
+                                <label for="manOriginImgFileInput" class="btn-upload-file">[ 📁 CHOOSE ORIGIN IMAGE ]</label>
                                 <input type="file" id="manOriginImgFileInput" accept="image/*" style="display:none;">
-                                <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP FILE DIRECTLY HERE</p>
+                                <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP FILE HERE</p>
                                 <div class="preview-img-wrap">
                                     <img id="manOriginImgPreview" src="https://images.unsplash.com/photo-1606240212005-cb6757b320d7?q=80&w=1000&auto=format&fit=crop" alt="Origin Texture Preview">
                                 </div>
                             </div>
                             <div style="margin-top:8px;">
-                                <input type="url" id="manOriginImgUrlInput" class="form-input" placeholder="Or paste direct image URL (https://...)" style="width:100%;">
+                                <input type="url" id="manOriginImgUrlInput" class="form-input" placeholder="Or direct image URL (https://...)" style="width:100%;">
                             </div>
                         </div>
 
-                        <button type="submit" class="btn-glitch" style="width:100%; justify-content:center; padding:16px;">
-                            COMMIT & SAVE MANIFESTO CONFIG [OVERRIDE]
+                        <!-- 03. The Process Pipeline -->
+                        <h3 style="font-family:var(--font-head); font-size:0.95rem; color:var(--neon-cyan); margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:0.5rem;">
+                            // 03. THE_PROCESS // 3-STEP PIPELINE
+                        </h3>
+                        
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>PROCESS SECTION HEADING *</label>
+                            <input type="text" id="manProcHeadingInput" class="form-input" placeholder="THE_PROCESS // ALGORITHM BYPASS" required>
+                        </div>
+
+                        <div class="sub-card">
+                            <h4 style="color:var(--neon-green); font-size:0.8rem; margin-bottom:1rem;">[ STEP 01 ]</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>STEP 01 TITLE *</label>
+                                    <input type="text" id="proc1Title" class="form-input" value="CORRUPTION" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>STEP 01 DESCRIPTION *</label>
+                                    <textarea id="proc1Desc" class="form-textarea" rows="2" required>We source heavy-weight, ethically produced blanks and immediately begin destroying them. Acid washes, distressing, and enzyme treatments to remove the "new" feeling.</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sub-card">
+                            <h4 style="color:var(--neon-green); font-size:0.8rem; margin-bottom:1rem;">[ STEP 02 ]</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>STEP 02 TITLE *</label>
+                                    <input type="text" id="proc2Title" class="form-input" value="SCREEN_PRINTING" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>STEP 02 DESCRIPTION *</label>
+                                    <textarea id="proc2Desc" class="form-textarea" rows="2" required>Graphics are designed digitally, corrupted via analog VHS feedback loops, and hand-screened using toxic-looking, but eco-friendly, neon inks.</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sub-card">
+                            <h4 style="color:var(--neon-green); font-size:0.8rem; margin-bottom:1rem;">[ STEP 03 ]</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>STEP 03 TITLE *</label>
+                                    <input type="text" id="proc3Title" class="form-input" value="THE_DROP" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>STEP 03 DESCRIPTION *</label>
+                                    <textarea id="proc3Desc" class="form-textarea" rows="2" required>Strictly limited runs. No pre-orders. No restocks. Once the inventory hits zero, the hardware is archived forever. Speed is survival.</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 04. The Crew / Architects of Decay -->
+                        <h3 style="font-family:var(--font-head); font-size:0.95rem; color:#ffcc00; margin-top:2rem; margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:0.5rem;">
+                            // 04. THE_CREW // ARCHITECTS OF DECAY
+                        </h3>
+
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>THE CREW SECTION HEADING *</label>
+                            <input type="text" id="manTeamHeadingInput" class="form-input" placeholder="THE_CREW // ARCHITECTS OF DECAY" required>
+                        </div>
+
+                        <!-- Member 1 -->
+                        <div class="sub-card">
+                            <h4 style="color:#ffcc00; font-size:0.8rem; margin-bottom:1rem;">[ CREW MEMBER 01 ]</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>NAME & TITLE *</label>
+                                    <input type="text" id="team1Name" class="form-input" value="XEN // FOUNDER" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>ROLE / TAG *</label>
+                                    <input type="text" id="team1Role" class="form-input" value="CREATIVE_DIRECTOR" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>CURRENT TRACK *</label>
+                                    <input type="text" id="team1Track" class="form-input" value="Crystal Castles - Crimewave" required>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom:1rem;">
+                                <label>BIO *</label>
+                                <textarea id="team1Bio" class="form-textarea" rows="2" required>Ex-corporate designer. Burnt out. Now strictly deals in vectors and chaos.</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>MEMBER 01 PORTRAIT (UPLOAD OR URL) *</label>
+                                <div class="upload-box" id="team1DropBox">
+                                    <label for="team1File" class="btn-upload-file">[ 📁 SELECT PORTRAIT 1 ]</label>
+                                    <input type="file" id="team1File" accept="image/*" style="display:none;">
+                                    <div class="preview-img-wrap">
+                                        <img id="team1Preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="Member 1">
+                                    </div>
+                                </div>
+                                <input type="url" id="team1Url" class="form-input" placeholder="Or direct image URL (https://...)" style="width:100%; margin-top:6px;">
+                            </div>
+                        </div>
+
+                        <!-- Member 2 -->
+                        <div class="sub-card">
+                            <h4 style="color:#ffcc00; font-size:0.8rem; margin-bottom:1rem;">[ CREW MEMBER 02 ]</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>NAME & TITLE *</label>
+                                    <input type="text" id="team2Name" class="form-input" value="K4L // PRINTER" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>ROLE / TAG *</label>
+                                    <input type="text" id="team2Role" class="form-input" value="LEAD_MANUFACTURING" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>CURRENT TRACK *</label>
+                                    <input type="text" id="team2Track" class="form-input" value="Death Grips - Guillotine" required>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom:1rem;">
+                                <label>BIO *</label>
+                                <textarea id="team2Bio" class="form-textarea" rows="2" required>Spends 90% of life covered in plastisol ink. Hates perfectly registered prints.</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>MEMBER 02 PORTRAIT (UPLOAD OR URL) *</label>
+                                <div class="upload-box" id="team2DropBox">
+                                    <label for="team2File" class="btn-upload-file">[ 📁 SELECT PORTRAIT 2 ]</label>
+                                    <input type="file" id="team2File" accept="image/*" style="display:none;">
+                                    <div class="preview-img-wrap">
+                                        <img id="team2Preview" src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?q=80&w=800&auto=format&fit=crop" alt="Member 2">
+                                    </div>
+                                </div>
+                                <input type="url" id="team2Url" class="form-input" placeholder="Or direct image URL (https://...)" style="width:100%; margin-top:6px;">
+                            </div>
+                        </div>
+
+                        <!-- Member 3 -->
+                        <div class="sub-card">
+                            <h4 style="color:#ffcc00; font-size:0.8rem; margin-bottom:1rem;">[ CREW MEMBER 03 ]</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>NAME & TITLE *</label>
+                                    <input type="text" id="team3Name" class="form-input" value="ZERO // WEB" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>ROLE / TAG *</label>
+                                    <input type="text" id="team3Role" class="form-input" value="DIGITAL_ARCHITECT" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>CURRENT TRACK *</label>
+                                    <input type="text" id="team3Track" class="form-input" value="Aphex Twin - Vordhosbn" required>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom:1rem;">
+                                <label>BIO *</label>
+                                <textarea id="team3Bio" class="form-textarea" rows="2" required>Wrote the custom checkout script to block reseller bots. Lives in the terminal.</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>MEMBER 03 PORTRAIT (UPLOAD OR URL) *</label>
+                                <div class="upload-box" id="team3DropBox">
+                                    <label for="team3File" class="btn-upload-file">[ 📁 SELECT PORTRAIT 3 ]</label>
+                                    <input type="file" id="team3File" accept="image/*" style="display:none;">
+                                    <div class="preview-img-wrap">
+                                        <img id="team3Preview" src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=800&auto=format&fit=crop" alt="Member 3">
+                                    </div>
+                                </div>
+                                <input type="url" id="team3Url" class="form-input" placeholder="Or direct image URL (https://...)" style="width:100%; margin-top:6px;">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-glitch" style="width:100%; justify-content:center; padding:16px; margin-top:1.5rem;">
+                            COMMIT & SAVE ALL MANIFESTO DATA [OVERRIDE]
                         </button>
                     </form>
                 </div>
@@ -992,7 +1151,7 @@
     <script src="js/store.js"></script>
     <script src="js/admin.js"></script>
 
-    <!-- Native Direct Controller for Collection Hero, Archive Lookbook & Manifesto -->
+    <!-- Native Direct Controller for Collection Hero, Archive Lookbook & Full Manifesto Suite -->
     <script>
         (function() {
             // === 1. COLLECTION HERO CONTROLLER ===
@@ -1028,19 +1187,14 @@
                 if (collStatusIn) collStatusIn.value = data.status;
                 if (collDescIn) collDescIn.value = data.description;
                 if (collPreviewImg) collPreviewImg.src = data.image;
-                
                 activeCollImageSource = data.image;
-
-                if (collUrlIn) {
-                    collUrlIn.value = data.image.startsWith('data:') ? '' : data.image;
-                }
+                if (collUrlIn) collUrlIn.value = data.image.startsWith('data:') ? '' : data.image;
             }
 
             if (collFileIn) {
                 collFileIn.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (!file) return;
-
                     const reader = new FileReader();
                     reader.onload = function(evt) {
                         activeCollImageSource = evt.target.result;
@@ -1052,13 +1206,8 @@
             }
 
             if (collDropBox) {
-                collDropBox.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    collDropBox.style.borderColor = 'var(--neon-green)';
-                });
-                collDropBox.addEventListener('dragleave', function() {
-                    collDropBox.style.borderColor = '#333';
-                });
+                collDropBox.addEventListener('dragover', function(e) { e.preventDefault(); collDropBox.style.borderColor = 'var(--neon-green)'; });
+                collDropBox.addEventListener('dragleave', function() { collDropBox.style.borderColor = '#333'; });
                 collDropBox.addEventListener('drop', function(e) {
                     e.preventDefault();
                     collDropBox.style.borderColor = '#333';
@@ -1088,7 +1237,6 @@
             if (collForm) {
                 collForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-
                     const payload = {
                         title: collTitleIn ? collTitleIn.value.trim() : DEFAULT_COLL_META.title,
                         status: collStatusIn ? collStatusIn.value.trim() : DEFAULT_COLL_META.status,
@@ -1160,7 +1308,6 @@
             if (lbForm) {
                 lbForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-
                     const payload = {
                         title: lbTitleIn ? lbTitleIn.value.trim() : DEFAULT_LB_META.title,
                         subtitle: lbSubtitleIn ? lbSubtitleIn.value.trim() : DEFAULT_LB_META.subtitle,
@@ -1197,7 +1344,7 @@
                 });
             }
 
-            // === 3. MANIFESTO // ABOUT CONTROLLER ===
+            // === 3. MANIFESTO // FULL SUITE CONTROLLER ===
             const STORAGE_KEY_MAN = 'adrastia_manifesto_meta';
             const DEFAULT_MAN_META = {
                 heroTitle: "SYSTEM_FAILURE",
@@ -1206,30 +1353,81 @@
                 originTitle: 'BORN IN <br><span class="neon-pink">STATIC.</span>',
                 originP1: "Adrastia started in a damp basement in 2024, born out of pure exhaustion with algorithm-dictated trends and fast-fashion waste.",
                 originP2: "We don't design for the masses. We design for the digital ghosts, the underground, and the youth who see the decay of modern culture and choose to wear it as armor.",
-                originImage: "https://images.unsplash.com/photo-1606240212005-cb6757b320d7?q=80&w=1000&auto=format&fit=crop"
+                originImage: "https://images.unsplash.com/photo-1606240212005-cb6757b320d7?q=80&w=1000&auto=format&fit=crop",
+                processHeading: "THE_PROCESS // ALGORITHM BYPASS",
+                process: [
+                    { num: "01.", title: "CORRUPTION", desc: "We source heavy-weight, ethically produced blanks and immediately begin destroying them. Acid washes, distressing, and enzyme treatments to remove the \"new\" feeling." },
+                    { num: "02.", title: "SCREEN_PRINTING", desc: "Graphics are designed digitally, corrupted via analog VHS feedback loops, and hand-screened using toxic-looking, but eco-friendly, neon inks." },
+                    { num: "03.", title: "THE_DROP", desc: "Strictly limited runs. No pre-orders. No restocks. Once the inventory hits zero, the hardware is archived forever. Speed is survival." }
+                ],
+                teamHeading: "THE_CREW // ARCHITECTS OF DECAY",
+                team: [
+                    { name: "XEN // FOUNDER", role: "CREATIVE_DIRECTOR", bio: "Ex-corporate designer. Burnt out. Now strictly deals in vectors and chaos.", track: "Crystal Castles - Crimewave", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" },
+                    { name: "K4L // PRINTER", role: "LEAD_MANUFACTURING", bio: "Spends 90% of life covered in plastisol ink. Hates perfectly registered prints.", track: "Death Grips - Guillotine", image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?q=80&w=800&auto=format&fit=crop" },
+                    { name: "ZERO // WEB", role: "DIGITAL_ARCHITECT", bio: "Wrote the custom checkout script to block reseller bots. Lives in the terminal.", track: "Aphex Twin - Vordhosbn", image: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=800&auto=format&fit=crop" }
+                ]
             };
 
-            let activeManHeaderBgSource = "";
-            let activeManOriginImgSource = "";
+            let activeManHeaderBg = "";
+            let activeManOriginImg = "";
+            let activeTeamImages = ["", "", ""];
 
-            const manHeroTitleIn = document.getElementById('manHeroTitleInput');
-            const manHeroSubtextIn = document.getElementById('manHeroSubtextInput');
-            const manHeaderBgFileIn = document.getElementById('manHeaderBgFileInput');
-            const manHeaderBgUrlIn = document.getElementById('manHeaderBgUrlInput');
-            const manHeaderBgPreview = document.getElementById('manHeaderBgPreview');
-            const manHeaderBgDropBox = document.getElementById('manHeaderBgDropBox');
+            function setupImageUploader(fileInputId, urlInputId, previewImgId, dropBoxId, callback) {
+                const fileEl = document.getElementById(fileInputId);
+                const urlEl = document.getElementById(urlInputId);
+                const prevEl = document.getElementById(previewImgId);
+                const dropEl = document.getElementById(dropBoxId);
 
-            const manOriginTitleIn = document.getElementById('manOriginTitleInput');
-            const manOriginP1In = document.getElementById('manOriginP1Input');
-            const manOriginP2In = document.getElementById('manOriginP2Input');
-            const manOriginImgFileIn = document.getElementById('manOriginImgFileInput');
-            const manOriginImgUrlIn = document.getElementById('manOriginImgUrlInput');
-            const manOriginImgPreview = document.getElementById('manOriginImgPreview');
-            const manOriginImgDropBox = document.getElementById('manOriginImgDropBox');
+                if (fileEl) {
+                    fileEl.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            callback(evt.target.result);
+                            if (prevEl) prevEl.src = evt.target.result;
+                            if (urlEl) urlEl.value = '';
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
 
-            const manForm = document.getElementById('manifestoMetaForm');
-            const manResetBtn = document.getElementById('btnResetManifestoMeta');
-            const manToast = document.getElementById('manifestoToast');
+                if (dropEl) {
+                    dropEl.addEventListener('dragover', function(e) { e.preventDefault(); dropEl.style.borderColor = 'var(--neon-green)'; });
+                    dropEl.addEventListener('dragleave', function() { dropEl.style.borderColor = '#333'; });
+                    dropEl.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        dropEl.style.borderColor = '#333';
+                        const file = e.dataTransfer.files[0];
+                        if (file && file.type.startsWith('image/')) {
+                            const reader = new FileReader();
+                            reader.onload = function(evt) {
+                                callback(evt.target.result);
+                                if (prevEl) prevEl.src = evt.target.result;
+                                if (urlEl) urlEl.value = '';
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+
+                if (urlEl) {
+                    urlEl.addEventListener('input', function(e) {
+                        const val = e.target.value.trim();
+                        if (val) {
+                            callback(val);
+                            if (prevEl) prevEl.src = val;
+                        }
+                    });
+                }
+            }
+
+            // Setup Uploaders
+            setupImageUploader('manHeaderBgFileInput', 'manHeaderBgUrlInput', 'manHeaderBgPreview', 'manHeaderBgDropBox', src => activeManHeaderBg = src);
+            setupImageUploader('manOriginImgFileInput', 'manOriginImgUrlInput', 'manOriginImgPreview', 'manOriginImgDropBox', src => activeManOriginImg = src);
+            setupImageUploader('team1File', 'team1Url', 'team1Preview', 'team1DropBox', src => activeTeamImages[0] = src);
+            setupImageUploader('team2File', 'team2Url', 'team2Preview', 'team2DropBox', src => activeTeamImages[1] = src);
+            setupImageUploader('team3File', 'team3Url', 'team3Preview', 'team3DropBox', src => activeTeamImages[2] = src);
 
             function loadManData() {
                 let data = DEFAULT_MAN_META;
@@ -1238,123 +1436,114 @@
                     try { data = { ...DEFAULT_MAN_META, ...JSON.parse(raw) }; } catch(e) {}
                 }
 
-                if (manHeroTitleIn) manHeroTitleIn.value = data.heroTitle;
-                if (manHeroSubtextIn) manHeroSubtextIn.value = data.heroSubtext;
-                if (manHeaderBgPreview) manHeaderBgPreview.src = data.headerBg;
-                activeManHeaderBgSource = data.headerBg;
-                if (manHeaderBgUrlIn) manHeaderBgUrlIn.value = data.headerBg.startsWith('data:') ? '' : data.headerBg;
+                // 1. Header & Origin
+                const heroTitle = document.getElementById('manHeroTitleInput');
+                const heroSubtext = document.getElementById('manHeroSubtextInput');
+                const headerBgPrev = document.getElementById('manHeaderBgPreview');
+                const headerBgUrl = document.getElementById('manHeaderBgUrlInput');
 
-                if (manOriginTitleIn) manOriginTitleIn.value = data.originTitle;
-                if (manOriginP1In) manOriginP1In.value = data.originP1;
-                if (manOriginP2In) manOriginP2In.value = data.originP2;
-                if (manOriginImgPreview) manOriginImgPreview.src = data.originImage;
-                activeManOriginImgSource = data.originImage;
-                if (manOriginImgUrlIn) manOriginImgUrlIn.value = data.originImage.startsWith('data:') ? '' : data.originImage;
-            }
+                if (heroTitle) heroTitle.value = data.heroTitle;
+                if (heroSubtext) heroSubtext.value = data.heroSubtext;
+                if (headerBgPrev) headerBgPrev.src = data.headerBg;
+                activeManHeaderBg = data.headerBg;
+                if (headerBgUrl) headerBgUrl.value = data.headerBg.startsWith('data:') ? '' : data.headerBg;
 
-            // Header BG File Upload
-            if (manHeaderBgFileIn) {
-                manHeaderBgFileIn.addEventListener('change', function(e) {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    const reader = new FileReader();
-                    reader.onload = function(evt) {
-                        activeManHeaderBgSource = evt.target.result;
-                        if (manHeaderBgPreview) manHeaderBgPreview.src = activeManHeaderBgSource;
-                        if (manHeaderBgUrlIn) manHeaderBgUrlIn.value = '';
-                    };
-                    reader.readAsDataURL(file);
+                const origTitle = document.getElementById('manOriginTitleInput');
+                const origP1 = document.getElementById('manOriginP1Input');
+                const origP2 = document.getElementById('manOriginP2Input');
+                const origImgPrev = document.getElementById('manOriginImgPreview');
+                const origImgUrl = document.getElementById('manOriginImgUrlInput');
+
+                if (origTitle) origTitle.value = data.originTitle;
+                if (origP1) origP1.value = data.originP1;
+                if (origP2) origP2.value = data.originP2;
+                if (origImgPrev) origImgPrev.src = data.originImage;
+                activeManOriginImg = data.originImage;
+                if (origImgUrl) origImgUrl.value = data.originImage.startsWith('data:') ? '' : data.originImage;
+
+                // 2. Process
+                const procHead = document.getElementById('manProcHeadingInput');
+                if (procHead) procHead.value = data.processHeading || DEFAULT_MAN_META.processHeading;
+
+                const procList = (data.process && data.process.length >= 3) ? data.process : DEFAULT_MAN_META.process;
+                if (document.getElementById('proc1Title')) document.getElementById('proc1Title').value = procList[0].title;
+                if (document.getElementById('proc1Desc')) document.getElementById('proc1Desc').value = procList[0].desc;
+                if (document.getElementById('proc2Title')) document.getElementById('proc2Title').value = procList[1].title;
+                if (document.getElementById('proc2Desc')) document.getElementById('proc2Desc').value = procList[1].desc;
+                if (document.getElementById('proc3Title')) document.getElementById('proc3Title').value = procList[2].title;
+                if (document.getElementById('proc3Desc')) document.getElementById('proc3Desc').value = procList[2].desc;
+
+                // 3. Team
+                const teamHead = document.getElementById('manTeamHeadingInput');
+                if (teamHead) teamHead.value = data.teamHeading || DEFAULT_MAN_META.teamHeading;
+
+                const teamList = (data.team && data.team.length >= 3) ? data.team : DEFAULT_MAN_META.team;
+                
+                [1, 2, 3].forEach((num, idx) => {
+                    const member = teamList[idx] || DEFAULT_MAN_META.team[idx];
+                    const nameEl = document.getElementById(`team${num}Name`);
+                    const roleEl = document.getElementById(`team${num}Role`);
+                    const trackEl = document.getElementById(`team${num}Track`);
+                    const bioEl = document.getElementById(`team${num}Bio`);
+                    const prevEl = document.getElementById(`team${num}Preview`);
+                    const urlEl = document.getElementById(`team${num}Url`);
+
+                    if (nameEl) nameEl.value = member.name;
+                    if (roleEl) roleEl.value = member.role;
+                    if (trackEl) trackEl.value = member.track;
+                    if (bioEl) bioEl.value = member.bio;
+                    if (prevEl) prevEl.src = member.image;
+                    activeTeamImages[idx] = member.image;
+                    if (urlEl) urlEl.value = member.image.startsWith('data:') ? '' : member.image;
                 });
             }
 
-            // Header BG Drop Box
-            if (manHeaderBgDropBox) {
-                manHeaderBgDropBox.addEventListener('dragover', function(e) { e.preventDefault(); manHeaderBgDropBox.style.borderColor = 'var(--neon-green)'; });
-                manHeaderBgDropBox.addEventListener('dragleave', function() { manHeaderBgDropBox.style.borderColor = '#333'; });
-                manHeaderBgDropBox.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    manHeaderBgDropBox.style.borderColor = '#333';
-                    const file = e.dataTransfer.files[0];
-                    if (file && file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = function(evt) {
-                            activeManHeaderBgSource = evt.target.result;
-                            if (manHeaderBgPreview) manHeaderBgPreview.src = activeManHeaderBgSource;
-                            if (manHeaderBgUrlIn) manHeaderBgUrlIn.value = '';
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            }
+            const manForm = document.getElementById('manifestoMetaForm');
+            const manResetBtn = document.getElementById('btnResetManifestoMeta');
+            const manToast = document.getElementById('manifestoToast');
 
-            if (manHeaderBgUrlIn) {
-                manHeaderBgUrlIn.addEventListener('input', function(e) {
-                    const val = e.target.value.trim();
-                    if (val) {
-                        activeManHeaderBgSource = val;
-                        if (manHeaderBgPreview) manHeaderBgPreview.src = val;
-                    }
-                });
-            }
-
-            // Origin Image File Upload
-            if (manOriginImgFileIn) {
-                manOriginImgFileIn.addEventListener('change', function(e) {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    const reader = new FileReader();
-                    reader.onload = function(evt) {
-                        activeManOriginImgSource = evt.target.result;
-                        if (manOriginImgPreview) manOriginImgPreview.src = activeManOriginImgSource;
-                        if (manOriginImgUrlIn) manOriginImgUrlIn.value = '';
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-
-            // Origin Image Drop Box
-            if (manOriginImgDropBox) {
-                manOriginImgDropBox.addEventListener('dragover', function(e) { e.preventDefault(); manOriginImgDropBox.style.borderColor = 'var(--neon-green)'; });
-                manOriginImgDropBox.addEventListener('dragleave', function() { manOriginImgDropBox.style.borderColor = '#333'; });
-                manOriginImgDropBox.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    manOriginImgDropBox.style.borderColor = '#333';
-                    const file = e.dataTransfer.files[0];
-                    if (file && file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = function(evt) {
-                            activeManOriginImgSource = evt.target.result;
-                            if (manOriginImgPreview) manOriginImgPreview.src = activeManOriginImgSource;
-                            if (manOriginImgUrlIn) manOriginImgUrlIn.value = '';
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            }
-
-            if (manOriginImgUrlIn) {
-                manOriginImgUrlIn.addEventListener('input', function(e) {
-                    const val = e.target.value.trim();
-                    if (val) {
-                        activeManOriginImgSource = val;
-                        if (manOriginImgPreview) manOriginImgPreview.src = val;
-                    }
-                });
-            }
-
-            // Save Manifesto Form
             if (manForm) {
                 manForm.addEventListener('submit', function(e) {
                     e.preventDefault();
 
                     const payload = {
-                        heroTitle: manHeroTitleIn ? manHeroTitleIn.value.trim() : DEFAULT_MAN_META.heroTitle,
-                        heroSubtext: manHeroSubtextIn ? manHeroSubtextIn.value.trim() : DEFAULT_MAN_META.heroSubtext,
-                        headerBg: activeManHeaderBgSource || (manHeaderBgPreview ? manHeaderBgPreview.src : DEFAULT_MAN_META.headerBg),
-                        originTitle: manOriginTitleIn ? manOriginTitleIn.value.trim() : DEFAULT_MAN_META.originTitle,
-                        originP1: manOriginP1In ? manOriginP1In.value.trim() : DEFAULT_MAN_META.originP1,
-                        originP2: manOriginP2In ? manOriginP2In.value.trim() : DEFAULT_MAN_META.originP2,
-                        originImage: activeManOriginImgSource || (manOriginImgPreview ? manOriginImgPreview.src : DEFAULT_MAN_META.originImage)
+                        heroTitle: document.getElementById('manHeroTitleInput').value.trim(),
+                        heroSubtext: document.getElementById('manHeroSubtextInput').value.trim(),
+                        headerBg: activeManHeaderBg || document.getElementById('manHeaderBgPreview').src,
+                        originTitle: document.getElementById('manOriginTitleInput').value.trim(),
+                        originP1: document.getElementById('manOriginP1Input').value.trim(),
+                        originP2: document.getElementById('manOriginP2Input').value.trim(),
+                        originImage: activeManOriginImg || document.getElementById('manOriginImgPreview').src,
+                        processHeading: document.getElementById('manProcHeadingInput').value.trim(),
+                        process: [
+                            { num: "01.", title: document.getElementById('proc1Title').value.trim(), desc: document.getElementById('proc1Desc').value.trim() },
+                            { num: "02.", title: document.getElementById('proc2Title').value.trim(), desc: document.getElementById('proc2Desc').value.trim() },
+                            { num: "03.", title: document.getElementById('proc3Title').value.trim(), desc: document.getElementById('proc3Desc').value.trim() }
+                        ],
+                        teamHeading: document.getElementById('manTeamHeadingInput').value.trim(),
+                        team: [
+                            {
+                                name: document.getElementById('team1Name').value.trim(),
+                                role: document.getElementById('team1Role').value.trim(),
+                                track: document.getElementById('team1Track').value.trim(),
+                                bio: document.getElementById('team1Bio').value.trim(),
+                                image: activeTeamImages[0] || document.getElementById('team1Preview').src
+                            },
+                            {
+                                name: document.getElementById('team2Name').value.trim(),
+                                role: document.getElementById('team2Role').value.trim(),
+                                track: document.getElementById('team2Track').value.trim(),
+                                bio: document.getElementById('team2Bio').value.trim(),
+                                image: activeTeamImages[1] || document.getElementById('team2Preview').src
+                            },
+                            {
+                                name: document.getElementById('team3Name').value.trim(),
+                                role: document.getElementById('team3Role').value.trim(),
+                                track: document.getElementById('team3Track').value.trim(),
+                                bio: document.getElementById('team3Bio').value.trim(),
+                                image: activeTeamImages[2] || document.getElementById('team3Preview').src
+                            }
+                        ]
                     };
 
                     localStorage.setItem(STORAGE_KEY_MAN, JSON.stringify(payload));
@@ -1367,10 +1556,9 @@
                 });
             }
 
-            // Reset Manifesto Defaults
             if (manResetBtn) {
                 manResetBtn.addEventListener('click', function() {
-                    if (confirm("Restore original Manifesto & Origin Story text and visuals?")) {
+                    if (confirm("Restore original Manifesto, Process, and The Crew defaults?")) {
                         localStorage.setItem(STORAGE_KEY_MAN, JSON.stringify(DEFAULT_MAN_META));
                         loadManData();
                         window.dispatchEvent(new CustomEvent('adr:manifesto-updated', { detail: DEFAULT_MAN_META }));
@@ -1378,7 +1566,7 @@
                             manToast.textContent = "// MANIFESTO RESTORED TO FACTORY DEFAULTS.";
                             manToast.classList.add('show');
                             setTimeout(() => {
-                                manToast.textContent = "// SUCCESS: MANIFESTO & ORIGIN STORY COMMITTED TO STORAGE!";
+                                manToast.textContent = "// SUCCESS: MANIFESTO, PROCESS & THE CREW COMMITTED TO STORAGE!";
                                 manToast.classList.remove('show');
                             }, 3000);
                         }
