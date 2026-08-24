@@ -823,7 +823,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 5: MANIFESTO // ABOUT CONTROLLER (FULL EDITING SUITE) -->
+            <!-- SECTION 5: MANIFESTO // ABOUT CONTROLLER -->
             <section id="view-manifesto-config" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -847,7 +847,6 @@
                 <div style="background:var(--bg-card); border:1px solid var(--neon-green); padding:2rem; box-shadow:0 0 20px rgba(0,255,102,0.1); margin-bottom:2rem;">
                     <form id="manifestoMetaForm">
                         
-                        <!-- 01. Header Section Settings -->
                         <h3 style="font-family:var(--font-head); font-size:0.95rem; color:var(--neon-green); margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:0.5rem;">
                             // 01. LO-FI HERO HEADER
                         </h3>
@@ -878,7 +877,6 @@
                             </div>
                         </div>
 
-                        <!-- 02. Origin Story Settings -->
                         <h3 style="font-family:var(--font-head); font-size:0.95rem; color:var(--neon-pink); margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:0.5rem;">
                             // 02. ORIGIN STORY & TEXTURE
                         </h3>
@@ -914,11 +912,9 @@
                             </div>
                         </div>
 
-                        <!-- 03. The Process Pipeline -->
                         <h3 style="font-family:var(--font-head); font-size:0.95rem; color:var(--neon-cyan); margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:0.5rem;">
                             // 03. THE_PROCESS // 3-STEP PIPELINE
                         </h3>
-                        
                         <div class="form-group" style="margin-bottom:1.5rem;">
                             <label>PROCESS SECTION HEADING *</label>
                             <input type="text" id="manProcHeadingInput" class="form-input" placeholder="THE_PROCESS // ALGORITHM BYPASS" required>
@@ -966,11 +962,9 @@
                             </div>
                         </div>
 
-                        <!-- 04. The Crew / Architects of Decay -->
                         <h3 style="font-family:var(--font-head); font-size:0.95rem; color:#ffcc00; margin-top:2rem; margin-bottom:1.2rem; border-bottom:1px solid #222; padding-bottom:0.5rem;">
                             // 04. THE_CREW // ARCHITECTS OF DECAY
                         </h3>
-
                         <div class="form-group" style="margin-bottom:1.5rem;">
                             <label>THE CREW SECTION HEADING *</label>
                             <input type="text" id="manTeamHeadingInput" class="form-input" placeholder="THE_CREW // ARCHITECTS OF DECAY" required>
@@ -998,7 +992,7 @@
                                 <textarea id="team1Bio" class="form-textarea" rows="2" required>Ex-corporate designer. Burnt out. Now strictly deals in vectors and chaos.</textarea>
                             </div>
                             <div class="form-group">
-                                <label>MEMBER 01 PORTRAIT (UPLOAD OR URL) *</label>
+                                <label>MEMBER 01 PORTRAIT *</label>
                                 <div class="upload-box" id="team1DropBox">
                                     <label for="team1File" class="btn-upload-file">[ 📁 SELECT PORTRAIT 1 ]</label>
                                     <input type="file" id="team1File" accept="image/*" style="display:none;">
@@ -1032,7 +1026,7 @@
                                 <textarea id="team2Bio" class="form-textarea" rows="2" required>Spends 90% of life covered in plastisol ink. Hates perfectly registered prints.</textarea>
                             </div>
                             <div class="form-group">
-                                <label>MEMBER 02 PORTRAIT (UPLOAD OR URL) *</label>
+                                <label>MEMBER 02 PORTRAIT *</label>
                                 <div class="upload-box" id="team2DropBox">
                                     <label for="team2File" class="btn-upload-file">[ 📁 SELECT PORTRAIT 2 ]</label>
                                     <input type="file" id="team2File" accept="image/*" style="display:none;">
@@ -1066,7 +1060,7 @@
                                 <textarea id="team3Bio" class="form-textarea" rows="2" required>Wrote the custom checkout script to block reseller bots. Lives in the terminal.</textarea>
                             </div>
                             <div class="form-group">
-                                <label>MEMBER 03 PORTRAIT (UPLOAD OR URL) *</label>
+                                <label>MEMBER 03 PORTRAIT *</label>
                                 <div class="upload-box" id="team3DropBox">
                                     <label for="team3File" class="btn-upload-file">[ 📁 SELECT PORTRAIT 3 ]</label>
                                     <input type="file" id="team3File" accept="image/*" style="display:none;">
@@ -1085,12 +1079,12 @@
                 </div>
             </section>
 
-            <!-- SECTION 6: AUDIO // SOUNDTRACK CONTROLLER -->
+            <!-- SECTION 6: AUDIO // SOUNDTRACK CONTROLLER (INDEXEDDB UNLIMITED CAPACITY) -->
             <section id="view-audio-config" class="view-section">
                 <div class="top-bar">
                     <div>
                         <h1 class="page-headline">SOUNDTRACK // ENGINE CONTROLLER</h1>
-                        <p class="page-tag">SELECT LOCAL MP3 FILE OR DIRECT AUDIO STREAM FOR STOREFRONT AMBIENT AUDIO</p>
+                        <p class="page-tag">SELECT LOCAL MP3/AUDIO FILE (STORED SAFELY IN INDEXEDDB) OR WEB STREAM</p>
                     </div>
                     <div style="display:flex; gap:10px;">
                         <button type="button" class="btn-ghost" id="btnTestPlayAudio">
@@ -1103,27 +1097,27 @@
                 </div>
 
                 <div id="audioToast" class="toast-msg">
-                    // SUCCESS: STOREFRONT SOUNDTRACK UPDATED & COMMITTED!
+                    // SUCCESS: SOUNDTRACK SAVED PERMANENTLY IN SECURE REPOSITORY!
                 </div>
 
                 <div style="background:var(--bg-card); border:1px solid var(--neon-pink); padding:2rem; box-shadow:0 0 20px rgba(255,0,85,0.1); margin-bottom:2rem;">
                     <form id="audioTrackForm">
                         
                         <div class="form-group" style="margin-bottom:1.5rem;">
-                            <label>SOUNDTRACK / AUDIO TRACK SOURCE (UPLOAD MP3 OR PASTE URL) *</label>
+                            <label>SOUNDTRACK SOURCE (UPLOAD MP3 / WAV OR ENTER URL) *</label>
                             
                             <div class="upload-box" id="audioDropBox">
                                 <label for="audioFileInput" class="btn-upload-file">
-                                    [ 🎵 📁 BROWSE AUDIO FILE (.MP3 / .WAV / .OGG) FROM DEVICE ]
+                                    [ 🎵 📁 BROWSE AUDIO FILE (MP3 / WAV / OGG) FROM DEVICE ]
                                 </label>
                                 <input type="file" id="audioFileInput" accept="audio/*" style="display:none;">
                                 <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP ANY AUDIO FILE DIRECTLY HERE</p>
-                                <span style="font-size:0.7rem; color:var(--neon-green);" id="audioFileNameDisplay">// DEFAULT SYNTHWAVE STREAM LOADED</span>
+                                <span style="font-size:0.75rem; font-weight:bold; color:var(--neon-green);" id="audioFileNameDisplay">// DEFAULT SYNTHWAVE STREAM ACTIVE</span>
                             </div>
                             
                             <div style="margin-top:12px;">
-                                <label style="font-size:0.7rem; color:#888;">OR ENTER DIRECT AUDIO URL / LOCAL PATH (e.g. audio/track.mp3 or https://...):</label>
-                                <input type="text" id="audioDirectUrlInput" class="form-input" placeholder="https://.../song.mp3 or audio/track.mp3" style="width:100%; margin-top:4px;">
+                                <label style="font-size:0.7rem; color:#888;">OR DIRECT AUDIO URL / PATH (e.g. audio/track.mp3 or https://...):</label>
+                                <input type="text" id="audioDirectUrlInput" class="form-input" placeholder="https://.../track.mp3" style="width:100%; margin-top:4px;">
                             </div>
                         </div>
 
@@ -1209,6 +1203,55 @@
     <script src="js/store.js"></script>
     <script src="js/admin.js"></script>
 
+    <!-- IndexedDB Database Storage Engine for Unlimited File Size (Audio & Media) -->
+    <script>
+        const AdrastiaIDB = {
+            dbName: 'AdrastiaMediaDB',
+            dbVersion: 1,
+            open() {
+                return new Promise((resolve, reject) => {
+                    const req = indexedDB.open(this.dbName, this.dbVersion);
+                    req.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains('media')) {
+                            db.createObjectStore('media');
+                        }
+                    };
+                    req.onsuccess = () => resolve(req.result);
+                    req.onerror = () => reject(req.error);
+                });
+            },
+            async set(key, val) {
+                const db = await this.open();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction('media', 'readwrite');
+                    tx.objectStore('media').put(val, key);
+                    tx.oncomplete = () => resolve();
+                    tx.onerror = () => reject(tx.error);
+                });
+            },
+            async get(key) {
+                const db = await this.open();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction('media', 'readonly');
+                    const req = tx.objectStore('media').get(key);
+                    req.onsuccess = () => resolve(req.result);
+                    req.onerror = () => reject(req.error);
+                });
+            },
+            async del(key) {
+                const db = await this.open();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction('media', 'readwrite');
+                    tx.objectStore('media').delete(key);
+                    tx.oncomplete = () => resolve();
+                    tx.onerror = () => reject(tx.error);
+                });
+            }
+        };
+        window.AdrastiaIDB = AdrastiaIDB;
+    </script>
+
     <!-- Native Direct Controller for Collection Hero, Archive Lookbook, Manifesto & Audio Engine -->
     <script>
         (function() {
@@ -1222,7 +1265,6 @@
             };
 
             let activeCollImageSource = "";
-
             const collTitleIn = document.getElementById('collTitleInput');
             const collStatusIn = document.getElementById('collStatusInput');
             const collDescIn = document.getElementById('collDescInput');
@@ -1628,11 +1670,9 @@
                 });
             }
 
-            // === 4. SOUNDTRACK // AUDIO ENGINE CONTROLLER ===
-            const STORAGE_KEY_AUDIO = 'adrastia_audio_track';
+            // === 4. SOUNDTRACK // INDEXEDDB PERSISTENT ENGINE ===
             const DEFAULT_AUDIO_TRACK = 'https://assets.mixkit.co/music/preview/mixkit-cyber-city-dark-synthwave-1188.mp3';
-
-            let activeAudioSource = "";
+            let activeAudioBlobOrUrl = null;
 
             const audioFileIn = document.getElementById('audioFileInput');
             const audioUrlIn = document.getElementById('audioDirectUrlInput');
@@ -1644,45 +1684,51 @@
             const btnTestPlay = document.getElementById('btnTestPlayAudio');
             const audioToast = document.getElementById('audioToast');
 
-            function loadAudioData() {
-                const storedTrack = localStorage.getItem(STORAGE_KEY_AUDIO) || DEFAULT_AUDIO_TRACK;
-                activeAudioSource = storedTrack;
-
-                if (audioPreviewPlayer) audioPreviewPlayer.src = storedTrack;
-
-                if (audioUrlIn) {
-                    audioUrlIn.value = storedTrack.startsWith('data:') ? '' : storedTrack;
-                }
-
-                if (audioFileNameDisplay) {
-                    if (storedTrack.startsWith('data:')) {
-                        audioFileNameDisplay.textContent = '// CUSTOM ENCODED AUDIO FILE STORED IN LOCALSTORAGE';
-                    } else if (storedTrack === DEFAULT_AUDIO_TRACK) {
-                        audioFileNameDisplay.textContent = '// DEFAULT SYNTHWAVE STREAM LOADED';
-                    } else {
-                        audioFileNameDisplay.textContent = `// SOURCE: ${storedTrack}`;
+            async function loadAudioData() {
+                try {
+                    // Try IndexedDB first
+                    const savedRecord = await AdrastiaIDB.get('soundtrack_track');
+                    if (savedRecord && savedRecord.blob) {
+                        activeAudioBlobOrUrl = savedRecord.blob;
+                        const objectUrl = URL.createObjectURL(savedRecord.blob);
+                        if (audioPreviewPlayer) audioPreviewPlayer.src = objectUrl;
+                        if (audioFileNameDisplay) audioFileNameDisplay.textContent = `// PERSISTED FILE: ${savedRecord.name || 'CUSTOM_SOUNDTRACK.mp3'}`;
+                        if (audioUrlIn) audioUrlIn.value = '';
+                        return;
                     }
+
+                    if (savedRecord && savedRecord.url) {
+                        activeAudioBlobOrUrl = savedRecord.url;
+                        if (audioPreviewPlayer) audioPreviewPlayer.src = savedRecord.url;
+                        if (audioUrlIn) audioUrlIn.value = savedRecord.url;
+                        if (audioFileNameDisplay) audioFileNameDisplay.textContent = `// STREAM: ${savedRecord.url}`;
+                        return;
+                    }
+                } catch(err) {
+                    console.warn('[ADRASTIA IDB] Error loading track:', err);
                 }
+
+                // Fallback to default
+                activeAudioBlobOrUrl = DEFAULT_AUDIO_TRACK;
+                if (audioPreviewPlayer) audioPreviewPlayer.src = DEFAULT_AUDIO_TRACK;
+                if (audioFileNameDisplay) audioFileNameDisplay.textContent = '// DEFAULT SYNTHWAVE STREAM ACTIVE';
             }
 
-            // Audio File Upload Handler
+            // File selection
             if (audioFileIn) {
                 audioFileIn.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (!file) return;
 
-                    const reader = new FileReader();
-                    reader.onload = function(evt) {
-                        activeAudioSource = evt.target.result;
-                        if (audioPreviewPlayer) audioPreviewPlayer.src = activeAudioSource;
-                        if (audioUrlIn) audioUrlIn.value = '';
-                        if (audioFileNameDisplay) audioFileNameDisplay.textContent = `// LOADED FILE: ${file.name}`;
-                    };
-                    reader.readAsDataURL(file);
+                    activeAudioBlobOrUrl = file;
+                    const objectUrl = URL.createObjectURL(file);
+                    if (audioPreviewPlayer) audioPreviewPlayer.src = objectUrl;
+                    if (audioUrlIn) audioUrlIn.value = '';
+                    if (audioFileNameDisplay) audioFileNameDisplay.textContent = `// LOADED FILE: ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
                 });
             }
 
-            // Audio Drop Box Handler
+            // Drag and drop audio
             if (audioDropBox) {
                 audioDropBox.addEventListener('dragover', function(e) { e.preventDefault(); audioDropBox.style.borderColor = 'var(--neon-pink)'; });
                 audioDropBox.addEventListener('dragleave', function() { audioDropBox.style.borderColor = '#333'; });
@@ -1691,14 +1737,11 @@
                     audioDropBox.style.borderColor = '#333';
                     const file = e.dataTransfer.files[0];
                     if (file && file.type.startsWith('audio/')) {
-                        const reader = new FileReader();
-                        reader.onload = function(evt) {
-                            activeAudioSource = evt.target.result;
-                            if (audioPreviewPlayer) audioPreviewPlayer.src = activeAudioSource;
-                            if (audioUrlIn) audioUrlIn.value = '';
-                            if (audioFileNameDisplay) audioFileNameDisplay.textContent = `// LOADED FILE: ${file.name}`;
-                        };
-                        reader.readAsDataURL(file);
+                        activeAudioBlobOrUrl = file;
+                        const objectUrl = URL.createObjectURL(file);
+                        if (audioPreviewPlayer) audioPreviewPlayer.src = objectUrl;
+                        if (audioUrlIn) audioUrlIn.value = '';
+                        if (audioFileNameDisplay) audioFileNameDisplay.textContent = `// LOADED FILE: ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
                     }
                 });
             }
@@ -1707,30 +1750,49 @@
                 audioUrlIn.addEventListener('input', function(e) {
                     const val = e.target.value.trim();
                     if (val) {
-                        activeAudioSource = val;
+                        activeAudioBlobOrUrl = val;
                         if (audioPreviewPlayer) audioPreviewPlayer.src = val;
-                        if (audioFileNameDisplay) audioFileNameDisplay.textContent = `// SOURCE: ${val}`;
+                        if (audioFileNameDisplay) audioFileNameDisplay.textContent = `// STREAM: ${val}`;
                     }
                 });
             }
 
-            // Audio Form Submit
+            // Save Soundtrack to IndexedDB
             if (audioForm) {
-                audioForm.addEventListener('submit', function(e) {
+                audioForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
 
-                    const finalTrack = activeAudioSource || (audioUrlIn ? audioUrlIn.value.trim() : DEFAULT_AUDIO_TRACK);
-                    localStorage.setItem(STORAGE_KEY_AUDIO, finalTrack);
-                    window.dispatchEvent(new CustomEvent('adr:audio-track-updated', { detail: finalTrack }));
+                    try {
+                        if (activeAudioBlobOrUrl instanceof Blob) {
+                            await AdrastiaIDB.set('soundtrack_track', {
+                                blob: activeAudioBlobOrUrl,
+                                name: activeAudioBlobOrUrl.name || 'CUSTOM_SOUNDTRACK.mp3',
+                                timestamp: Date.now()
+                            });
+                            localStorage.setItem('adrastia_audio_track', 'IDB_STORED');
+                        } else {
+                            const trackUrl = (audioUrlIn && audioUrlIn.value.trim()) || activeAudioBlobOrUrl || DEFAULT_AUDIO_TRACK;
+                            await AdrastiaIDB.set('soundtrack_track', {
+                                url: trackUrl,
+                                timestamp: Date.now()
+                            });
+                            localStorage.setItem('adrastia_audio_track', trackUrl);
+                        }
 
-                    if (audioToast) {
-                        audioToast.classList.add('show');
-                        setTimeout(() => audioToast.classList.remove('show'), 3500);
+                        window.dispatchEvent(new CustomEvent('adr:audio-track-updated'));
+
+                        if (audioToast) {
+                            audioToast.textContent = "// SUCCESS: SOUNDTRACK SAVED PERMANENTLY IN SECURE REPOSITORY!";
+                            audioToast.classList.add('show');
+                            setTimeout(() => audioToast.classList.remove('show'), 3500);
+                        }
+                    } catch (err) {
+                        alert("STORAGE_ERROR: Failed to write audio to persistent database: " + err.message);
                     }
                 });
             }
 
-            // Test Play / Pause Button
+            // Test play/pause
             if (btnTestPlay && audioPreviewPlayer) {
                 btnTestPlay.addEventListener('click', function() {
                     if (audioPreviewPlayer.paused) {
@@ -1745,20 +1807,18 @@
                 });
             }
 
-            // Reset Audio Defaults
+            // Reset soundtrack
             if (btnResetAudio) {
-                btnResetAudio.addEventListener('click', function() {
+                btnResetAudio.addEventListener('click', async function() {
                     if (confirm("Restore default underground ambient soundtrack?")) {
-                        localStorage.setItem(STORAGE_KEY_AUDIO, DEFAULT_AUDIO_TRACK);
-                        loadAudioData();
-                        window.dispatchEvent(new CustomEvent('adr:audio-track-updated', { detail: DEFAULT_AUDIO_TRACK }));
+                        await AdrastiaIDB.del('soundtrack_track');
+                        localStorage.removeItem('adrastia_audio_track');
+                        await loadAudioData();
+                        window.dispatchEvent(new CustomEvent('adr:audio-track-updated'));
                         if (audioToast) {
                             audioToast.textContent = "// SOUNDTRACK RESTORED TO DEFAULT SYNTHWAVE.";
                             audioToast.classList.add('show');
-                            setTimeout(() => {
-                                audioToast.textContent = "// SUCCESS: STOREFRONT SOUNDTRACK UPDATED & COMMITTED!";
-                                audioToast.classList.remove('show');
-                            }, 3000);
+                            setTimeout(() => audioToast.classList.remove('show'), 3000);
                         }
                     }
                 });
