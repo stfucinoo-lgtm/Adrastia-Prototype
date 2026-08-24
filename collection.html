@@ -40,15 +40,15 @@
         </div>
     </nav>
 
-    <!-- Collection Header -->
+    <!-- Collection Header (Dynamic Hydration Support) -->
     <header class="collection-hero border-bottom">
         <div class="hero-split text-side">
-            <h1 class="glitch" data-text="VOID_CORE">VOID_CORE</h1>
-            <p class="drop-status blink">// STATUS: LIVE // INVENTORY: CRITICAL</p>
-            <p class="drop-desc">A brutalist exploration of the empty spaces between the digital and physical worlds. Limited to 50 pieces per garment. No restocks.</p>
+            <h1 class="glitch" id="dropHeroTitle" data-text="VOID_CORE">VOID_CORE</h1>
+            <p class="drop-status blink" id="dropHeroStatus">// STATUS: LIVE // INVENTORY: CRITICAL</p>
+            <p class="drop-desc" id="dropHeroDesc">A brutalist exploration of the empty spaces between the digital and physical worlds. Limited to 50 pieces per garment. No restocks.</p>
         </div>
         <div class="hero-split img-side">
-            <img src="https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop" alt="VOID_CORE Hero">
+            <img id="dropHeroImage" src="https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop" alt="Collection Drop Hero">
         </div>
     </header>
 
@@ -56,19 +56,6 @@
     <section class="collection-products border-bottom">
         <div class="grid-layout" id="dropProductsGrid">
             <!-- Injected dynamically via JS from AdrastiaStore -->
-        </div>
-    </section>
-
-    <!-- High Flash Street Gallery -->
-    <section class="flash-gallery border-bottom">
-        <div class="flash-img border-right">
-            <img src="https://images.unsplash.com/photo-1542272205-21d157ab9c4c?q=80&w=1000&auto=format&fit=crop" alt="Street style 1">
-        </div>
-        <div class="flash-img border-right">
-            <img src="https://images.unsplash.com/photo-1517502699925-502a9446f7ff?q=80&w=1000&auto=format&fit=crop" alt="Street style 2">
-        </div>
-        <div class="flash-img">
-            <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1000&auto=format&fit=crop" alt="Street style 3">
         </div>
     </section>
 
@@ -119,16 +106,48 @@
     <script src="js/glitch.js"></script>
     <script src="js/audio.js"></script>
 
-    <!-- Dynamic Collection Grid Engine -->
+    <!-- Dynamic Collection Grid & Hero Metadata Engine -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             'use strict';
 
+            // 1. Hydrate Collection Hero Metadata
+            const hydrateCollectionHero = () => {
+                const titleEl = document.getElementById("dropHeroTitle");
+                const statusEl = document.getElementById("dropHeroStatus");
+                const descEl = document.getElementById("dropHeroDesc");
+                const imgEl = document.getElementById("dropHeroImage");
+
+                const rawMeta = localStorage.getItem("adrastia_collection_meta");
+                if (rawMeta) {
+                    try {
+                        const meta = JSON.parse(rawMeta);
+                        if (meta.title && titleEl) {
+                            titleEl.textContent = meta.title;
+                            titleEl.setAttribute("data-text", meta.title);
+                        }
+                        if (meta.status && statusEl) {
+                            statusEl.textContent = meta.status;
+                        }
+                        if (meta.description && descEl) {
+                            descEl.textContent = meta.description;
+                        }
+                        if (meta.image && imgEl) {
+                            imgEl.src = meta.image;
+                        }
+                    } catch (e) {
+                        console.error("[ADRASTIA] Error loading collection meta:", e);
+                    }
+                }
+            };
+
+            hydrateCollectionHero();
+
+            // 2. Render Real Products from Store
             const gridContainer = document.getElementById("dropProductsGrid");
             if (!gridContainer || !window.AdrastiaStore) return;
 
             const renderDropGrid = () => {
-                // Fetch ONLY active products
                 const activeProducts = window.AdrastiaStore.getActiveProducts();
                 
                 let dropItems = activeProducts.filter(p => p.collection === "VOID_CORE");
@@ -176,7 +195,9 @@
 
             renderDropGrid();
 
+            // Listen for store updates
             window.addEventListener("adr:products-updated", renderDropGrid);
+            window.addEventListener("adr:collection-updated", hydrateCollectionHero);
         });
     </script>
 </body>
