@@ -1,112 +1,97 @@
 /**
  * ==========================================================================
- * ADRASTIA // UNDERGROUND AMBIENT AUDIO ENGINE (js/audio.js)
- * Features: Pure Web Audio API Synthetic Ambient Drone & Visual Equalizer
- * Version: 2.0.0
+ * ADRASTIA // UNDERGROUND AUDIO ENGINE (js/audio.js)
+ * Features: Real Music Track Player, Dynamic Audio URL, Smooth Fade Engine & Equalizer
+ * Version: 3.0.0
  * ==========================================================================
  */
 
 (function (window) {
     'use strict';
 
-    // Internal Audio State
-    let audioCtx = null;
-    let masterGain = null;
-    let osc1 = null;
-    let osc2 = null;
-    let noiseNode = null;
-    let filterNode = null;
+    // Default Underground Track (Can be overridden via localStorage or custom MP3)
+    const DEFAULT_TRACK_URL = 'https://assets.mixkit.co/music/preview/mixkit-cyber-city-dark-synthwave-1188.mp3';
+    const STORAGE_KEY_ACTIVE = 'ADRASTIA_AUDIO_ACTIVE';
+    const STORAGE_KEY_TRACK = 'adrastia_audio_track';
+
+    let audioElement = null;
+    let fadeInterval = null;
     let isPlaying = false;
+    const TARGET_VOLUME = 0.55;
 
-    // Local Storage Audio Preference
-    const STORAGE_KEY = 'ADRASTIA_AUDIO_ACTIVE';
-
-    // --- 1. Synthesizer Setup (Web Audio API) ---
-    function initSynth() {
-        if (audioCtx) return;
-
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContext();
-
-        // Master Gain
-        masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-        masterGain.connect(audioCtx.destination);
-
-        // Low-pass Filter for dark, underground resonance
-        filterNode = audioCtx.createBiquadFilter();
-        filterNode.type = 'lowpass';
-        filterNode.frequency.setValueAtTime(280, audioCtx.currentTime);
-        filterNode.Q.setValueAtTime(4, audioCtx.currentTime);
-        filterNode.connect(masterGain);
-
-        // Oscillator 1: Deep Sine (55Hz / Note A1)
-        osc1 = audioCtx.createOscillator();
-        osc1.type = 'sine';
-        osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
-        osc1.connect(filterNode);
-
-        // Oscillator 2: Slightly detuned Sawtooth for industrial warmth
-        osc2 = audioCtx.createOscillator();
-        osc2.type = 'sawtooth';
-        osc2.frequency.setValueAtTime(55.6, audioCtx.currentTime);
-
-        const osc2Gain = audioCtx.createGain();
-        osc2Gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-        osc2.connect(osc2Gain);
-        osc2Gain.connect(filterNode);
-
-        // Analog Noise Generator (Tape Static Texture)
-        const bufferSize = audioCtx.sampleRate * 2;
-        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        const output = noiseBuffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-            output[i] = (Math.random() * 2 - 1) * 0.02; // Very gentle white noise
-        }
-
-        noiseNode = audioCtx.createBufferSource();
-        noiseNode.buffer = noiseBuffer;
-        noiseNode.loop = true;
-
-        const noiseFilter = audioCtx.createBiquadFilter();
-        noiseFilter.type = 'bandpass';
-        noiseFilter.frequency.setValueAtTime(1200, audioCtx.currentTime);
-        noiseFilter.Q.setValueAtTime(1, audioCtx.currentTime);
-
-        noiseNode.connect(noiseFilter);
-        noiseFilter.connect(masterGain);
-
-        // Start Oscillators
-        osc1.start();
-        osc2.start();
-        noiseNode.start();
+    // --- 1. Audio Track Initialization ---
+    function getTrackSource() {
+        return localStorage.getItem(STORAGE_KEY_TRACK) || DEFAULT_TRACK_URL;
     }
 
-    // Smooth Fade In
+    function initAudio() {
+        if (audioElement) return;
+
+        audioElement = new Audio();
+        audioElement.src = getTrackSource();
+        audioElement.loop = true;
+        audioElement.preload = 'metadata';
+        audioElement.volume = 0;
+
+        // Auto reload if user changes track dynamically
+        window.addEventListener('adr:audio-track-updated', (e) => {
+            const newUrl = e.detail || getTrackSource();
+            const wasPlaying = isPlaying;
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.src = newUrl;
+                if (wasPlaying) startAudio();
+            }
+        });
+    }
+
+    // --- 2. Smooth Fade-in & Fade-out Engine ---
     function startAudio() {
-        initSynth();
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
+        initAudio();
+        
+        // Ensure source is current
+        const currentSrc = getTrackSource();
+        if (audioElement.src !== currentSrc) {
+            audioElement.src = currentSrc;
         }
 
-        // Smooth Volume Ramp to prevent popping
-        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-        masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-        masterGain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 1.5);
-        isPlaying = true;
-        updateWidgetUI(true);
-        localStorage.setItem(STORAGE_KEY, 'true');
+        clearInterval(fadeInterval);
+        audioElement.play().then(() => {
+            isPlaying = true;
+            updateWidgetUI(true);
+            localStorage.setItem(STORAGE_KEY_ACTIVE, 'true');
+
+            // Smooth Fade-in
+            fadeInterval = setInterval(() => {
+                if (audioElement.volume < TARGET_VOLUME) {
+                    audioElement.volume = Math.min(TARGET_VOLUME, audioElement.volume + 0.05);
+                } else {
+                    clearInterval(fadeInterval);
+                }
+            }, 80);
+        }).catch(err => {
+            console.warn('[ADRASTIA AUDIO] Autoplay prevented or track error:', err);
+            isPlaying = false;
+            updateWidgetUI(false);
+        });
     }
 
-    // Smooth Fade Out
     function stopAudio() {
-        if (!audioCtx || !masterGain) return;
-        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-        masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-        masterGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
-        isPlaying = false;
-        updateWidgetUI(false);
-        localStorage.setItem(STORAGE_KEY, 'false');
+        if (!audioElement) return;
+
+        clearInterval(fadeInterval);
+        fadeInterval = setInterval(() => {
+            if (audioElement.volume > 0.05) {
+                audioElement.volume = Math.max(0, audioElement.volume - 0.08);
+            } else {
+                audioElement.volume = 0;
+                audioElement.pause();
+                clearInterval(fadeInterval);
+                isPlaying = false;
+                updateWidgetUI(false);
+                localStorage.setItem(STORAGE_KEY_ACTIVE, 'false');
+            }
+        }, 60);
     }
 
     function toggleAudio() {
@@ -117,11 +102,10 @@
         }
     }
 
-    // --- 2. Inject Brutalist Audio Widget UI ---
+    // --- 3. Inject Brutalist Visual Widget ---
     function injectAudioWidget() {
         if (document.getElementById('adrAudioWidget')) return;
 
-        // Scoped Styles for Audio Controller
         const style = document.createElement('style');
         style.innerHTML = `
             .adr-audio-widget {
@@ -168,7 +152,7 @@
             }
             .adr-audio-widget.active .audio-bar {
                 background: var(--accent-pink, #ff0055);
-                animation: sound-bars 1s infinite alternate ease-in-out;
+                animation: sound-bars 0.8s infinite alternate ease-in-out;
             }
             .adr-audio-widget.active .audio-bar:nth-child(1) { animation-delay: 0.1s; }
             .adr-audio-widget.active .audio-bar:nth-child(2) { animation-delay: 0.3s; }
@@ -188,14 +172,14 @@
         document.head.appendChild(style);
 
         const widgetMarkup = `
-            <div class="adr-audio-widget" id="adrAudioWidget" title="Toggle Underground Ambient Frequency">
+            <div class="adr-audio-widget" id="adrAudioWidget" title="Click to Toggle Soundtrack">
                 <div class="audio-bars">
                     <div class="audio-bar"></div>
                     <div class="audio-bar"></div>
                     <div class="audio-bar"></div>
                     <div class="audio-bar"></div>
                 </div>
-                <span id="adrAudioLabel">FREQ: OFF // 55Hz</span>
+                <span id="adrAudioLabel">AUDIO: OFF // 00Hz</span>
             </div>
         `;
 
@@ -212,24 +196,28 @@
 
         if (active) {
             widget.classList.add('active');
-            label.innerText = 'FREQ: 55Hz [LIVE AMBIENT]';
+            label.innerText = 'SOUNDTRACK: LIVE [PLAYING]';
             label.style.color = 'var(--accent-pink, #ff0055)';
         } else {
             widget.classList.remove('active');
-            label.innerText = 'FREQ: OFF // 55Hz';
+            label.innerText = 'AUDIO: OFF // 00Hz';
             label.style.color = '';
         }
     }
 
-    // Expose API
+    // --- 4. Expose Public Engine API ---
     window.AdrastiaAudio = {
         toggle: toggleAudio,
         start: startAudio,
         stop: stopAudio,
-        isPlaying: () => isPlaying
+        isPlaying: () => isPlaying,
+        setTrack: (url) => {
+            localStorage.setItem(STORAGE_KEY_TRACK, url);
+            window.dispatchEvent(new CustomEvent('adr:audio-track-updated', { detail: url }));
+        }
     };
 
-    // Auto Ingest UI on DOM Ready
+    // Auto Ingest Widget on DOM Ready
     document.addEventListener('DOMContentLoaded', () => {
         injectAudioWidget();
     });
