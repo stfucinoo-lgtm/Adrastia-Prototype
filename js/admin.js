@@ -1,9 +1,8 @@
 /**
  * ==========================================================================
  * ADRASTIA // ADMIN COMMAND TERMINAL CONTROLLER (js/admin.js)
- * Features: Live Telemetry, Base64 Image Processing, Inventory Management,
- *           Dispatch Orders Workflow & Real CSV Export Engine
- * Version: 2.0.0
+ * Features: DA Currency Localization, Kill Drop Deactivation & Restore Engine
+ * Version: 2.1.0
  * ==========================================================================
  */
 
@@ -16,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Cached Upload Image (Base64)
     let currentUploadedImageBase64 = "";
 
     // --- 1. Tab Switching Controller ---
@@ -74,18 +72,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const urlInput = document.getElementById("prodImgUrl");
 
     if (dropzone && fileInput) {
-        // Trigger file browser on click
         dropzone.addEventListener("click", () => fileInput.click());
 
-        // File selection handler
         fileInput.addEventListener("change", async (e) => {
             const file = e.target.files[0];
-            if (file) {
-                await processImageFile(file);
-            }
+            if (file) await processImageFile(file);
         });
 
-        // Drag & Drop handlers
         dropzone.addEventListener("dragover", (e) => {
             e.preventDefault();
             dropzone.classList.add("dragover");
@@ -113,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 imgPreview.src = base64;
                 imgPreview.style.display = "inline-block";
             }
-            if (urlInput) urlInput.value = ""; // Clear manual URL if file provided
+            if (urlInput) urlInput.value = "";
         } catch (err) {
             alert("IMAGE_ENCODE_ERROR: Could not process image file.");
         }
@@ -155,7 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const desc = document.getElementById("prodDesc").value.trim();
             const manualUrl = urlInput ? urlInput.value.trim() : "";
 
-            // Determine image source
             const finalImage = currentUploadedImageBase64 || manualUrl || "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000";
 
             if (!name || isNaN(price) || isNaN(totalStock)) {
@@ -163,7 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Distribute stock across sizes evenly
             const sRatio = Math.floor(totalStock * 0.2);
             const mRatio = Math.floor(totalStock * 0.3);
             const lRatio = Math.floor(totalStock * 0.3);
@@ -180,13 +171,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 stock: { S: sRatio, M: mRatio, L: lRatio, XL: xlRatio }
             });
 
-            alert(`SYSTEM_DEPLOY: [${newProduct.name}] successfully injected into catalog.`);
+            alert(`SYSTEM_DEPLOY: [${newProduct.name}] deployed successfully (${window.AdrastiaStore.formatMoney(price)}).`);
             toggleAddDrawer(false);
             renderAll();
         });
     }
 
-    // --- 5. Render Inventory Table ---
+    // --- 5. Render Inventory Table (With Kill / Restore & DA) ---
     const renderInventory = () => {
         const tbody = document.getElementById("inventoryTableBody");
         if (!tbody) return;
@@ -199,52 +190,62 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         tbody.innerHTML = products.map(prod => {
-            // Stock badge status
             let badgeHtml = '<span class="badge badge-green">IN STOCK</span>';
-            if (prod.isSoldOut || prod.totalStock <= 0) {
-                badgeHtml = '<span class="badge badge-gray">SOLD OUT</span>';
+            let actionBtn = `<button class="btn-kill btn-action-kill" data-id="${prod.id}">KILL_DROP</button>`;
+
+            if (prod.isKilled) {
+                badgeHtml = '<span class="badge badge-pink" style="background:rgba(255,0,85,0.15);">KILLED [HIDDEN]</span>';
+                actionBtn = `<button class="btn-ghost btn-action-restore" data-id="${prod.id}" style="border-color:var(--neon-green); color:var(--neon-green); font-size:0.7rem; padding:6px 10px;">RESTORE</button>`;
+            } else if (prod.isSoldOut || prod.totalStock <= 0) {
+                badgeHtml = '<span class="badge badge-gray">SOLD OUT [VISIBLE]</span>';
             } else if (prod.isCritical || prod.totalStock <= 5) {
                 badgeHtml = '<span class="badge badge-pink">CRITICAL</span>';
             }
 
-            const isDead = prod.isSoldOut || prod.totalStock <= 0;
-
             return `
-                <tr data-id="${prod.id}">
+                <tr data-id="${prod.id}" style="${prod.isKilled ? 'opacity:0.6; background:rgba(255,0,85,0.02);' : ''}">
                     <td><img src="${prod.image}" class="prod-thumb" alt="Product"></td>
                     <td>
                         <strong>${prod.name}</strong><br>
                         <span style="color:#666; font-size:0.7rem;">SKU: ${prod.sku}</span>
                     </td>
                     <td><span class="badge badge-cyan">${prod.collection || 'DIGITAL_DECAY'}</span></td>
-                    <td><strong>$${prod.price.toFixed(2)}</strong></td>
+                    <td><strong>${window.AdrastiaStore.formatMoney(prod.price)}</strong></td>
                     <td>
-                        <span style="${prod.totalStock <= 5 ? 'color:var(--neon-pink); font-weight:bold;' : ''}">
+                        <span style="${prod.totalStock <= 5 && !prod.isKilled ? 'color:var(--neon-pink); font-weight:bold;' : ''}">
                             ${prod.totalStock} / ${prod.maxStock || 50} REMAINING
                         </span>
                     </td>
                     <td>${badgeHtml}</td>
                     <td>
-                        <button class="btn-kill btn-action-kill" data-id="${prod.id}" ${isDead ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>
-                            ${isDead ? 'EXHAUSTED' : 'KILL_DROP'}
-                        </button>
-                        <button class="btn-del btn-action-del" data-id="${prod.id}" title="Delete Artifact">&times;</button>
+                        ${actionBtn}
+                        <button class="btn-del btn-action-del" data-id="${prod.id}" title="Delete Artifact Permanently">&times;</button>
                     </td>
                 </tr>
             `;
         }).join("");
 
-        // Attach Kill and Delete Listeners
+        // Kill Drop Listeners (Deactivates from Storefront)
         tbody.querySelectorAll(".btn-action-kill").forEach(btn => {
             btn.addEventListener("click", () => {
                 const id = btn.getAttribute("data-id");
-                if (confirm("OVERRIDE WARNING: Terminate stock for this drop immediately?")) {
+                if (confirm("KILL DROP WARNING: This will immediately HIDE this product from the storefront catalog and homepage. Proceed?")) {
                     window.AdrastiaStore.killProduct(id);
                     renderAll();
                 }
             });
         });
 
+        // Restore Drop Listeners (Re-activates back to Storefront)
+        tbody.querySelectorAll(".btn-action-restore").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const id = btn.getAttribute("data-id");
+                window.AdrastiaStore.restoreProduct(id);
+                renderAll();
+            });
+        });
+
+        // Permanent Delete Listeners
         tbody.querySelectorAll(".btn-action-del").forEach(btn => {
             btn.addEventListener("click", () => {
                 const id = btn.getAttribute("data-id");
@@ -256,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 6. Render Dispatch Log (Orders) Table ---
+    // --- 6. Render Dispatch Log (Orders) in DA ---
     const renderOrders = () => {
         const tbody = document.getElementById("ordersTableBody");
         if (!tbody) return;
@@ -269,17 +270,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         tbody.innerHTML = orders.map(ord => {
-            // Status Badge class
             let statusBadge = "badge-cyan";
-            if (ord.status === "DISPATCHED") statusBadge = "badge-green";
-            if (ord.status === "DELIVERED") statusBadge = "badge-green";
+            if (ord.status === "DISPATCHED" || ord.status === "DELIVERED") statusBadge = "badge-green";
             if (ord.status === "PROCESSING") statusBadge = "badge-pink";
             if (ord.status === "CANCELLED") statusBadge = "badge-gray";
 
-            // Items Payload summary
             const itemsSummary = ord.items.map(i => `${i.qty}x ${i.name} (${i.size})`).join("<br>");
-
-            // Format date
             const dateStr = new Date(ord.timestamp).toLocaleString("en-GB", {
                 dateStyle: "short",
                 timeStyle: "short"
@@ -294,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span style="color:#666; font-size:0.7rem;">${ord.customer.address}</span>
                     </td>
                     <td style="font-size:0.75rem; line-height:1.4;">${itemsSummary}</td>
-                    <td style="font-weight:bold; color:var(--neon-green);">$${ord.totalAmount.toFixed(2)}</td>
+                    <td style="font-weight:bold; color:var(--neon-green);">${window.AdrastiaStore.formatMoney(ord.totalAmount)}</td>
                     <td style="color:#888; font-size:0.7rem;">${dateStr}</td>
                     <td><span class="badge ${statusBadge}">${ord.status}</span></td>
                     <td>
@@ -309,7 +305,6 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
         }).join("");
 
-        // Status Changer Listeners
         tbody.querySelectorAll(".order-status-select").forEach(select => {
             select.addEventListener("change", (e) => {
                 const orderId = e.target.getAttribute("data-id");
@@ -320,18 +315,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 7. Live Telemetry & Metrics (KPIs) ---
+    // --- 7. Live Telemetry & Metrics in DA ---
     const renderKPIs = () => {
         const orders = window.AdrastiaStore.getOrders();
         const products = window.AdrastiaStore.getProducts();
 
-        // Calculate Revenue from non-cancelled orders
         const grossRevenue = orders
             .filter(o => o.status !== "CANCELLED")
             .reduce((sum, o) => sum + o.totalAmount, 0);
 
         const pendingOrders = orders.filter(o => o.status === "PROCESSING").length;
-        const criticalProducts = products.filter(p => p.totalStock <= 5 && !p.isSoldOut).length;
+        const criticalProducts = products.filter(p => p.totalStock <= 5 && !p.isSoldOut && !p.isKilled).length;
 
         const revEl = document.getElementById("kpiGrossRevenue");
         const ordersEl = document.getElementById("kpiTotalOrders");
@@ -339,14 +333,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const prodCountEl = document.getElementById("kpiTotalProducts");
         const critEl = document.getElementById("kpiCriticalStock");
 
-        if (revEl) revEl.innerText = `$${grossRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        if (revEl) revEl.innerText = window.AdrastiaStore.formatMoney(grossRevenue);
         if (ordersEl) ordersEl.innerText = orders.length;
         if (pendingEl) pendingEl.innerText = `${pendingOrders} PENDING DISPATCH`;
-        if (prodCountEl) prodCountEl.innerText = products.length;
+        if (prodCountEl) prodCountEl.innerText = products.filter(p => !p.isKilled).length;
         if (critEl) critEl.innerText = String(criticalProducts).padStart(2, '0');
     };
 
-    // --- 8. Live Terminal Alerts Feed ---
+    // --- 8. Live Alerts Feed ---
     const renderTerminalAlerts = () => {
         const feedContainer = document.getElementById("terminalAlertsFeed");
         if (!feedContainer) return;
@@ -356,27 +350,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let alerts = [];
 
-        // Critical stock alerts
         products.forEach(p => {
-            if (p.isSoldOut || p.totalStock === 0) {
-                alerts.push(`<div style="background:rgba(255,0,85,0.08); border-left:3px solid var(--neon-pink); padding:8px 12px;"><strong class="text-pink">EXHAUSTED:</strong> [${p.name}] stock is zero.</div>`);
+            if (p.isKilled) {
+                alerts.push(`<div style="background:rgba(255,0,85,0.08); border-left:3px solid var(--neon-pink); padding:8px 12px;"><strong class="text-pink">KILLED_DROP:</strong> [${p.name}] hidden from store.</div>`);
+            } else if (p.isSoldOut || p.totalStock === 0) {
+                alerts.push(`<div style="background:rgba(100,100,100,0.1); border-left:3px solid #666; padding:8px 12px;"><strong style="color:#aaa;">SOLD_OUT:</strong> [${p.name}] natural stock exhausted.</div>`);
             } else if (p.totalStock <= 5) {
                 alerts.push(`<div style="background:rgba(255,170,0,0.08); border-left:3px solid #ffaa00; padding:8px 12px;"><strong style="color:#ffaa00;">CRITICAL_STOCK:</strong> [${p.name}] at ${p.totalStock} units.</div>`);
             }
         });
 
-        // Latest order alerts
         if (orders.length > 0) {
             const latest = orders[0];
-            alerts.push(`<div style="background:rgba(0,255,102,0.08); border-left:3px solid var(--neon-green); padding:8px 12px;"><strong class="text-green">NEW_PAYLOAD:</strong> Order ${latest.orderId} received for $${latest.totalAmount.toFixed(2)}.</div>`);
+            alerts.push(`<div style="background:rgba(0,255,102,0.08); border-left:3px solid var(--neon-green); padding:8px 12px;"><strong class="text-green">NEW_DISPATCH:</strong> ${latest.orderId} received for ${window.AdrastiaStore.formatMoney(latest.totalAmount)}.</div>`);
         }
 
-        alerts.push(`<div style="background:rgba(0,240,255,0.05); border-left:3px solid var(--neon-cyan); padding:8px 12px;"><strong class="text-cyan">SOCKET_STATUS:</strong> Encrypted LocalStorage Buffer sync operational.</div>`);
+        alerts.push(`<div style="background:rgba(0,240,255,0.05); border-left:3px solid var(--neon-cyan); padding:8px 12px;"><strong class="text-cyan">CURRENCY_GATEWAY:</strong> Algerian Dinar (DA) engine active.</div>`);
 
         feedContainer.innerHTML = alerts.slice(0, 4).join("");
     };
 
-    // --- 9. Promo Codes & System Override Settings ---
+    // --- 9. Promo Codes & Factory Purge ---
     const renderSettings = () => {
         const promoList = document.getElementById("promoCodesList");
         if (!promoList) return;
@@ -392,19 +386,18 @@ document.addEventListener("DOMContentLoaded", () => {
         `).join("");
     };
 
-    // Factory Reset Button
     const btnFactoryReset = document.getElementById("btnFactoryReset");
     if (btnFactoryReset) {
         btnFactoryReset.addEventListener("click", () => {
-            if (confirm("EMERGENCY OVERRIDE: Are you sure you want to PURGE all custom products, drops, orders, and reset to defaults?")) {
+            if (confirm("EMERGENCY OVERRIDE: Purge all products/orders and reload DA factory defaults?")) {
                 window.AdrastiaStore.factoryReset();
-                alert("SYSTEM: Repository purged and restored to factory defaults.");
+                alert("SYSTEM: Repository purged and restored to DA factory defaults.");
                 location.reload();
             }
         });
     }
 
-    // --- 10. Real CSV Export Engine ---
+    // --- 10. CSV Export Engine ---
     const exportCsvBtn = document.getElementById("exportCsvBtn");
     if (exportCsvBtn) {
         exportCsvBtn.addEventListener("click", () => {
@@ -414,10 +407,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Generate CSV Header
-            let csvContent = "Order ID,Recipient Name,Email,Address,Items,Total Amount (USD),Payment Method,Status,Timestamp\n";
+            let csvContent = "Order ID,Recipient Name,Email,Address,Items,Total (DA),Payment Method,Status,Timestamp\n";
 
-            // Generate CSV Rows
             orders.forEach(o => {
                 const itemsClean = o.items.map(i => `${i.qty}x ${i.name} (${i.size})`).join(" | ");
                 const row = [
@@ -426,7 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     `"${o.customer.email}"`,
                     `"${o.customer.address}"`,
                     `"${itemsClean}"`,
-                    `"${o.totalAmount.toFixed(2)}"`,
+                    `"${o.totalAmount} DA"`,
                     `"${o.paymentMethod}"`,
                     `"${o.status}"`,
                     `"${o.timestamp}"`
@@ -434,7 +425,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 csvContent += row.join(",") + "\n";
             });
 
-            // Trigger Download
             const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
@@ -446,7 +436,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- Master Render Function ---
     const renderAll = () => {
         renderKPIs();
         renderInventory();
@@ -455,10 +444,8 @@ document.addEventListener("DOMContentLoaded", () => {
         renderSettings();
     };
 
-    // Initial Execution
     renderAll();
 
-    // Listen for events emitted by AdrastiaStore
     window.addEventListener("adr:products-updated", renderAll);
     window.addEventListener("adr:orders-updated", renderAll);
 });
