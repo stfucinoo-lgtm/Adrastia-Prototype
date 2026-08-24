@@ -40,14 +40,14 @@
         </div>
     </nav>
 
-    <!-- Editorial Header -->
+    <!-- Editorial Header (Dynamic Meta Hydration) -->
     <header class="editorial-header">
         <div class="editorial-img-container">
             <img id="lookbookHeroImage" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Lookbook Hero">
         </div>
         <div class="editorial-title-wrapper">
-            <h1 class="glitch" data-text="// VOL.2: DIGITAL_DECAY">// VOL.2: DIGITAL_DECAY</h1>
-            <p class="sub-headline">A VISUAL EXPLORATION OF URBAN CORRUPTION AND Y2K NOSTALGIA.</p>
+            <h1 class="glitch" id="lookbookTitle" data-text="// VOL.2: DIGITAL_DECAY">// VOL.2: DIGITAL_DECAY</h1>
+            <p class="sub-headline" id="lookbookSubtitle">A VISUAL EXPLORATION OF URBAN CORRUPTION AND Y2K NOSTALGIA.</p>
         </div>
     </header>
 
@@ -56,13 +56,13 @@
         <!-- Rendered dynamically from published products -->
     </section>
 
-    <!-- Narrative Break Feature -->
+    <!-- Narrative Break Feature (Dynamic Text Hydration) -->
     <section class="narrative-break border-bottom">
         <div class="narrative-content">
-            <h2>REJECT THE <br><span class="neon-green">ALGORITHM.</span></h2>
+            <h2 id="lookbookNarrativeTitle">REJECT THE <br><span class="neon-green">ALGORITHM.</span></h2>
             <div class="text-columns">
-                <p>Volume 2 was born from the static of broken CRT monitors and the concrete of underground rave venues. We looked at the polished, algorithm-driven state of modern streetwear and decided to burn it down.</p>
-                <p>Every piece in DIGITAL_DECAY is distressed, acid-washed, or misprinted by design. The glitches are intentional. The rawness is the point. This is clothing for the end of the internet.</p>
+                <p id="lookbookNarrativeP1">Volume 2 was born from the static of broken CRT monitors and the concrete of underground rave venues. We looked at the polished, algorithm-driven state of modern streetwear and decided to burn it down.</p>
+                <p id="lookbookNarrativeP2">Every piece in DIGITAL_DECAY is distressed, acid-washed, or misprinted by design. The glitches are intentional. The rawness is the point. This is clothing for the end of the internet.</p>
             </div>
         </div>
     </section>
@@ -129,18 +129,55 @@
             const stlGridContainer = document.getElementById("stlGrid");
             const heroImg = document.getElementById("lookbookHeroImage");
 
+            // 1. Dynamic Lookbook Metadata & Texts Hydration
+            const hydrateLookbookTexts = () => {
+                const titleEl = document.getElementById("lookbookTitle");
+                const subtitleEl = document.getElementById("lookbookSubtitle");
+                const narrativeTitleEl = document.getElementById("lookbookNarrativeTitle");
+                const p1El = document.getElementById("lookbookNarrativeP1");
+                const p2El = document.getElementById("lookbookNarrativeP2");
+
+                const raw = localStorage.getItem("adrastia_lookbook_meta");
+                if (raw) {
+                    try {
+                        const meta = JSON.parse(raw);
+                        if (meta.title && titleEl) {
+                            titleEl.textContent = meta.title;
+                            titleEl.setAttribute("data-text", meta.title);
+                        }
+                        if (meta.subtitle && subtitleEl) {
+                            subtitleEl.textContent = meta.subtitle;
+                        }
+                        if (meta.narrativeTitle && narrativeTitleEl) {
+                            narrativeTitleEl.innerHTML = meta.narrativeTitle;
+                        }
+                        if (meta.p1 && p1El) {
+                            p1El.textContent = meta.p1;
+                        }
+                        if (meta.p2 && p2El) {
+                            p2El.textContent = meta.p2;
+                        }
+                    } catch (e) {
+                        console.error("[ADRASTIA] Error hydrating lookbook texts:", e);
+                    }
+                }
+            };
+
+            hydrateLookbookTexts();
+
+            // 2. Render Products into Galleries & Shop the Look
             const renderLookbook = () => {
                 if (!window.AdrastiaStore) return;
                 const products = window.AdrastiaStore.getActiveProducts();
 
                 if (products.length === 0) return;
 
-                // 1. Update Hero Image if first product exists
+                // Update Hero Image from first specimen
                 if (heroImg && products[0] && products[0].image) {
                     heroImg.src = products[0].image;
                 }
 
-                // 2. Hydrate Scattered Gallery (Up to 4 slots)
+                // Hydrate Scattered Gallery
                 if (scatteredContainer) {
                     const scatteredItems = products.slice(0, 4);
                     scatteredContainer.innerHTML = scatteredItems.map((prod, idx) => `
@@ -153,7 +190,7 @@
                     `).join("");
                 }
 
-                // 3. Hydrate Diptych Gallery (2 Slots)
+                // Hydrate Diptych Gallery
                 if (diptychContainer) {
                     const diptychItems = products.slice(0, 2);
                     diptychContainer.innerHTML = diptychItems.map(prod => `
@@ -165,7 +202,7 @@
                     `).join("");
                 }
 
-                // 4. Hydrate Shop The Look Grid
+                // Hydrate Shop The Look Grid
                 if (stlGridContainer) {
                     const stlItems = products.slice(0, 6);
                     stlGridContainer.innerHTML = stlItems.map(prod => {
@@ -197,8 +234,9 @@
 
             renderLookbook();
 
-            // Re-render when products change in storage
+            // Event Listeners for real-time synchronization
             window.addEventListener("adr:products-updated", renderLookbook);
+            window.addEventListener("adr:lookbook-updated", hydrateLookbookTexts);
         });
     </script>
 </body>
