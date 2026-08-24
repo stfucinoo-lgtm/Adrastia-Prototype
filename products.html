@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHOP ALL | ADRASTIA</title>
+    <title>SHOP ALL // HARDWARE REPOSITORY | ADRASTIA</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700;900&display=swap" rel="stylesheet">
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/base.css">
@@ -21,7 +21,7 @@
     <div class="noise-overlay"></div>
     <div class="custom-cursor"></div>
 
-    <!-- Navigation (Reused) -->
+    <!-- Brutalist Navigation -->
     <nav class="brutalist-nav">
         <div class="nav-left">
             <a href="index.html" class="brand-logo glitch-hover" data-text="ADRASTIA">ADRASTIA</a>
@@ -30,6 +30,7 @@
             <a href="products.html" class="nav-link neon-green">SHOP_ALL</a>
             <a href="collection.html" class="nav-link">NEW_DROP</a>
             <a href="lookbook.html" class="nav-link">ARCHIVE</a>
+            <a href="admin.html" class="nav-link">DASHBOARD</a>
         </div>
         <div class="nav-right">
             <a href="about.html" class="nav-link hidden-mobile">MANIFESTO</a>
@@ -40,91 +41,35 @@
     </nav>
 
     <!-- Page Header -->
-    <header class="products-header">
-        <h1 class="massive-title glitch" data-text="ALL_PRODUCTS">ALL_PRODUCTS</h1>
-        <p class="sub-headline">// GEAR UP. STAND OUT. // SYSTEM OVERRIDE INITIATED.</p>
+    <header class="products-header border-bottom">
+        <h1 class="massive-title glitch" data-text="ALL_HARDWARE">ALL_HARDWARE</h1>
+        <p class="sub-headline">// LIVE CATALOG INGESTION // FILTER BY PROTOCOL</p>
     </header>
 
     <!-- Industrial Filter Section -->
-    <section class="filter-section border-top border-bottom">
-        <div class="filter-group">
+    <section class="filter-section border-bottom">
+        <div class="filter-group" id="collectionFilters">
             <span class="filter-label">COLLECTION:</span>
-            <button class="filter-btn active">ALL</button>
-            <button class="filter-btn">DIGITAL_DECAY</button>
-            <button class="filter-btn">VOID_CORE</button>
+            <button class="filter-btn active" data-filter="ALL">ALL</button>
+            <button class="filter-btn" data-filter="DIGITAL_DECAY">DIGITAL_DECAY</button>
+            <button class="filter-btn" data-filter="VOID_CORE">VOID_CORE</button>
         </div>
-        <div class="filter-group">
+        <div class="filter-group" id="sizeFilters">
             <span class="filter-label">SIZE:</span>
-            <button class="filter-btn">S</button>
-            <button class="filter-btn">M</button>
-            <button class="filter-btn">L</button>
-            <button class="filter-btn">XL</button>
+            <button class="filter-btn active" data-size="ALL">ALL</button>
+            <button class="filter-btn" data-size="S">S</button>
+            <button class="filter-btn" data-size="M">M</button>
+            <button class="filter-btn" data-size="L">L</button>
+            <button class="filter-btn" data-size="XL">XL</button>
         </div>
     </section>
 
-    <!-- Full-Width Chaotic Grid -->
-    <section class="products-full-grid">
-        <!-- Grid Item 1 -->
-        <a href="product.html" class="grid-product-card">
-            <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000&auto=format&fit=crop" alt="Acid Wash Graphic Tee">
-            <div class="card-overlay">
-                <h3 class="glitch-hover" data-text="ACID_WASH TEE">ACID_WASH TEE</h3>
-                <span class="price">$45.00</span>
-                <button class="quick-add-btn">ADD_TO_CART</button>
-            </div>
-        </a>
+    <!-- Full-Width Dynamic Grid -->
+    <main class="products-full-grid" id="dynamicProductsGrid">
+        <!-- Injected dynamically from AdrastiaStore via JavaScript -->
+    </main>
 
-        <!-- Grid Item 2 -->
-        <a href="product.html" class="grid-product-card">
-            <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000&auto=format&fit=crop" alt="Cyber Skull Hoodie">
-            <div class="card-overlay">
-                <h3 class="glitch-hover" data-text="CYBER_SKULL HOODIE">CYBER_SKULL HOODIE</h3>
-                <span class="price">$85.00</span>
-                <button class="quick-add-btn">ADD_TO_CART</button>
-            </div>
-        </a>
-
-        <!-- Grid Item 3 -->
-        <a href="product.html" class="grid-product-card">
-            <img src="https://images.unsplash.com/photo-1503342394128-c104d54dba01?q=80&w=1000&auto=format&fit=crop" alt="Static Noise Longsleeve">
-            <div class="card-overlay">
-                <h3 class="glitch-hover" data-text="STATIC LONGSLEEVE">STATIC LONGSLEEVE</h3>
-                <span class="price neon-pink">SOLD_OUT</span>
-            </div>
-        </a>
-
-        <!-- Grid Item 4 -->
-        <a href="product.html" class="grid-product-card">
-            <img src="https://images.unsplash.com/photo-1601115867451-24874b7117fa?q=80&w=1000&auto=format&fit=crop" alt="Utility Cargo Pants">
-            <div class="card-overlay">
-                <h3 class="glitch-hover" data-text="VOID_CARGO PANTS">VOID_CARGO PANTS</h3>
-                <span class="price">$110.00</span>
-                <button class="quick-add-btn">ADD_TO_CART</button>
-            </div>
-        </a>
-
-        <!-- Grid Item 5 -->
-        <a href="product.html" class="grid-product-card">
-            <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1000&auto=format&fit=crop" alt="Distressed Denim Jacket">
-            <div class="card-overlay">
-                <h3 class="glitch-hover" data-text="DECAY_DENIM">DECAY_DENIM</h3>
-                <span class="price">$130.00</span>
-                <button class="quick-add-btn">ADD_TO_CART</button>
-            </div>
-        </a>
-
-        <!-- Grid Item 6 -->
-        <a href="product.html" class="grid-product-card">
-            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop" alt="Heavy Metal Tee">
-            <div class="card-overlay">
-                <h3 class="glitch-hover" data-text="METALLURGY TEE">METALLURGY TEE</h3>
-                <span class="price">$40.00</span>
-                <button class="quick-add-btn">ADD_TO_CART</button>
-            </div>
-        </a>
-    </section>
-
-    <!-- Footer (Reused) -->
+    <!-- Footer -->
     <footer class="brutalist-footer border-top">
         <div class="footer-grid">
             <div class="footer-brand">
@@ -148,8 +93,114 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <!-- Custom Scripts -->
+    <!-- Central Store and Global Scripts -->
+    <script src="js/store.js"></script>
     <script src="js/global.js"></script>
     <script src="js/glitch.js"></script>
+
+    <!-- Dynamic Catalog Engine -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            'use strict';
+
+            const gridContainer = document.getElementById("dynamicProductsGrid");
+            const collectionBtns = document.querySelectorAll("#collectionFilters .filter-btn");
+            const sizeBtns = document.querySelectorAll("#sizeFilters .filter-btn");
+
+            let activeCollection = "ALL";
+            let activeSize = "ALL";
+
+            // Render Products from Central Store
+            const renderCatalog = () => {
+                if (!window.AdrastiaStore || !gridContainer) return;
+
+                const allProducts = window.AdrastiaStore.getProducts();
+
+                // Apply Filters
+                const filtered = allProducts.filter(prod => {
+                    // Filter by Collection
+                    const matchesCollection = (activeCollection === "ALL") || (prod.collection === activeCollection);
+                    
+                    // Filter by Size availability
+                    let matchesSize = true;
+                    if (activeSize !== "ALL" && prod.stock) {
+                        matchesSize = (prod.stock[activeSize] && prod.stock[activeSize] > 0);
+                    }
+
+                    return matchesCollection && matchesSize;
+                });
+
+                // Empty State
+                if (filtered.length === 0) {
+                    gridContainer.innerHTML = `
+                        <div style="grid-column: 1 / -1; padding: 6rem 2rem; text-align: center; color: #888;">
+                            <h3 class="neon-pink" style="font-size: 2rem; margin-bottom: 1rem;">[ ZERO_SPECIMENS_FOUND ]</h3>
+                            <p style="font-family: var(--font-body);">NO HARDWARE CORRESPONDS TO THE ACTIVE FILTER PARAMETERS.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Render Cards
+                gridContainer.innerHTML = filtered.map(prod => {
+                    const isSoldOut = prod.isSoldOut || prod.totalStock <= 0;
+                    
+                    return `
+                        <div class="grid-product-card">
+                            <a href="product.html?id=${prod.id}" style="display:block; width:100%; height:100%;">
+                                <img src="${prod.image}" alt="${prod.name}" loading="lazy">
+                            </a>
+                            <div class="card-overlay">
+                                <a href="product.html?id=${prod.id}">
+                                    <h3 class="glitch-hover" data-text="${prod.name}">${prod.name}</h3>
+                                </a>
+                                <span class="price ${isSoldOut ? 'neon-pink' : ''}">
+                                    ${isSoldOut ? 'SOLD_OUT [EXHAUSTED]' : '$' + prod.price.toFixed(2)}
+                                </span>
+                                ${!isSoldOut ? `
+                                    <button class="quick-add-btn" data-product-id="${prod.id}">
+                                        ADD_TO_CART [ + ]
+                                    </button>
+                                ` : `
+                                    <button class="quick-add-btn" style="opacity:0.4; cursor:not-allowed; border-color:#555; color:#555;" disabled>
+                                        UNAVAILABLE
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+
+                // Reattach cursor and scramble listeners
+                if (window.attachCursorHoverListeners) window.attachCursorHoverListeners();
+            };
+
+            // Collection Filter Buttons
+            collectionBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    collectionBtns.forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    activeCollection = btn.getAttribute("data-filter");
+                    renderCatalog();
+                });
+            });
+
+            // Size Filter Buttons
+            sizeBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    sizeBtns.forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    activeSize = btn.getAttribute("data-size");
+                    renderCatalog();
+                });
+            });
+
+            // Initial Execution
+            renderCatalog();
+
+            // Reactive update if items change in store
+            window.addEventListener("adr:products-updated", renderCatalog);
+        });
+    </script>
 </body>
 </html>
