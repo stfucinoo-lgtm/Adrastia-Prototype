@@ -1,8 +1,8 @@
 /**
  * ==========================================================================
  * ADRASTIA // ADMIN COMMAND TERMINAL CONTROLLER (js/admin.js)
- * Features: DA Currency Localization, Kill Drop Deactivation & Restore Engine
- * Version: 2.1.0
+ * Features: DA Currency, Collection Drop Hero Manager, Kill Switches & CSV Log
+ * Version: 2.2.0
  * ==========================================================================
  */
 
@@ -16,6 +16,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let currentUploadedImageBase64 = "";
+    let currentCollImageBase64 = "";
+
+    // Default Fallback Meta for Collection Drop
+    const DEFAULT_COLL_META = {
+        title: "VOID_CORE",
+        status: "// STATUS: LIVE // INVENTORY: CRITICAL",
+        description: "A brutalist exploration of the empty spaces between the digital and physical worlds. Limited to 50 pieces per garment. No restocks.",
+        image: "https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop"
+    };
 
     // --- 1. Tab Switching Controller ---
     const navButtons = document.querySelectorAll(".nav-btn[data-target]");
@@ -65,7 +74,17 @@ document.addEventListener("DOMContentLoaded", () => {
         btnCloseAddForm.addEventListener("click", () => toggleAddDrawer(false));
     }
 
-    // --- 3. Image Upload & Drag & Drop Processor ---
+    // Helper: File to Base64
+    const fileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    // --- 3. Hardware Image Upload & Drag & Drop Processor ---
     const dropzone = document.getElementById("uploadDropzone");
     const fileInput = document.getElementById("prodImgFile");
     const imgPreview = document.getElementById("imgPreview");
@@ -100,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const processImageFile = async (file) => {
         try {
-            const base64 = await window.AdrastiaStore.fileToBase64(file);
+            const base64 = await fileToBase64(file);
             currentUploadedImageBase64 = base64;
             if (imgPreview) {
                 imgPreview.src = base64;
@@ -177,7 +196,138 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 5. Render Inventory Table (With Kill / Restore & DA) ---
+    // --- 5. COLLECTION DROP HERO CONTROLLER ENGINE ---
+    const collForm = document.getElementById("collectionMetaForm");
+    const collTitleInput = document.getElementById("collMetaTitle");
+    const collStatusInput = document.getElementById("collMetaStatus");
+    const collDescInput = document.getElementById("collMetaDesc");
+    const collImgFileInput = document.getElementById("collMetaImgFile");
+    const collImgUrlInput = document.getElementById("collMetaImgUrl");
+    const collImgPreview = document.getElementById("collImgPreview");
+    const collDropzone = document.getElementById("collDropzone");
+    const btnResetCollectionMeta = document.getElementById("btnResetCollectionMeta");
+
+    // Load Existing Collection Hero Meta into Form
+    const loadCollectionMetaToForm = () => {
+        let meta = DEFAULT_COLL_META;
+        const raw = localStorage.getItem("adrastia_collection_meta");
+        if (raw) {
+            try {
+                meta = { ...DEFAULT_COLL_META, ...JSON.parse(raw) };
+            } catch (err) {
+                console.error("[ADRASTIA] Error parsing collection meta", err);
+            }
+        }
+
+        if (collTitleInput) collTitleInput.value = meta.title;
+        if (collStatusInput) collStatusInput.value = meta.status;
+        if (collDescInput) collDescInput.value = meta.description;
+        if (collImgPreview) {
+            collImgPreview.src = meta.image;
+            collImgPreview.style.display = "inline-block";
+        }
+        if (collImgUrlInput && !meta.image.startsWith("data:")) {
+            collImgUrlInput.value = meta.image;
+        } else if (collImgUrlInput) {
+            collImgUrlInput.value = "";
+        }
+        currentCollImageBase64 = meta.image.startsWith("data:") ? meta.image : "";
+    };
+
+    // Collection Image Upload & Drag & Drop Handling
+    if (collDropzone && collImgFileInput) {
+        collDropzone.addEventListener("click", () => collImgFileInput.click());
+
+        collImgFileInput.addEventListener("change", async (e) => {
+            const file = e.target.files[0];
+            if (file) await processCollImageFile(file);
+        });
+
+        collDropzone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            collDropzone.classList.add("dragover");
+        });
+
+        collDropzone.addEventListener("dragleave", () => {
+            collDropzone.classList.remove("dragover");
+        });
+
+        collDropzone.addEventListener("drop", async (e) => {
+            e.preventDefault();
+            collDropzone.classList.remove("dragover");
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith("image/")) {
+                await processCollImageFile(file);
+            }
+        });
+    }
+
+    const processCollImageFile = async (file) => {
+        try {
+            const base64 = await fileToBase64(file);
+            currentCollImageBase64 = base64;
+            if (collImgPreview) {
+                collImgPreview.src = base64;
+                collImgPreview.style.display = "inline-block";
+            }
+            if (collImgUrlInput) collImgUrlInput.value = "";
+        } catch (err) {
+            alert("IMAGE_ENCODE_ERROR: Could not process collection hero image.");
+        }
+    };
+
+    if (collImgUrlInput) {
+        collImgUrlInput.addEventListener("input", (e) => {
+            const url = e.target.value.trim();
+            if (url && collImgPreview) {
+                collImgPreview.src = url;
+                collImgPreview.style.display = "inline-block";
+                currentCollImageBase64 = "";
+            } else if (!currentCollImageBase64 && collImgPreview) {
+                collImgPreview.src = DEFAULT_COLL_META.image;
+            }
+        });
+    }
+
+    // Save Collection Hero Form
+    if (collForm) {
+        collForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const title = collTitleInput ? collTitleInput.value.trim() : DEFAULT_COLL_META.title;
+            const status = collStatusInput ? collStatusInput.value.trim() : DEFAULT_COLL_META.status;
+            const description = collDescInput ? collDescInput.value.trim() : DEFAULT_COLL_META.description;
+            const manualUrl = collImgUrlInput ? collImgUrlInput.value.trim() : "";
+            
+            const image = currentCollImageBase64 || manualUrl || (collImgPreview ? collImgPreview.src : DEFAULT_COLL_META.image);
+
+            const payload = {
+                title: title || DEFAULT_COLL_META.title,
+                status: status || DEFAULT_COLL_META.status,
+                description: description || DEFAULT_COLL_META.description,
+                image: image || DEFAULT_COLL_META.image
+            };
+
+            localStorage.setItem("adrastia_collection_meta", JSON.stringify(payload));
+            window.dispatchEvent(new CustomEvent("adr:collection-updated", { detail: payload }));
+
+            alert("COLLECTION_OVERRIDE_SUCCESS: Collection Drop Hero data committed to memory.");
+        });
+    }
+
+    // Reset Collection Hero to Defaults
+    if (btnResetCollectionMeta) {
+        btnResetCollectionMeta.addEventListener("click", () => {
+            if (confirm("RESTORE DEFAULT HERO: Revert collection hero section back to factory defaults?")) {
+                localStorage.setItem("adrastia_collection_meta", JSON.stringify(DEFAULT_COLL_META));
+                loadCollectionMetaToForm();
+                window.dispatchEvent(new CustomEvent("adr:collection-updated", { detail: DEFAULT_COLL_META }));
+                alert("HERO_RESTORED: Default VOID_CORE drop assets restored.");
+            }
+        });
+    }
+
+    // --- 6. Render Inventory Table (With Kill / Restore & DA) ---
     const renderInventory = () => {
         const tbody = document.getElementById("inventoryTableBody");
         if (!tbody) return;
@@ -225,7 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
         }).join("");
 
-        // Kill Drop Listeners (Deactivates from Storefront)
+        // Kill Drop Listeners
         tbody.querySelectorAll(".btn-action-kill").forEach(btn => {
             btn.addEventListener("click", () => {
                 const id = btn.getAttribute("data-id");
@@ -236,7 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // Restore Drop Listeners (Re-activates back to Storefront)
+        // Restore Drop Listeners
         tbody.querySelectorAll(".btn-action-restore").forEach(btn => {
             btn.addEventListener("click", () => {
                 const id = btn.getAttribute("data-id");
@@ -257,7 +407,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 6. Render Dispatch Log (Orders) in DA ---
+    // --- 7. Render Dispatch Log (Orders) in DA ---
     const renderOrders = () => {
         const tbody = document.getElementById("ordersTableBody");
         if (!tbody) return;
@@ -315,7 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- 7. Live Telemetry & Metrics in DA ---
+    // --- 8. Live Telemetry & Metrics in DA ---
     const renderKPIs = () => {
         const orders = window.AdrastiaStore.getOrders();
         const products = window.AdrastiaStore.getProducts();
@@ -340,7 +490,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (critEl) critEl.innerText = String(criticalProducts).padStart(2, '0');
     };
 
-    // --- 8. Live Alerts Feed ---
+    // --- 9. Live Alerts Feed ---
     const renderTerminalAlerts = () => {
         const feedContainer = document.getElementById("terminalAlertsFeed");
         if (!feedContainer) return;
@@ -370,7 +520,7 @@ document.addEventListener("DOMContentLoaded", () => {
         feedContainer.innerHTML = alerts.slice(0, 4).join("");
     };
 
-    // --- 9. Promo Codes & Factory Purge ---
+    // --- 10. Promo Codes & Factory Purge ---
     const renderSettings = () => {
         const promoList = document.getElementById("promoCodesList");
         if (!promoList) return;
@@ -391,13 +541,14 @@ document.addEventListener("DOMContentLoaded", () => {
         btnFactoryReset.addEventListener("click", () => {
             if (confirm("EMERGENCY OVERRIDE: Purge all products/orders and reload DA factory defaults?")) {
                 window.AdrastiaStore.factoryReset();
+                localStorage.removeItem("adrastia_collection_meta");
                 alert("SYSTEM: Repository purged and restored to DA factory defaults.");
                 location.reload();
             }
         });
     }
 
-    // --- 10. CSV Export Engine ---
+    // --- 11. CSV Export Engine ---
     const exportCsvBtn = document.getElementById("exportCsvBtn");
     if (exportCsvBtn) {
         exportCsvBtn.addEventListener("click", () => {
@@ -442,6 +593,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderOrders();
         renderTerminalAlerts();
         renderSettings();
+        loadCollectionMetaToForm();
     };
 
     renderAll();
