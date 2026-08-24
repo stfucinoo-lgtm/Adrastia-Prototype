@@ -1,8 +1,8 @@
 /**
  * ==========================================================================
  * ADRASTIA // UNDERGROUND AUDIO ENGINE (js/audio.js)
- * Features: Guaranteed Track Playback, LocalStorage Synced, Smooth Volume & Equalizer
- * Version: 3.1.0
+ * Features: IndexedDB Unlimited Audio Storage, Instant Blob Player, Equalizer & UI Sync
+ * Version: 3.2.0
  * ==========================================================================
  */
 
@@ -17,13 +17,63 @@
     let isPlaying = false;
     let currentLoadedSrc = "";
 
-    // 1. Get current track source
-    function getStoredTrack() {
-        return localStorage.getItem(STORAGE_KEY_TRACK) || DEFAULT_TRACK_URL;
+    // 1. IndexedDB Helper for Large Audio Files
+    const IDB_HELPER = {
+        dbName: 'AdrastiaMediaDB',
+        dbVersion: 1,
+        open() {
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open(this.dbName, this.dbVersion);
+                req.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('media')) {
+                        db.createObjectStore('media');
+                    }
+                };
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        },
+        async get(key) {
+            try {
+                const db = await this.open();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction('media', 'readonly');
+                    const req = tx.objectStore('media').get(key);
+                    req.onsuccess = () => resolve(req.result);
+                    req.onerror = () => reject(req.error);
+                });
+            } catch (err) {
+                console.warn('[ADRASTIA IDB] Read error:', err);
+                return null;
+            }
+        }
+    };
+
+    // 2. Fetch Active Audio Source (Checks IndexedDB first, then localStorage, then Default)
+    async function resolveActiveAudioSource() {
+        try {
+            const savedRecord = await IDB_HELPER.get('soundtrack_track');
+            if (savedRecord && savedRecord.blob) {
+                return URL.createObjectURL(savedRecord.blob);
+            }
+            if (savedRecord && savedRecord.url) {
+                return savedRecord.url;
+            }
+        } catch (e) {
+            console.warn('[ADRASTIA AUDIO] IDB Fetch failed, falling back:', e);
+        }
+
+        const localUrl = localStorage.getItem(STORAGE_KEY_TRACK);
+        if (localUrl && localUrl !== 'IDB_STORED') {
+            return localUrl;
+        }
+
+        return DEFAULT_TRACK_URL;
     }
 
-    // 2. Initialize Audio Instance
-    function ensureAudioInstance() {
+    // 3. Ensure Audio Element Exists & Setup Track
+    async function ensureAudioInstance() {
         if (!audioElement) {
             audioElement = new Audio();
             audioElement.loop = true;
@@ -35,36 +85,36 @@
             });
 
             audioElement.addEventListener('error', (e) => {
-                console.warn('[ADRASTIA AUDIO] Track load error:', e);
+                console.warn('[ADRASTIA AUDIO] Track playback error:', e);
                 const label = document.getElementById('adrAudioLabel');
                 if (label) label.innerText = 'AUDIO: ERR // RETRY';
             });
         }
 
-        const targetSrc = getStoredTrack();
-        if (currentLoadedSrc !== targetSrc) {
-            audioElement.src = targetSrc;
-            currentLoadedSrc = targetSrc;
+        const resolvedSrc = await resolveActiveAudioSource();
+        if (currentLoadedSrc !== resolvedSrc) {
+            audioElement.src = resolvedSrc;
+            currentLoadedSrc = resolvedSrc;
             audioElement.load();
         }
     }
 
-    // 3. Play Soundtrack
-    function startAudio() {
-        ensureAudioInstance();
+    // 4. Play Audio Track
+    async function startAudio() {
+        await ensureAudioInstance();
 
         audioElement.play().then(() => {
             isPlaying = true;
             updateWidgetUI(true);
             localStorage.setItem(STORAGE_KEY_ACTIVE, 'true');
         }).catch((err) => {
-            console.warn('[ADRASTIA AUDIO] Play rejected (User gesture required):', err);
+            console.warn('[ADRASTIA AUDIO] Playback requires direct user click:', err);
             isPlaying = false;
             updateWidgetUI(false);
         });
     }
 
-    // 4. Pause Soundtrack
+    // 5. Stop/Pause Audio Track
     function stopAudio() {
         if (audioElement) {
             audioElement.pause();
@@ -74,7 +124,7 @@
         localStorage.setItem(STORAGE_KEY_ACTIVE, 'false');
     }
 
-    // 5. Toggle Play/Pause
+    // 6. Toggle Audio Playback
     function toggleAudio() {
         if (isPlaying) {
             stopAudio();
@@ -83,7 +133,7 @@
         }
     }
 
-    // 6. Inject Fixed Brutalist Widget
+    // 7. Inject Brutalist Audio Widget
     function injectAudioWidget() {
         if (document.getElementById('adrAudioWidget')) return;
 
@@ -176,7 +226,7 @@
         }
     }
 
-    // 7. Update UI Indicator
+    // 8. Update UI Indicator
     function updateWidgetUI(active) {
         const widget = document.getElementById('adrAudioWidget');
         const label = document.getElementById('adrAudioLabel');
@@ -193,35 +243,32 @@
         }
     }
 
-    // 8. Public API & Event Listeners
+    // 9. Public API & Synchronization Listeners
     window.AdrastiaAudio = {
         toggle: toggleAudio,
         start: startAudio,
         stop: stopAudio,
         isPlaying: () => isPlaying,
-        setTrack: (url) => {
-            localStorage.setItem(STORAGE_KEY_TRACK, url);
+        refreshTrack: async () => {
             currentLoadedSrc = "";
             if (audioElement) {
-                audioElement.src = url;
-                currentLoadedSrc = url;
-                if (isPlaying) audioElement.play();
+                const wasPlaying = isPlaying;
+                audioElement.pause();
+                const newSrc = await resolveActiveAudioSource();
+                audioElement.src = newSrc;
+                currentLoadedSrc = newSrc;
+                if (wasPlaying) startAudio();
             }
-            window.dispatchEvent(new CustomEvent('adr:audio-track-updated', { detail: url }));
         }
     };
 
-    window.addEventListener('adr:audio-track-updated', (e) => {
-        const newTrack = e.detail || getStoredTrack();
-        currentLoadedSrc = "";
-        if (audioElement) {
-            audioElement.src = newTrack;
-            currentLoadedSrc = newTrack;
-            if (isPlaying) audioElement.play();
+    window.addEventListener('adr:audio-track-updated', async () => {
+        if (window.AdrastiaAudio) {
+            await window.AdrastiaAudio.refreshTrack();
         }
     });
 
-    // Auto Ingest
+    // Auto Inject UI on DOM Ready
     document.addEventListener('DOMContentLoaded', () => {
         injectAudioWidget();
     });
