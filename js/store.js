@@ -1,8 +1,8 @@
 /**
  * ==========================================================================
  * ADRASTIA // CENTRAL DATA STORE & STATE ENGINE (js/store.js)
- * Architecture: Modular LocalStorage Engine with Event-Driven Reactivity
- * Version: 2.0.0
+ * Currency: Algerian Dinar (DA)
+ * Version: 2.1.0 (Kill Drop Isolation & Currency Localization)
  * ==========================================================================
  */
 
@@ -11,21 +11,21 @@
 
     // LocalStorage Keys
     const KEYS = {
-        PRODUCTS: 'ADRASTIA_PRODUCTS_V2',
-        DROPS: 'ADRASTIA_DROPS_V2',
-        ORDERS: 'ADRASTIA_ORDERS_V2',
-        CART: 'ADRASTIA_CART_V2',
-        SETTINGS: 'ADRASTIA_SETTINGS_V2'
+        PRODUCTS: 'ADRASTIA_PRODUCTS_V3',
+        DROPS: 'ADRASTIA_DROPS_V3',
+        ORDERS: 'ADRASTIA_ORDERS_V3',
+        CART: 'ADRASTIA_CART_V3',
+        SETTINGS: 'ADRASTIA_SETTINGS_V3'
     };
 
-    // Default Seed Data (Synchronized with existing HTML catalog)
+    // Default Seed Data (In Algerian Dinars - DA)
     const DEFAULT_PRODUCTS = [
         {
             id: 'prod-001',
             sku: 'ADR-001',
             name: 'ACID_WASH TEE',
             collection: 'DIGITAL_DECAY',
-            price: 45.00,
+            price: 4500,
             stock: { S: 5, M: 8, L: 6, XL: 5 },
             totalStock: 24,
             maxStock: 50,
@@ -33,6 +33,7 @@
             description: 'Oversized fit. Hand-distressed edges. Each piece is uniquely corroded. 100% heavyweight acid-treated cotton.',
             isSoldOut: false,
             isCritical: false,
+            isKilled: false,
             dateAdded: '2024-11-01'
         },
         {
@@ -40,7 +41,7 @@
             sku: 'ADR-002',
             name: 'CYBER_SKULL HOODIE',
             collection: 'DIGITAL_DECAY',
-            price: 85.00,
+            price: 8500,
             stock: { S: 1, M: 1, L: 1, XL: 0 },
             totalStock: 3,
             maxStock: 50,
@@ -48,6 +49,7 @@
             description: 'Ultra-heavy fleece, cybernetic screen print on back and sleeves. Corrupted aesthetic with raw hem finish.',
             isSoldOut: false,
             isCritical: true,
+            isKilled: false,
             dateAdded: '2024-11-02'
         },
         {
@@ -55,7 +57,7 @@
             sku: 'ADR-003',
             name: 'STATIC LONGSLEEVE',
             collection: 'DIGITAL_DECAY',
-            price: 55.00,
+            price: 5500,
             stock: { S: 0, M: 0, L: 0, XL: 0 },
             totalStock: 0,
             maxStock: 50,
@@ -63,6 +65,7 @@
             description: 'Exhausted artifact. Distorted analog noise pattern printed on black waffle-knit cotton.',
             isSoldOut: true,
             isCritical: false,
+            isKilled: false,
             dateAdded: '2024-10-28'
         },
         {
@@ -70,7 +73,7 @@
             sku: 'ADR-004',
             name: 'VOID_CARGO PANTS',
             collection: 'VOID_CORE',
-            price: 110.00,
+            price: 11000,
             stock: { S: 4, M: 6, L: 5, XL: 3 },
             totalStock: 18,
             maxStock: 50,
@@ -78,6 +81,7 @@
             description: 'Multi-pocket tactical trousers with waterproof tech zippers and industrial webbing straps.',
             isSoldOut: false,
             isCritical: false,
+            isKilled: false,
             dateAdded: '2024-11-05'
         },
         {
@@ -85,7 +89,7 @@
             sku: 'ADR-005',
             name: 'DECAY_DENIM JACKET',
             collection: 'VOID_CORE',
-            price: 130.00,
+            price: 13000,
             stock: { S: 2, M: 5, L: 4, XL: 4 },
             totalStock: 15,
             maxStock: 50,
@@ -93,6 +97,7 @@
             description: 'Custom stonewashed rigid denim with raw shredded seams and matte black metal hardware.',
             isSoldOut: false,
             isCritical: false,
+            isKilled: false,
             dateAdded: '2024-11-06'
         },
         {
@@ -100,7 +105,7 @@
             sku: 'ADR-006',
             name: 'METALLURGY TEE',
             collection: 'DIGITAL_DECAY',
-            price: 40.00,
+            price: 4000,
             stock: { S: 8, M: 10, L: 8, XL: 4 },
             totalStock: 30,
             maxStock: 50,
@@ -108,6 +113,7 @@
             description: 'Heavy metal typography inspired by industrial brutalism. Vintage black wash treatment.',
             isSoldOut: false,
             isCritical: false,
+            isKilled: false,
             dateAdded: '2024-11-07'
         }
     ];
@@ -137,13 +143,13 @@
             customer: {
                 name: 'K. Valkyrie',
                 email: 'k.valkyrie@mesh.io',
-                phone: '+1 555-0199',
-                address: 'Sector 7, Neo-Tokyo Grid 4'
+                phone: '+213 555-0199',
+                address: 'Hydra, Algiers Sector 4'
             },
             items: [
-                { id: 'prod-002', name: 'CYBER_SKULL HOODIE', size: 'L', qty: 1, price: 85.00 }
+                { id: 'prod-002', name: 'CYBER_SKULL HOODIE', size: 'L', qty: 1, price: 8500 }
             ],
-            totalAmount: 85.00,
+            totalAmount: 8500,
             paymentMethod: 'COD',
             status: 'DISPATCHED',
             timestamp: new Date(Date.now() - 3600000 * 4).toISOString()
@@ -152,15 +158,15 @@
             orderId: 'ADR-98441',
             customer: {
                 name: 'Ghost Runner',
-                email: 'ghost_runner@tokyo.net',
-                phone: '+1 555-0142',
-                address: 'Underground Unit B-12'
+                email: 'ghost_runner@algiers.net',
+                phone: '+213 555-0142',
+                address: 'Oran Unit B-12'
             },
             items: [
-                { id: 'prod-001', name: 'ACID_WASH TEE', size: 'XL', qty: 2, price: 45.00 },
-                { id: 'prod-004', name: 'VOID_CARGO PANTS', size: 'M', qty: 1, price: 110.00 }
+                { id: 'prod-001', name: 'ACID_WASH TEE', size: 'XL', qty: 2, price: 4500 },
+                { id: 'prod-004', name: 'VOID_CARGO PANTS', size: 'M', qty: 1, price: 11000 }
             ],
-            totalAmount: 200.00,
+            totalAmount: 20000,
             paymentMethod: 'CARD',
             status: 'PROCESSING',
             timestamp: new Date(Date.now() - 3600000 * 8).toISOString()
@@ -169,13 +175,14 @@
 
     const DEFAULT_SETTINGS = {
         killSwitch: false,
+        currency: 'DA',
         promoCodes: {
             'GLITCH20': 20, // 20% off
             'VOID10': 10,   // 10% off
-            'OVERRIDE': 50  // 50% VIP test
+            'OVERRIDE': 50  // 50% VIP
         },
-        shippingFee: 15.00,
-        freeShippingThreshold: 150.00
+        shippingFee: 800, // 800 DA Standard Dispatch
+        freeShippingThreshold: 15000 // Free dispatch for orders >= 15000 DA
     };
 
     // Internal Helper: LocalStorage Safe JSON
@@ -216,10 +223,8 @@
         }
     }
 
-    // Initialize immediately
     initStore();
 
-    // Event Trigger Helper
     function emitEvent(eventName, detail = {}) {
         window.dispatchEvent(new CustomEvent(eventName, { detail }));
     }
@@ -230,10 +235,23 @@
      * ==========================================================================
      */
     const AdrastiaStore = {
+        currency: 'DA',
+
+        // Currency Formatter Helper
+        formatMoney(amount) {
+            const num = parseFloat(amount) || 0;
+            return `${num.toLocaleString('en-US')} DA`;
+        },
 
         // --- 1. PRODUCTS API ---
+        // Returns all products (for Admin Panel)
         getProducts() {
             return getStored(KEYS.PRODUCTS, []);
+        },
+
+        // Returns ONLY active, non-killed products (for Storefront, Catalog, Home, etc.)
+        getActiveProducts() {
+            return this.getProducts().filter(p => !p.isKilled);
         },
 
         getProductById(id) {
@@ -256,10 +274,10 @@
                 description: productData.description || 'Raw underground garment. Handle with chaos.',
                 isSoldOut: false,
                 isCritical: false,
+                isKilled: false, // Active by default
                 dateAdded: new Date().toISOString().split('T')[0]
             };
 
-            // Recalculate status
             if (newProduct.totalStock <= 0) {
                 newProduct.isSoldOut = true;
             } else if (newProduct.totalStock <= 5) {
@@ -279,7 +297,6 @@
 
             products[index] = { ...products[index], ...updatedFields };
 
-            // Recalculate Stock Status
             const totalStock = products[index].totalStock;
             products[index].isSoldOut = totalStock <= 0;
             products[index].isCritical = totalStock > 0 && totalStock <= 5;
@@ -296,11 +313,17 @@
             emitEvent('adr:products-updated', { products });
         },
 
+        // KILL DROP: Completely deactivates product from storefront
         killProduct(id) {
             return this.updateProduct(id, {
-                totalStock: 0,
-                isSoldOut: true,
-                isCritical: false
+                isKilled: true
+            });
+        },
+
+        // RESTORE DROP: Reactivates product back to storefront
+        restoreProduct(id) {
+            return this.updateProduct(id, {
+                isKilled: false
             });
         },
 
@@ -332,8 +355,8 @@
 
         addToCart(productId, size = 'M', qty = 1) {
             const product = this.getProductById(productId);
-            if (!product || product.isSoldOut) {
-                alert('HARDWARE_EXHAUSTED: Item is sold out.');
+            if (!product || product.isSoldOut || product.isKilled) {
+                alert('HARDWARE_EXHAUSTED: Item is currently unavailable.');
                 return false;
             }
 
@@ -414,26 +437,33 @@
                 discountAmount = (subtotal * orderPayload.discountPercent) / 100;
             }
 
-            const totalAmount = Math.max(0, subtotal - discountAmount);
+            const settings = this.getSettings();
+            const baseShipping = settings.shippingFee || 800;
+            const freeThreshold = settings.freeShippingThreshold || 15000;
+            const shippingFee = (subtotal >= freeThreshold) ? 0 : baseShipping;
+
+            const totalAmount = Math.max(0, subtotal - discountAmount + shippingFee);
 
             const newOrder = {
                 orderId: 'ADR-' + Math.floor(10000 + Math.random() * 90000),
                 customer: {
                     name: orderPayload.customer.name || 'ANONYMOUS_RUNNER',
-                    email: orderPayload.customer.email || 'void@adrastia.com',
+                    email: orderPayload.customer.email || 'void@adrastia.dz',
                     phone: orderPayload.customer.phone || 'N/A',
-                    address: orderPayload.customer.address || 'UNDISCLOSED_SECTOR'
+                    address: orderPayload.customer.address || 'ALGIERS_SECTOR'
                 },
                 items: itemsToOrder,
                 subtotal: subtotal,
                 discount: discountAmount,
+                shippingFee: shippingFee,
                 totalAmount: totalAmount,
+                currency: 'DA',
                 paymentMethod: orderPayload.paymentMethod || 'COD',
                 status: 'PROCESSING',
                 timestamp: new Date().toISOString()
             };
 
-            // Deduct Stock from Products
+            // Deduct Stock
             itemsToOrder.forEach(item => {
                 const prod = this.getProductById(item.id);
                 if (prod) {
@@ -442,7 +472,6 @@
                 }
             });
 
-            // Save order & clear cart
             orders.unshift(newOrder);
             setStored(KEYS.ORDERS, orders);
             this.clearCart();
@@ -482,7 +511,6 @@
             return { valid: false, discount: 0 };
         },
 
-        // --- 6. UTILITIES (Image to Base64) ---
         fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 if (!file) {
@@ -496,7 +524,6 @@
             });
         },
 
-        // Reset to Factory Default
         factoryReset() {
             localStorage.removeItem(KEYS.PRODUCTS);
             localStorage.removeItem(KEYS.DROPS);
@@ -509,7 +536,6 @@
         }
     };
 
-    // Expose globally to window
     window.AdrastiaStore = AdrastiaStore;
 
 })(window);
