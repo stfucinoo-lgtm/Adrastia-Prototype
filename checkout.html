@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL CHECKOUT // DISPATCH AUTHORIZATION | ADRASTIA</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/checkout.css">
+</head>
+<body>
+    <!-- Global UI Overlays -->
+    <div class="noise-overlay"></div>
+    <div class="custom-cursor"></div>
+
+    <!-- Brutalist Navigation -->
+    <nav class="brutalist-nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand-logo glitch-hover" data-text="ADRASTIA">ADRASTIA</a>
+        </div>
+        <div class="nav-center hidden-mobile">
+            <a href="products.html" class="nav-link">SHOP_ALL</a>
+            <a href="collection.html" class="nav-link">NEW_DROP</a>
+            <a href="lookbook.html" class="nav-link">ARCHIVE</a>
+        </div>
+        <div class="nav-right">
+            <a href="products.html" class="nav-link hidden-mobile">&larr; BACK TO SHOP</a>
+            <button class="cart-toggle">
+                CART [<span class="cart-count">0</span>]
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="checkout-header border-bottom">
+        <h1 class="glitch" data-text="DISPATCH_AUTHORIZATION">DISPATCH_AUTHORIZATION</h1>
+        <p class="subtext">// ENCRYPTED TRANSACTION GATEWAY // SYSTEM PROTOCOL ADR-770</p>
+    </header>
+
+    <!-- Main Checkout Gateway Container -->
+    <main class="checkout-container">
+        
+        <!-- ========================================================
+             VIEW 1: CHECKOUT FORM & PAYLOAD SUMMARY
+             ======================================================== -->
+        <section id="checkoutSection" class="checkout-grid">
+            
+            <!-- LEFT COLUMN: CART PAYLOAD SUMMARY & PROMO DECRYPT -->
+            <div class="checkout-panel border-right">
+                <div class="panel-header">
+                    <h2>01 // HARDWARE_PAYLOAD</h2>
+                    <span class="pulse-indicator neon-green">&#9679; BUFFER ACTIVE</span>
+                </div>
+
+                <!-- Dynamic Item List Container -->
+                <div class="checkout-items-list" id="checkoutItemsList">
+                    <!-- Injected dynamically via js/checkout.js -->
+                </div>
+
+                <!-- Promo Bypass Code Form -->
+                <div class="promo-section border-top">
+                    <form id="promoForm" class="promo-form">
+                        <input type="text" id="promoInput" placeholder="ENTER_BYPASS_KEY (e.g. GLITCH20)" class="form-input">
+                        <button type="submit" class="btn-ghost">DECRYPT</button>
+                    </form>
+                    <div id="promoMessage" class="promo-msg"></div>
+                </div>
+
+                <!-- Price Calculation Breakdown -->
+                <div class="checkout-totals border-top">
+                    <div class="total-row">
+                        <span>PAYLOAD_SUBTOTAL:</span>
+                        <span id="checkoutSubtotal" class="mono-val">$0.00</span>
+                    </div>
+                    <div class="total-row" id="checkoutDiscountRow" style="display:none; color:var(--accent-pink);">
+                        <span>BYPASS_DISCOUNT:</span>
+                        <span id="checkoutDiscountVal" class="mono-val">-$0.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>ESTIMATED_DISPATCH:</span>
+                        <span id="checkoutShipping" class="mono-val">$15.00</span>
+                    </div>
+                    <div class="total-row grand-total border-top">
+                        <span>TOTAL_DUE:</span>
+                        <span id="checkoutGrandTotal" class="neon-green mono-val">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: RECIPIENT & DESTINATION FORM -->
+            <div class="checkout-panel">
+                <div class="panel-header">
+                    <h2>02 // DISPATCH_COORDINATES</h2>
+                    <span style="color:#888; font-size:0.75rem;">SECURE FIELDS *</span>
+                </div>
+
+                <form id="checkoutForm" class="dispatch-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="custName">RECIPIENT CALLSIGN / FULL NAME *</label>
+                            <input type="text" id="custName" class="form-input" placeholder="e.g. K. Valkyrie" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="custEmail">COMMS / EMAIL ADDRESS *</label>
+                            <input type="email" id="custEmail" class="form-input" placeholder="valkyrie@mesh.io" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="custPhone">TELECOM / PHONE NUMBER *</label>
+                            <input type="tel" id="custPhone" class="form-input" placeholder="+1 (555) 019-9482" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="custCity">SECTOR / CITY *</label>
+                            <input type="text" id="custCity" class="form-input" placeholder="Sector 7 / Neo-Tokyo" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="custAddress">DROP DESTINATION (STREET / APARTMENT / UNIT) *</label>
+                        <input type="text" id="custAddress" class="form-input" placeholder="Grid B-14, Sub-level 4" required>
+                    </div>
+
+                    <!-- Payment Gateway Selector -->
+                    <div class="form-group border-top" style="padding-top:1.5rem; margin-top:1rem;">
+                        <label>PAYMENT_GATEWAY_PROTOCOL *</label>
+                        <div class="payment-options">
+                            <label class="payment-card active">
+                                <input type="radio" name="paymentMethod" value="COD" checked>
+                                <div class="payment-meta">
+                                    <strong>CASH ON DISPATCH (COD)</strong>
+                                    <span>Pay physical currency upon courier drop.</span>
+                                </div>
+                            </label>
+                            <label class="payment-card">
+                                <input type="radio" name="paymentMethod" value="CARD">
+                                <div class="payment-meta">
+                                    <strong>ENCRYPTED CREDIT / DEBIT (SIMULATION)</strong>
+                                    <span>Instant token validation & bypass.</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="massive-submit-btn" id="btnSubmitOrder">
+                        AUTHORIZE DISPATCH [CONFIRM ORDER]
+                    </button>
+                </form>
+            </div>
+
+        </section>
+
+        <!-- ========================================================
+             VIEW 2: ORDER CONFIRMATION & ASCII TERMINAL RECEIPT
+             ======================================================== -->
+        <section id="orderSuccessSection" class="success-screen" style="display:none;">
+            <div class="success-card">
+                <div class="success-header">
+                    <span class="neon-green badge" style="font-size:0.9rem;">&#x2713; DISPATCH_MANIFEST_GENERATED</span>
+                    <h1 class="glitch" id="successOrderRef" data-text="#ADR-00000">#ADR-00000</h1>
+                    <p>// PAYLOAD LOGGED INTO MAINFRAME. COURIER ASSIGNED.</p>
+                </div>
+
+                <!-- Pure ASCII Terminal Receipt Box -->
+                <pre class="ascii-receipt" id="asciiReceiptContainer">
+============================================================
+                   ADRASTIA // OFFICIAL DISPATCH
+                      EST. 2024 // VOL.2 SYSTEM
+============================================================
+GENERATING ENCRYPTED MANIFEST...
+============================================================
+                </pre>
+
+                <div class="success-actions">
+                    <button class="btn-primary" id="btnPrintReceipt">&#x2399; PRINT_MANIFEST</button>
+                    <a href="index.html" class="btn-primary inverted">&larr; RETURN_TO_STOREFRONT</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="brutalist-footer border-top">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h2>ADRASTIA</h2>
+                <p>EST. 2024 // SYSTEM OVERRIDE</p>
+            </div>
+            <div class="footer-links">
+                <a href="products.html">SHOP ALL</a>
+                <a href="collection.html">NEW DROP</a>
+                <a href="about.html">MANIFESTO</a>
+            </div>
+            <div class="footer-legal">
+                <a href="#">DISPATCH LOGS</a>
+                <a href="#">ENCRYPTION TERMS</a>
+                <p>&copy; 2024 ADRASTIA REPOSITORY.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GSAP for Glitch effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="js/store.js"></script>
+    <script src="js/global.js"></script>
+    <script src="js/glitch.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
+</html>
