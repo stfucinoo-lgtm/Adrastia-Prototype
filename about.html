@@ -30,6 +30,7 @@
             <a href="products.html" class="nav-link">SHOP_ALL</a>
             <a href="collection.html" class="nav-link">NEW_DROP</a>
             <a href="lookbook.html" class="nav-link">ARCHIVE</a>
+            <a href="admin.html" class="nav-link">DASHBOARD</a>
         </div>
         <div class="nav-right">
             <a href="about.html" class="nav-link hidden-mobile neon-green">MANIFESTO</a>
@@ -39,25 +40,25 @@
         </div>
     </nav>
 
-    <!-- Lo-Fi Header -->
+    <!-- Lo-Fi Header (Dynamic Hydration) -->
     <header class="about-header border-bottom">
         <div class="header-bg">
-            <img src="https://images.unsplash.com/photo-1508807526345-15e9b5f4eaff?q=80&w=2564&auto=format&fit=crop" alt="Backstage Texture">
+            <img id="aboutHeaderBg" src="https://images.unsplash.com/photo-1508807526345-15e9b5f4eaff?q=80&w=2564&auto=format&fit=crop" alt="Backstage Texture">
         </div>
-        <h1 class="glitch" data-text="SYSTEM_FAILURE">SYSTEM_FAILURE</h1>
-        <p class="about-subtext">[ WE ARE NOT A FASHION BRAND. WE ARE A GLITCH. ]</p>
+        <h1 class="glitch" id="aboutHeroTitle" data-text="SYSTEM_FAILURE">SYSTEM_FAILURE</h1>
+        <p class="about-subtext" id="aboutHeroSubtext">[ WE ARE NOT A FASHION BRAND. WE ARE A GLITCH. ]</p>
     </header>
 
-    <!-- Origin Story Feature -->
+    <!-- Origin Story Feature (Dynamic Hydration) -->
     <section class="origin-section border-bottom">
         <div class="origin-grid">
             <div class="origin-text">
-                <h2>BORN IN <br><span class="neon-pink">STATIC.</span></h2>
-                <p>Adrastia started in a damp basement in 2024, born out of pure exhaustion with algorithm-dictated trends and fast-fashion waste.</p>
-                <p>We don't design for the masses. We design for the digital ghosts, the underground, and the youth who see the decay of modern culture and choose to wear it as armor.</p>
+                <h2 id="aboutOriginTitle">BORN IN <br><span class="neon-pink">STATIC.</span></h2>
+                <p id="aboutOriginP1">Adrastia started in a damp basement in 2024, born out of pure exhaustion with algorithm-dictated trends and fast-fashion waste.</p>
+                <p id="aboutOriginP2">We don't design for the masses. We design for the digital ghosts, the underground, and the youth who see the decay of modern culture and choose to wear it as armor.</p>
             </div>
             <div class="origin-image">
-                <img src="https://images.unsplash.com/photo-1606240212005-cb6757b320d7?q=80&w=1000&auto=format&fit=crop" alt="Concrete Texture">
+                <img id="aboutOriginImage" src="https://images.unsplash.com/photo-1606240212005-cb6757b320d7?q=80&w=1000&auto=format&fit=crop" alt="Concrete Texture">
             </div>
         </div>
     </section>
@@ -175,5 +176,58 @@
     <!-- Custom Scripts -->
     <script src="js/global.js"></script>
     <script src="js/glitch.js"></script>
+
+    <!-- Dynamic Manifesto Hydration Engine -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            'use strict';
+
+            const hydrateManifesto = () => {
+                const headerBg = document.getElementById("aboutHeaderBg");
+                const heroTitle = document.getElementById("aboutHeroTitle");
+                const heroSubtext = document.getElementById("aboutHeroSubtext");
+                const originTitle = document.getElementById("aboutOriginTitle");
+                const originP1 = document.getElementById("aboutOriginP1");
+                const originP2 = document.getElementById("aboutOriginP2");
+                const originImage = document.getElementById("aboutOriginImage");
+
+                const raw = localStorage.getItem("adrastia_manifesto_meta");
+                if (raw) {
+                    try {
+                        const meta = JSON.parse(raw);
+                        if (meta.heroTitle && heroTitle) {
+                            heroTitle.textContent = meta.heroTitle;
+                            heroTitle.setAttribute("data-text", meta.heroTitle);
+                        }
+                        if (meta.heroSubtext && heroSubtext) {
+                            heroSubtext.textContent = meta.heroSubtext;
+                        }
+                        if (meta.headerBg && headerBg) {
+                            headerBg.src = meta.headerBg;
+                        }
+                        if (meta.originTitle && originTitle) {
+                            originTitle.innerHTML = meta.originTitle;
+                        }
+                        if (meta.originP1 && originP1) {
+                            originP1.textContent = meta.originP1;
+                        }
+                        if (meta.originP2 && originP2) {
+                            originP2.textContent = meta.originP2;
+                        }
+                        if (meta.originImage && originImage) {
+                            originImage.src = meta.originImage;
+                        }
+                    } catch (e) {
+                        console.error("[ADRASTIA] Error hydrating manifesto data:", e);
+                    }
+                }
+            };
+
+            hydrateManifesto();
+
+            // Real-time synchronization event
+            window.addEventListener("adr:manifesto-updated", hydrateManifesto);
+        });
+    </script>
 </body>
 </html>
