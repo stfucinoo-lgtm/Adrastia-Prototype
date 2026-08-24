@@ -17,7 +17,23 @@
     <link rel="stylesheet" href="css/admin.css">
 
     <style>
-        /* Embedded Terminal Architecture */
+        /* === SYSTEM CURSOR RESTORATION FOR ADMIN TERMINAL === */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            cursor: default !important; /* Restores visible system cursor */
+        }
+
+        a, button, select, .nav-btn, .btn-glitch, .btn-ghost, .btn-kill, .btn-del, .upload-dropzone, input[type="file"], input[type="submit"] {
+            cursor: pointer !important;
+        }
+
+        input[type="text"], input[type="number"], input[type="email"], input[type="url"], input[type="tel"], textarea {
+            cursor: text !important;
+        }
+
+        /* === TERMINAL THEME VARIABLES === */
         :root {
             --bg-void: #050507;
             --bg-surface: #0c0c10;
@@ -128,7 +144,6 @@
             font-weight: 700;
             padding: 14px 18px;
             text-align: left;
-            cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
@@ -346,7 +361,6 @@
             padding: 2rem;
             text-align: center;
             background: #09090e;
-            cursor: pointer;
             transition: all 0.2s;
             position: relative;
         }
@@ -372,7 +386,6 @@
             font-weight: 700;
             padding: 12px 24px;
             border: none;
-            cursor: pointer;
             letter-spacing: 1.5px;
             transition: all 0.2s;
             text-transform: uppercase;
@@ -393,7 +406,6 @@
             font-family: var(--font-mono);
             font-size: 0.75rem;
             padding: 8px 16px;
-            cursor: pointer;
             transition: all 0.2s;
         }
         .btn-ghost:hover {
@@ -408,7 +420,6 @@
             padding: 6px 12px;
             font-family: var(--font-mono);
             font-size: 0.7rem;
-            cursor: pointer;
             transition: all 0.2s;
         }
         .btn-kill:hover {
@@ -424,7 +435,6 @@
             padding: 6px 10px;
             font-family: var(--font-mono);
             font-size: 0.7rem;
-            cursor: pointer;
             margin-left: 4px;
         }
         .btn-del:hover { color: #fff; border-color: #fff; }
@@ -490,9 +500,7 @@
         <!-- MAIN VIEW AREA -->
         <main class="content-area">
             
-            <!-- ========================================================
-                 SECTION 1: LIVE METRICS & FEED
-                 ======================================================== -->
+            <!-- SECTION 1: LIVE METRICS & FEED -->
             <section id="view-dashboard" class="view-section active-view">
                 <div class="top-bar">
                     <div>
@@ -560,9 +568,7 @@
                 </div>
             </section>
 
-            <!-- ========================================================
-                 SECTION 2: HARDWARE / DROPS INVENTORY (With Upload)
-                 ======================================================== -->
+            <!-- SECTION 2: HARDWARE / DROPS INVENTORY -->
             <section id="view-inventory" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -658,9 +664,7 @@
                 </div>
             </section>
 
-            <!-- ========================================================
-                 SECTION 3: DISPATCH LOG / ORDERS
-                 ======================================================== -->
+            <!-- SECTION 3: DISPATCH LOG / ORDERS -->
             <section id="view-orders" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -690,9 +694,7 @@
                 </div>
             </section>
 
-            <!-- ========================================================
-                 SECTION 4: SYSTEM OVERRIDE / SETTINGS
-                 ======================================================== -->
+            <!-- SECTION 4: SYSTEM OVERRIDE / SETTINGS -->
             <section id="view-settings" class="view-section">
                 <div class="top-bar">
                     <div>
