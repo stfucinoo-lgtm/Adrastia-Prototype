@@ -1,99 +1,80 @@
 /**
  * ==========================================================================
  * ADRASTIA // UNDERGROUND AUDIO ENGINE (js/audio.js)
- * Features: Real Music Track Player, Dynamic Audio URL, Smooth Fade Engine & Equalizer
- * Version: 3.0.0
+ * Features: Guaranteed Track Playback, LocalStorage Synced, Smooth Volume & Equalizer
+ * Version: 3.1.0
  * ==========================================================================
  */
 
 (function (window) {
     'use strict';
 
-    // Default Underground Track (Can be overridden via localStorage or custom MP3)
     const DEFAULT_TRACK_URL = 'https://assets.mixkit.co/music/preview/mixkit-cyber-city-dark-synthwave-1188.mp3';
     const STORAGE_KEY_ACTIVE = 'ADRASTIA_AUDIO_ACTIVE';
     const STORAGE_KEY_TRACK = 'adrastia_audio_track';
 
     let audioElement = null;
-    let fadeInterval = null;
     let isPlaying = false;
-    const TARGET_VOLUME = 0.55;
+    let currentLoadedSrc = "";
 
-    // --- 1. Audio Track Initialization ---
-    function getTrackSource() {
+    // 1. Get current track source
+    function getStoredTrack() {
         return localStorage.getItem(STORAGE_KEY_TRACK) || DEFAULT_TRACK_URL;
     }
 
-    function initAudio() {
-        if (audioElement) return;
+    // 2. Initialize Audio Instance
+    function ensureAudioInstance() {
+        if (!audioElement) {
+            audioElement = new Audio();
+            audioElement.loop = true;
+            audioElement.preload = 'auto';
+            audioElement.volume = 0.6;
 
-        audioElement = new Audio();
-        audioElement.src = getTrackSource();
-        audioElement.loop = true;
-        audioElement.preload = 'metadata';
-        audioElement.volume = 0;
+            audioElement.addEventListener('ended', () => {
+                if (isPlaying) audioElement.play();
+            });
 
-        // Auto reload if user changes track dynamically
-        window.addEventListener('adr:audio-track-updated', (e) => {
-            const newUrl = e.detail || getTrackSource();
-            const wasPlaying = isPlaying;
-            if (audioElement) {
-                audioElement.pause();
-                audioElement.src = newUrl;
-                if (wasPlaying) startAudio();
-            }
-        });
-    }
-
-    // --- 2. Smooth Fade-in & Fade-out Engine ---
-    function startAudio() {
-        initAudio();
-        
-        // Ensure source is current
-        const currentSrc = getTrackSource();
-        if (audioElement.src !== currentSrc) {
-            audioElement.src = currentSrc;
+            audioElement.addEventListener('error', (e) => {
+                console.warn('[ADRASTIA AUDIO] Track load error:', e);
+                const label = document.getElementById('adrAudioLabel');
+                if (label) label.innerText = 'AUDIO: ERR // RETRY';
+            });
         }
 
-        clearInterval(fadeInterval);
+        const targetSrc = getStoredTrack();
+        if (currentLoadedSrc !== targetSrc) {
+            audioElement.src = targetSrc;
+            currentLoadedSrc = targetSrc;
+            audioElement.load();
+        }
+    }
+
+    // 3. Play Soundtrack
+    function startAudio() {
+        ensureAudioInstance();
+
         audioElement.play().then(() => {
             isPlaying = true;
             updateWidgetUI(true);
             localStorage.setItem(STORAGE_KEY_ACTIVE, 'true');
-
-            // Smooth Fade-in
-            fadeInterval = setInterval(() => {
-                if (audioElement.volume < TARGET_VOLUME) {
-                    audioElement.volume = Math.min(TARGET_VOLUME, audioElement.volume + 0.05);
-                } else {
-                    clearInterval(fadeInterval);
-                }
-            }, 80);
-        }).catch(err => {
-            console.warn('[ADRASTIA AUDIO] Autoplay prevented or track error:', err);
+        }).catch((err) => {
+            console.warn('[ADRASTIA AUDIO] Play rejected (User gesture required):', err);
             isPlaying = false;
             updateWidgetUI(false);
         });
     }
 
+    // 4. Pause Soundtrack
     function stopAudio() {
-        if (!audioElement) return;
-
-        clearInterval(fadeInterval);
-        fadeInterval = setInterval(() => {
-            if (audioElement.volume > 0.05) {
-                audioElement.volume = Math.max(0, audioElement.volume - 0.08);
-            } else {
-                audioElement.volume = 0;
-                audioElement.pause();
-                clearInterval(fadeInterval);
-                isPlaying = false;
-                updateWidgetUI(false);
-                localStorage.setItem(STORAGE_KEY_ACTIVE, 'false');
-            }
-        }, 60);
+        if (audioElement) {
+            audioElement.pause();
+        }
+        isPlaying = false;
+        updateWidgetUI(false);
+        localStorage.setItem(STORAGE_KEY_ACTIVE, 'false');
     }
 
+    // 5. Toggle Play/Pause
     function toggleAudio() {
         if (isPlaying) {
             stopAudio();
@@ -102,7 +83,7 @@
         }
     }
 
-    // --- 3. Inject Brutalist Visual Widget ---
+    // 6. Inject Fixed Brutalist Widget
     function injectAudioWidget() {
         if (document.getElementById('adrAudioWidget')) return;
 
@@ -122,19 +103,19 @@
                 font-family: 'Space Mono', monospace;
                 font-size: 0.72rem;
                 color: #888;
-                cursor: pointer;
+                cursor: pointer !important;
                 user-select: none;
                 transition: all 0.2s ease;
                 backdrop-filter: blur(8px);
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
             }
             .adr-audio-widget:hover {
-                border-color: var(--accent-green, #00ff66);
+                border-color: var(--neon-green, #00ff66);
                 color: #fff;
                 transform: translateY(-2px);
             }
             .adr-audio-widget.active {
-                border-color: var(--accent-pink, #ff0055);
+                border-color: var(--neon-pink, #ff0055);
                 color: #fff;
                 box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
             }
@@ -143,6 +124,7 @@
                 align-items: flex-end;
                 gap: 3px;
                 height: 14px;
+                pointer-events: none;
             }
             .audio-bar {
                 width: 3px;
@@ -151,15 +133,15 @@
                 transition: height 0.1s ease, background-color 0.2s ease;
             }
             .adr-audio-widget.active .audio-bar {
-                background: var(--accent-pink, #ff0055);
-                animation: sound-bars 0.8s infinite alternate ease-in-out;
+                background: var(--neon-pink, #ff0055);
+                animation: sound-bars-anim 0.8s infinite alternate ease-in-out;
             }
             .adr-audio-widget.active .audio-bar:nth-child(1) { animation-delay: 0.1s; }
             .adr-audio-widget.active .audio-bar:nth-child(2) { animation-delay: 0.3s; }
             .adr-audio-widget.active .audio-bar:nth-child(3) { animation-delay: 0.2s; }
             .adr-audio-widget.active .audio-bar:nth-child(4) { animation-delay: 0.4s; }
 
-            @keyframes sound-bars {
+            @keyframes sound-bars-anim {
                 0% { height: 3px; }
                 50% { height: 14px; }
                 100% { height: 6px; }
@@ -186,9 +168,15 @@
         document.body.insertAdjacentHTML('beforeend', widgetMarkup);
 
         const widgetEl = document.getElementById('adrAudioWidget');
-        widgetEl.addEventListener('click', toggleAudio);
+        if (widgetEl) {
+            widgetEl.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleAudio();
+            });
+        }
     }
 
+    // 7. Update UI Indicator
     function updateWidgetUI(active) {
         const widget = document.getElementById('adrAudioWidget');
         const label = document.getElementById('adrAudioLabel');
@@ -197,7 +185,7 @@
         if (active) {
             widget.classList.add('active');
             label.innerText = 'SOUNDTRACK: LIVE [PLAYING]';
-            label.style.color = 'var(--accent-pink, #ff0055)';
+            label.style.color = '#ff0055';
         } else {
             widget.classList.remove('active');
             label.innerText = 'AUDIO: OFF // 00Hz';
@@ -205,7 +193,7 @@
         }
     }
 
-    // --- 4. Expose Public Engine API ---
+    // 8. Public API & Event Listeners
     window.AdrastiaAudio = {
         toggle: toggleAudio,
         start: startAudio,
@@ -213,11 +201,27 @@
         isPlaying: () => isPlaying,
         setTrack: (url) => {
             localStorage.setItem(STORAGE_KEY_TRACK, url);
+            currentLoadedSrc = "";
+            if (audioElement) {
+                audioElement.src = url;
+                currentLoadedSrc = url;
+                if (isPlaying) audioElement.play();
+            }
             window.dispatchEvent(new CustomEvent('adr:audio-track-updated', { detail: url }));
         }
     };
 
-    // Auto Ingest Widget on DOM Ready
+    window.addEventListener('adr:audio-track-updated', (e) => {
+        const newTrack = e.detail || getStoredTrack();
+        currentLoadedSrc = "";
+        if (audioElement) {
+            audioElement.src = newTrack;
+            currentLoadedSrc = newTrack;
+            if (isPlaying) audioElement.play();
+        }
+    });
+
+    // Auto Ingest
     document.addEventListener('DOMContentLoaded', () => {
         injectAudioWidget();
     });
