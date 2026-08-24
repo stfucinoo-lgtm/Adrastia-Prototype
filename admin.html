@@ -25,7 +25,7 @@
             cursor: default !important;
         }
 
-        a, button, select, .nav-btn, .btn-glitch, .btn-ghost, .btn-kill, .btn-del, .upload-box, label[for], input[type="file"], input[type="submit"], input[type="button"] {
+        a, button, select, .nav-btn, .btn-glitch, .btn-ghost, .btn-kill, .btn-del, .upload-box, label[for], input[type="file"], input[type="submit"], input[type="button"], audio {
             cursor: pointer !important;
         }
 
@@ -389,7 +389,6 @@
             object-fit: cover;
         }
 
-        /* Sub-card styling for nested blocks */
         .sub-card {
             background: rgba(8, 8, 12, 0.9);
             border: 1px solid #222;
@@ -528,12 +527,16 @@
                     <span>05. MANIFESTO // ABOUT</span>
                     <span>&gt;</span>
                 </button>
+                <button class="nav-btn" data-target="audio-config">
+                    <span>06. AUDIO // SOUNDTRACK</span>
+                    <span>&gt;</span>
+                </button>
                 <button class="nav-btn" data-target="orders">
-                    <span>06. DISPATCH LOG</span>
+                    <span>07. DISPATCH LOG</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="settings">
-                    <span>07. SYSTEM OVERRIDE</span>
+                    <span>08. SYSTEM OVERRIDE</span>
                     <span>&gt;</span>
                 </button>
 
@@ -1082,7 +1085,62 @@
                 </div>
             </section>
 
-            <!-- SECTION 6: DISPATCH LOG / ORDERS -->
+            <!-- SECTION 6: AUDIO // SOUNDTRACK CONTROLLER -->
+            <section id="view-audio-config" class="view-section">
+                <div class="top-bar">
+                    <div>
+                        <h1 class="page-headline">SOUNDTRACK // ENGINE CONTROLLER</h1>
+                        <p class="page-tag">SELECT LOCAL MP3 FILE OR DIRECT AUDIO STREAM FOR STOREFRONT AMBIENT AUDIO</p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button type="button" class="btn-ghost" id="btnTestPlayAudio">
+                            [ ▶ TEST PLAY / PAUSE ]
+                        </button>
+                        <button type="button" class="btn-ghost" id="btnResetAudioTrack">
+                            &#x21bb; RESTORE DEFAULT TRACK
+                        </button>
+                    </div>
+                </div>
+
+                <div id="audioToast" class="toast-msg">
+                    // SUCCESS: STOREFRONT SOUNDTRACK UPDATED & COMMITTED!
+                </div>
+
+                <div style="background:var(--bg-card); border:1px solid var(--neon-pink); padding:2rem; box-shadow:0 0 20px rgba(255,0,85,0.1); margin-bottom:2rem;">
+                    <form id="audioTrackForm">
+                        
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>SOUNDTRACK / AUDIO TRACK SOURCE (UPLOAD MP3 OR PASTE URL) *</label>
+                            
+                            <div class="upload-box" id="audioDropBox">
+                                <label for="audioFileInput" class="btn-upload-file">
+                                    [ 🎵 📁 BROWSE AUDIO FILE (.MP3 / .WAV / .OGG) FROM DEVICE ]
+                                </label>
+                                <input type="file" id="audioFileInput" accept="audio/*" style="display:none;">
+                                <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP ANY AUDIO FILE DIRECTLY HERE</p>
+                                <span style="font-size:0.7rem; color:var(--neon-green);" id="audioFileNameDisplay">// DEFAULT SYNTHWAVE STREAM LOADED</span>
+                            </div>
+                            
+                            <div style="margin-top:12px;">
+                                <label style="font-size:0.7rem; color:#888;">OR ENTER DIRECT AUDIO URL / LOCAL PATH (e.g. audio/track.mp3 or https://...):</label>
+                                <input type="text" id="audioDirectUrlInput" class="form-input" placeholder="https://.../song.mp3 or audio/track.mp3" style="width:100%; margin-top:4px;">
+                            </div>
+                        </div>
+
+                        <!-- Live In-Dashboard Preview Player -->
+                        <div class="form-group" style="margin-bottom:1.5rem; background:#07070a; padding:1.2rem; border:1px solid #222;">
+                            <label style="color:var(--neon-cyan); margin-bottom:8px;">// LIVE DASHBOARD AUDIO PREVIEW</label>
+                            <audio id="dashboardAudioPreview" controls style="width:100%; filter:invert(1) hue-rotate(180deg);"></audio>
+                        </div>
+
+                        <button type="submit" class="btn-glitch" style="width:100%; justify-content:center; padding:16px;">
+                            COMMIT & SAVE SOUNDTRACK [APPLY TO ALL PAGES]
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- SECTION 7: DISPATCH LOG / ORDERS -->
             <section id="view-orders" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -1110,7 +1168,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 7: SYSTEM OVERRIDE / SETTINGS -->
+            <!-- SECTION 8: SYSTEM OVERRIDE / SETTINGS -->
             <section id="view-settings" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -1151,7 +1209,7 @@
     <script src="js/store.js"></script>
     <script src="js/admin.js"></script>
 
-    <!-- Native Direct Controller for Collection Hero, Archive Lookbook & Full Manifesto Suite -->
+    <!-- Native Direct Controller for Collection Hero, Archive Lookbook, Manifesto & Audio Engine -->
     <script>
         (function() {
             // === 1. COLLECTION HERO CONTROLLER ===
@@ -1422,7 +1480,6 @@
                 }
             }
 
-            // Setup Uploaders
             setupImageUploader('manHeaderBgFileInput', 'manHeaderBgUrlInput', 'manHeaderBgPreview', 'manHeaderBgDropBox', src => activeManHeaderBg = src);
             setupImageUploader('manOriginImgFileInput', 'manOriginImgUrlInput', 'manOriginImgPreview', 'manOriginImgDropBox', src => activeManOriginImg = src);
             setupImageUploader('team1File', 'team1Url', 'team1Preview', 'team1DropBox', src => activeTeamImages[0] = src);
@@ -1436,7 +1493,6 @@
                     try { data = { ...DEFAULT_MAN_META, ...JSON.parse(raw) }; } catch(e) {}
                 }
 
-                // 1. Header & Origin
                 const heroTitle = document.getElementById('manHeroTitleInput');
                 const heroSubtext = document.getElementById('manHeroSubtextInput');
                 const headerBgPrev = document.getElementById('manHeaderBgPreview');
@@ -1461,7 +1517,6 @@
                 activeManOriginImg = data.originImage;
                 if (origImgUrl) origImgUrl.value = data.originImage.startsWith('data:') ? '' : data.originImage;
 
-                // 2. Process
                 const procHead = document.getElementById('manProcHeadingInput');
                 if (procHead) procHead.value = data.processHeading || DEFAULT_MAN_META.processHeading;
 
@@ -1473,7 +1528,6 @@
                 if (document.getElementById('proc3Title')) document.getElementById('proc3Title').value = procList[2].title;
                 if (document.getElementById('proc3Desc')) document.getElementById('proc3Desc').value = procList[2].desc;
 
-                // 3. Team
                 const teamHead = document.getElementById('manTeamHeadingInput');
                 if (teamHead) teamHead.value = data.teamHeading || DEFAULT_MAN_META.teamHeading;
 
@@ -1574,10 +1628,147 @@
                 });
             }
 
+            // === 4. SOUNDTRACK // AUDIO ENGINE CONTROLLER ===
+            const STORAGE_KEY_AUDIO = 'adrastia_audio_track';
+            const DEFAULT_AUDIO_TRACK = 'https://assets.mixkit.co/music/preview/mixkit-cyber-city-dark-synthwave-1188.mp3';
+
+            let activeAudioSource = "";
+
+            const audioFileIn = document.getElementById('audioFileInput');
+            const audioUrlIn = document.getElementById('audioDirectUrlInput');
+            const audioDropBox = document.getElementById('audioDropBox');
+            const audioFileNameDisplay = document.getElementById('audioFileNameDisplay');
+            const audioPreviewPlayer = document.getElementById('dashboardAudioPreview');
+            const audioForm = document.getElementById('audioTrackForm');
+            const btnResetAudio = document.getElementById('btnResetAudioTrack');
+            const btnTestPlay = document.getElementById('btnTestPlayAudio');
+            const audioToast = document.getElementById('audioToast');
+
+            function loadAudioData() {
+                const storedTrack = localStorage.getItem(STORAGE_KEY_AUDIO) || DEFAULT_AUDIO_TRACK;
+                activeAudioSource = storedTrack;
+
+                if (audioPreviewPlayer) audioPreviewPlayer.src = storedTrack;
+
+                if (audioUrlIn) {
+                    audioUrlIn.value = storedTrack.startsWith('data:') ? '' : storedTrack;
+                }
+
+                if (audioFileNameDisplay) {
+                    if (storedTrack.startsWith('data:')) {
+                        audioFileNameDisplay.textContent = '// CUSTOM ENCODED AUDIO FILE STORED IN LOCALSTORAGE';
+                    } else if (storedTrack === DEFAULT_AUDIO_TRACK) {
+                        audioFileNameDisplay.textContent = '// DEFAULT SYNTHWAVE STREAM LOADED';
+                    } else {
+                        audioFileNameDisplay.textContent = `// SOURCE: ${storedTrack}`;
+                    }
+                }
+            }
+
+            // Audio File Upload Handler
+            if (audioFileIn) {
+                audioFileIn.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        activeAudioSource = evt.target.result;
+                        if (audioPreviewPlayer) audioPreviewPlayer.src = activeAudioSource;
+                        if (audioUrlIn) audioUrlIn.value = '';
+                        if (audioFileNameDisplay) audioFileNameDisplay.textContent = `// LOADED FILE: ${file.name}`;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Audio Drop Box Handler
+            if (audioDropBox) {
+                audioDropBox.addEventListener('dragover', function(e) { e.preventDefault(); audioDropBox.style.borderColor = 'var(--neon-pink)'; });
+                audioDropBox.addEventListener('dragleave', function() { audioDropBox.style.borderColor = '#333'; });
+                audioDropBox.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    audioDropBox.style.borderColor = '#333';
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('audio/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            activeAudioSource = evt.target.result;
+                            if (audioPreviewPlayer) audioPreviewPlayer.src = activeAudioSource;
+                            if (audioUrlIn) audioUrlIn.value = '';
+                            if (audioFileNameDisplay) audioFileNameDisplay.textContent = `// LOADED FILE: ${file.name}`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            if (audioUrlIn) {
+                audioUrlIn.addEventListener('input', function(e) {
+                    const val = e.target.value.trim();
+                    if (val) {
+                        activeAudioSource = val;
+                        if (audioPreviewPlayer) audioPreviewPlayer.src = val;
+                        if (audioFileNameDisplay) audioFileNameDisplay.textContent = `// SOURCE: ${val}`;
+                    }
+                });
+            }
+
+            // Audio Form Submit
+            if (audioForm) {
+                audioForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const finalTrack = activeAudioSource || (audioUrlIn ? audioUrlIn.value.trim() : DEFAULT_AUDIO_TRACK);
+                    localStorage.setItem(STORAGE_KEY_AUDIO, finalTrack);
+                    window.dispatchEvent(new CustomEvent('adr:audio-track-updated', { detail: finalTrack }));
+
+                    if (audioToast) {
+                        audioToast.classList.add('show');
+                        setTimeout(() => audioToast.classList.remove('show'), 3500);
+                    }
+                });
+            }
+
+            // Test Play / Pause Button
+            if (btnTestPlay && audioPreviewPlayer) {
+                btnTestPlay.addEventListener('click', function() {
+                    if (audioPreviewPlayer.paused) {
+                        audioPreviewPlayer.play();
+                        btnTestPlay.innerText = '[ ❚❚ PAUSE PREVIEW ]';
+                        btnTestPlay.style.color = 'var(--neon-pink)';
+                    } else {
+                        audioPreviewPlayer.pause();
+                        btnTestPlay.innerText = '[ ▶ TEST PLAY / PAUSE ]';
+                        btnTestPlay.style.color = '';
+                    }
+                });
+            }
+
+            // Reset Audio Defaults
+            if (btnResetAudio) {
+                btnResetAudio.addEventListener('click', function() {
+                    if (confirm("Restore default underground ambient soundtrack?")) {
+                        localStorage.setItem(STORAGE_KEY_AUDIO, DEFAULT_AUDIO_TRACK);
+                        loadAudioData();
+                        window.dispatchEvent(new CustomEvent('adr:audio-track-updated', { detail: DEFAULT_AUDIO_TRACK }));
+                        if (audioToast) {
+                            audioToast.textContent = "// SOUNDTRACK RESTORED TO DEFAULT SYNTHWAVE.";
+                            audioToast.classList.add('show');
+                            setTimeout(() => {
+                                audioToast.textContent = "// SUCCESS: STOREFRONT SOUNDTRACK UPDATED & COMMITTED!";
+                                audioToast.classList.remove('show');
+                            }, 3000);
+                        }
+                    }
+                });
+            }
+
             // Initial Load
             loadCollData();
             loadLbData();
             loadManData();
+            loadAudioData();
         })();
     </script>
 </body>
