@@ -1,0 +1,368 @@
+/* ==========================================================================
+   ADRASTIA - CHECKOUT & TERMINAL DISPATCH CSS (css/checkout.css)
+   Features: Dual Panel Layout, Cyberpunk Form Controls & ASCII Receipt Box
+   Version: 2.0.0
+   ========================================================================== */
+
+/* --- 1. Page Header --- */
+.checkout-header {
+    padding: 10rem 2rem 4rem;
+    text-align: center;
+    background: radial-gradient(circle at center, #14141c 0%, var(--bg-color) 70%);
+}
+
+.checkout-header h1 {
+    font-size: 4vw;
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+}
+
+.checkout-header .subtext {
+    font-family: var(--font-body);
+    color: var(--accent-green);
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+/* --- 2. Main Checkout Grid Layout --- */
+.checkout-container {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 2rem 2rem 8rem;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    border: var(--border-thickness) solid var(--border-color);
+    background: #08080c;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+}
+
+.checkout-panel {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.border-right {
+    border-right: var(--border-thickness) solid var(--border-color);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #22222e;
+    padding-bottom: 1rem;
+}
+
+.panel-header h2 {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+
+.pulse-indicator {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    animation: pulse-glow 1.5s infinite;
+}
+
+/* --- 3. Left Panel: Payload Items List --- */
+.checkout-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 1rem;
+    margin-bottom: 2rem;
+}
+
+.checkout-items-list::-webkit-scrollbar {
+    width: 4px;
+}
+.checkout-items-list::-webkit-scrollbar-track {
+    background: #09090e;
+}
+.checkout-items-list::-webkit-scrollbar-thumb {
+    background: #333;
+}
+.checkout-items-list::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-pink);
+}
+
+.chk-item-card {
+    display: grid;
+    grid-template-columns: 65px 1fr auto;
+    gap: 1rem;
+    padding: 1rem;
+    background: #0d0d14;
+    border: 1px solid #222;
+    align-items: center;
+}
+
+.chk-item-img {
+    width: 65px;
+    height: 75px;
+    object-fit: cover;
+    border: 1px solid #333;
+}
+
+.chk-item-title {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.chk-item-meta {
+    font-size: 0.75rem;
+    color: #888;
+    display: flex;
+    gap: 8px;
+}
+
+.chk-item-price {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    color: var(--accent-green);
+}
+
+/* Promo / Bypass Key Section */
+.promo-section {
+    padding: 1.5rem 0;
+}
+
+.promo-form {
+    display: flex;
+    gap: 10px;
+}
+
+.promo-form input {
+    flex-grow: 1;
+}
+
+.promo-msg {
+    margin-top: 8px;
+    font-size: 0.75rem;
+    font-family: var(--font-body);
+    min-height: 18px;
+}
+.promo-msg.success { color: var(--accent-green); }
+.promo-msg.error { color: var(--accent-pink); }
+
+/* Totals Breakdown */
+.checkout-totals {
+    padding-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: auto;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.mono-val {
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.total-row.grand-total {
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.total-row.grand-total .mono-val {
+    font-size: 1.6rem;
+    font-family: var(--font-heading);
+}
+
+/* --- 4. Right Panel: Dispatch Form --- */
+.dispatch-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.form-input {
+    background: #050508;
+    border: 1px solid #282836;
+    color: #fff;
+    padding: 14px 16px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent-pink);
+    box-shadow: 0 0 12px rgba(255, 0, 85, 0.4);
+}
+
+/* Payment Gateway Selector */
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.payment-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    background: #050508;
+    border: 1px solid #282836;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.payment-card:hover, .payment-card:has(input:checked) {
+    border-color: var(--accent-green);
+    background: rgba(0, 255, 102, 0.03);
+}
+
+.payment-card input[type="radio"] {
+    margin-top: 4px;
+    accent-color: var(--accent-green);
+}
+
+.payment-meta strong {
+    display: block;
+    font-size: 0.85rem;
+    font-family: var(--font-heading);
+    margin-bottom: 2px;
+    color: var(--text-color);
+}
+
+.payment-meta span {
+    font-size: 0.75rem;
+    color: #777;
+}
+
+/* Massive Submit Button */
+.massive-submit-btn {
+    width: 100%;
+    padding: 1.4rem;
+    background: var(--accent-green);
+    color: #000;
+    border: none;
+    font-family: var(--font-heading);
+    font-weight: 900;
+    font-size: 1.15rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    margin-top: 1rem;
+}
+
+.massive-submit-btn:hover {
+    background: var(--accent-pink);
+    color: #fff;
+    box-shadow: 0 0 25px rgba(255, 0, 85, 0.6);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+}
+
+/* --- 5. Order Confirmation & ASCII Receipt Screen --- */
+.success-screen {
+    max-width: 900px;
+    margin: 0 auto;
+    animation: appear 0.4s ease;
+}
+
+.success-card {
+    background: #08080c;
+    border: var(--border-thickness) solid var(--accent-green);
+    padding: 3.5rem;
+    box-shadow: 0 0 40px rgba(0, 255, 102, 0.15);
+}
+
+.success-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.success-header h1 {
+    font-size: 3.5vw;
+    margin: 1rem 0;
+    color: var(--accent-green);
+}
+
+.success-header p {
+    font-family: var(--font-body);
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* ASCII Receipt Terminal Box */
+.ascii-receipt {
+    background: #020204;
+    border: 1px dashed var(--accent-green);
+    color: #e0e0e0;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    padding: 2rem;
+    overflow-x: auto;
+    white-space: pre;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9);
+    margin-bottom: 2.5rem;
+}
+
+.success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+/* --- 6. Responsive Adjustments --- */
+@media (max-width: 1024px) {
+    .checkout-grid { grid-template-columns: 1fr; }
+    .border-right { border-right: none; border-bottom: var(--border-thickness) solid var(--border-color); }
+    .checkout-panel { padding: 2rem; }
+    .checkout-header h1 { font-size: 7vw; }
+    .success-header h1 { font-size: 7vw; }
+}
+
+@media (max-width: 650px) {
+    .form-row { grid-template-columns: 1fr; }
+    .checkout-header { padding: 8rem 1rem 3rem; }
+    .checkout-container { padding: 1rem 1rem 4rem; }
+    .success-card { padding: 1.5rem; }
+    .success-actions { flex-direction: column; }
+    .ascii-receipt { font-size: 0.7rem; padding: 1rem; }
+}
