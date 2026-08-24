@@ -1,15 +1,16 @@
 /**
  * ==========================================================================
- * ADRASTIA // CENTRAL DATA STORE & STATE ENGINE (js/store.js)
+ * ADRASTIA // HYBRID CLOUD & LOCAL DATA ENGINE (js/store.js)
+ * Backend: Node.js / Express Server API Sync
  * Currency: Algerian Dinar (DA)
- * Version: 3.0.0 (Unified State Synchronization, Export/Import & DA Engine)
+ * Version: 3.5.0
  * ==========================================================================
  */
 
 (function (window) {
     'use strict';
 
-    // Core LocalStorage Storage Keys
+    // Local Storage Keys Cache
     const KEYS = {
         PRODUCTS: 'ADRASTIA_PRODUCTS_V3',
         DROPS: 'ADRASTIA_DROPS_V3',
@@ -23,7 +24,7 @@
         AUDIO_TRACK: 'adrastia_audio_track'
     };
 
-    // Default Seed Data (In Algerian Dinars - DA)
+    // Default Fallback Seed
     const DEFAULT_PRODUCTS = [
         {
             id: 'prod-001',
@@ -35,7 +36,7 @@
             totalStock: 24,
             maxStock: 50,
             image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000&auto=format&fit=crop',
-            description: 'Oversized fit. Hand-distressed edges. Each piece is uniquely corroded. 100% heavyweight acid-treated cotton.',
+            description: 'Oversized fit. Hand-distressed edges. 100% heavyweight acid-treated cotton.',
             isSoldOut: false,
             isCritical: false,
             isKilled: false,
@@ -51,135 +52,27 @@
             totalStock: 3,
             maxStock: 50,
             image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000&auto=format&fit=crop',
-            description: 'Ultra-heavy fleece, cybernetic screen print on back and sleeves. Corrupted aesthetic with raw hem finish.',
+            description: 'Ultra-heavy fleece, cybernetic screen print. Raw hem finish.',
             isSoldOut: false,
             isCritical: true,
             isKilled: false,
             dateAdded: '2024-11-02'
-        },
-        {
-            id: 'prod-003',
-            sku: 'ADR-003',
-            name: 'STATIC LONGSLEEVE',
-            collection: 'DIGITAL_DECAY',
-            price: 5500,
-            stock: { S: 0, M: 0, L: 0, XL: 0 },
-            totalStock: 0,
-            maxStock: 50,
-            image: 'https://images.unsplash.com/photo-1503342394128-c104d54dba01?q=80&w=1000&auto=format&fit=crop',
-            description: 'Exhausted artifact. Distorted analog noise pattern printed on black waffle-knit cotton.',
-            isSoldOut: true,
-            isCritical: false,
-            isKilled: false,
-            dateAdded: '2024-10-28'
-        },
-        {
-            id: 'prod-004',
-            sku: 'ADR-004',
-            name: 'VOID_CARGO PANTS',
-            collection: 'VOID_CORE',
-            price: 11000,
-            stock: { S: 4, M: 6, L: 5, XL: 3 },
-            totalStock: 18,
-            maxStock: 50,
-            image: 'https://images.unsplash.com/photo-1601115867451-24874b7117fa?q=80&w=1000&auto=format&fit=crop',
-            description: 'Multi-pocket tactical trousers with waterproof tech zippers and industrial webbing straps.',
-            isSoldOut: false,
-            isCritical: false,
-            isKilled: false,
-            dateAdded: '2024-11-05'
-        },
-        {
-            id: 'prod-005',
-            sku: 'ADR-005',
-            name: 'DECAY_DENIM JACKET',
-            collection: 'VOID_CORE',
-            price: 13000,
-            stock: { S: 2, M: 5, L: 4, XL: 4 },
-            totalStock: 15,
-            maxStock: 50,
-            image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1000&auto=format&fit=crop',
-            description: 'Custom stonewashed rigid denim with raw shredded seams and matte black metal hardware.',
-            isSoldOut: false,
-            isCritical: false,
-            isKilled: false,
-            dateAdded: '2024-11-06'
-        },
-        {
-            id: 'prod-006',
-            sku: 'ADR-006',
-            name: 'METALLURGY TEE',
-            collection: 'DIGITAL_DECAY',
-            price: 4000,
-            stock: { S: 8, M: 10, L: 8, XL: 4 },
-            totalStock: 30,
-            maxStock: 50,
-            image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop',
-            description: 'Heavy metal typography inspired by industrial brutalism. Vintage black wash treatment.',
-            isSoldOut: false,
-            isCritical: false,
-            isKilled: false,
-            dateAdded: '2024-11-07'
-        }
-    ];
-
-    const DEFAULT_DROPS = [
-        {
-            id: 'drop-01',
-            name: 'DIGITAL_DECAY',
-            code: 'VOL.3',
-            status: 'LIVE',
-            passcode: '',
-            launchDate: '2024-11-01'
-        },
-        {
-            id: 'drop-02',
-            name: 'VOID_CORE',
-            code: 'VOL.4',
-            status: 'LIVE',
-            passcode: '',
-            launchDate: '2024-11-08'
-        }
-    ];
-
-    const DEFAULT_ORDERS = [
-        {
-            orderId: 'ADR-98442',
-            customer: {
-                name: 'K. Valkyrie',
-                email: 'k.valkyrie@mesh.io',
-                phone: '+213 555-0199',
-                address: 'Hydra, Algiers Sector 4'
-            },
-            items: [
-                { id: 'prod-002', name: 'CYBER_SKULL HOODIE', size: 'L', qty: 1, price: 8500 }
-            ],
-            totalAmount: 8500,
-            paymentMethod: 'COD',
-            status: 'DISPATCHED',
-            timestamp: new Date(Date.now() - 3600000 * 4).toISOString()
         }
     ];
 
     const DEFAULT_SETTINGS = {
-        killSwitch: false,
         currency: 'DA',
-        promoCodes: {
-            'GLITCH20': 20,
-            'VOID10': 10,
-            'OVERRIDE': 50
-        },
+        promoCodes: { 'GLITCH20': 20, 'VOID10': 10, 'OVERRIDE': 50 },
         shippingFee: 800,
         freeShippingThreshold: 15000
     };
 
-    // Internal Helper: LocalStorage Safe JSON
+    // Helper: Local Storage I/O
     function getStored(key, fallback) {
         try {
             const data = localStorage.getItem(key);
             return data ? JSON.parse(data) : fallback;
         } catch (err) {
-            console.error(`[AdrastiaStore] Error reading key: ${key}`, err);
             return fallback;
         }
     }
@@ -188,34 +81,56 @@
         try {
             localStorage.setItem(key, JSON.stringify(value));
         } catch (err) {
-            console.error(`[AdrastiaStore] Error saving key: ${key}`, err);
+            console.warn('[AdrastiaStore Cache Error]', err);
         }
     }
-
-    // Initialize Store on Load
-    function initStore() {
-        if (!localStorage.getItem(KEYS.PRODUCTS)) {
-            setStored(KEYS.PRODUCTS, DEFAULT_PRODUCTS);
-        }
-        if (!localStorage.getItem(KEYS.DROPS)) {
-            setStored(KEYS.DROPS, DEFAULT_DROPS);
-        }
-        if (!localStorage.getItem(KEYS.ORDERS)) {
-            setStored(KEYS.ORDERS, DEFAULT_ORDERS);
-        }
-        if (!localStorage.getItem(KEYS.CART)) {
-            setStored(KEYS.CART, []);
-        }
-        if (!localStorage.getItem(KEYS.SETTINGS)) {
-            setStored(KEYS.SETTINGS, DEFAULT_SETTINGS);
-        }
-    }
-
-    initStore();
 
     function emitEvent(eventName, detail = {}) {
         window.dispatchEvent(new CustomEvent(eventName, { detail }));
     }
+
+    // --- Server Cloud Sync Engine ---
+    async function syncWithServer() {
+        try {
+            const res = await fetch('/api/sync');
+            if (res.ok) {
+                const payload = await res.json();
+                if (payload.success && payload.data) {
+                    const { products, orders, drops, settings, meta } = payload.data;
+                    
+                    if (products) setStored(KEYS.PRODUCTS, products);
+                    if (orders) setStored(KEYS.ORDERS, orders);
+                    if (drops) setStored(KEYS.DROPS, drops);
+                    if (settings) setStored(KEYS.SETTINGS, settings);
+
+                    if (meta) {
+                        if (meta.collection) setStored(KEYS.COLLECTION_META, meta.collection);
+                        if (meta.homeManifesto) setStored(KEYS.HOME_MANIFESTO_META, meta.homeManifesto);
+                        if (meta.lookbook) setStored(KEYS.LOOKBOOK_META, meta.lookbook);
+                        if (meta.manifesto) setStored(KEYS.MANIFESTO_META, meta.manifesto);
+                        if (meta.soundtrack && meta.soundtrack.url) setStored(KEYS.AUDIO_TRACK, meta.soundtrack.url);
+                    }
+
+                    // Dispatch Global Refresh Events
+                    emitEvent('adr:products-updated', { products });
+                    emitEvent('adr:orders-updated', { orders });
+                    emitEvent('adr:collection-updated', meta ? meta.collection : {});
+                    emitEvent('adr:home-manifesto-updated', meta ? meta.homeManifesto : {});
+                    emitEvent('adr:lookbook-updated', meta ? meta.lookbook : {});
+                    emitEvent('adr:manifesto-updated', meta ? meta.manifesto : {});
+                    emitEvent('adr:audio-track-updated');
+                }
+            }
+        } catch (err) {
+            console.log('[Adrastia Cloud Sync] Running in offline/cache mode');
+        }
+    }
+
+    // Initial Load & Sync
+    if (!localStorage.getItem(KEYS.PRODUCTS)) setStored(KEYS.PRODUCTS, DEFAULT_PRODUCTS);
+    if (!localStorage.getItem(KEYS.SETTINGS)) setStored(KEYS.SETTINGS, DEFAULT_SETTINGS);
+    if (!localStorage.getItem(KEYS.CART)) setStored(KEYS.CART, []);
+    syncWithServer();
 
     /**
      * ==========================================================================
@@ -225,15 +140,14 @@
     const AdrastiaStore = {
         currency: 'DA',
 
-        // Currency Formatter Helper
         formatMoney(amount) {
             const num = parseFloat(amount) || 0;
             return `${num.toLocaleString('en-US')} DA`;
         },
 
-        // --- 1. PRODUCTS API ---
+        // --- 1. PRODUCTS API (SERVER SYNCED) ---
         getProducts() {
-            return getStored(KEYS.PRODUCTS, []);
+            return getStored(KEYS.PRODUCTS, DEFAULT_PRODUCTS);
         },
 
         getActiveProducts() {
@@ -245,7 +159,7 @@
             return products.find(p => p.id === id || p.sku === id) || null;
         },
 
-        addProduct(productData) {
+        async addProduct(productData) {
             const products = this.getProducts();
             const newProduct = {
                 id: 'prod-' + Date.now(),
@@ -264,39 +178,71 @@
                 dateAdded: new Date().toISOString().split('T')[0]
             };
 
-            if (newProduct.totalStock <= 0) {
-                newProduct.isSoldOut = true;
-            } else if (newProduct.totalStock <= 5) {
-                newProduct.isCritical = true;
-            }
+            if (newProduct.totalStock <= 0) newProduct.isSoldOut = true;
+            else if (newProduct.totalStock <= 5) newProduct.isCritical = true;
 
             products.unshift(newProduct);
             setStored(KEYS.PRODUCTS, products);
             emitEvent('adr:products-updated', { products });
+
+            // Post to Server
+            try {
+                await fetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newProduct)
+                });
+            } catch (e) {
+                console.warn('[SERVER SYNC POST FAILED]', e);
+            }
+
             return newProduct;
         },
 
-        updateProduct(id, updatedFields) {
+        async updateProduct(id, updatedFields) {
             const products = this.getProducts();
             const index = products.findIndex(p => p.id === id || p.sku === id);
             if (index === -1) return null;
 
             products[index] = { ...products[index], ...updatedFields };
-
             const totalStock = products[index].totalStock;
             products[index].isSoldOut = totalStock <= 0;
             products[index].isCritical = totalStock > 0 && totalStock <= 5;
 
             setStored(KEYS.PRODUCTS, products);
             emitEvent('adr:products-updated', { products });
+
+            // Put to Server
+            try {
+                await fetch(`/api/products/${encodeURIComponent(products[index].id)}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(products[index])
+                });
+            } catch (e) {
+                console.warn('[SERVER SYNC PUT FAILED]', e);
+            }
+
             return products[index];
         },
 
-        deleteProduct(id) {
+        async deleteProduct(id) {
             let products = this.getProducts();
+            const targetProd = products.find(p => p.id === id || p.sku === id);
+            const targetId = targetProd ? targetProd.id : id;
+
             products = products.filter(p => p.id !== id && p.sku !== id);
             setStored(KEYS.PRODUCTS, products);
             emitEvent('adr:products-updated', { products });
+
+            // Delete from Server
+            try {
+                await fetch(`/api/products/${encodeURIComponent(targetId)}`, {
+                    method: 'DELETE'
+                });
+            } catch (e) {
+                console.warn('[SERVER SYNC DELETE FAILED]', e);
+            }
         },
 
         killProduct(id) {
@@ -307,25 +253,17 @@
             return this.updateProduct(id, { isKilled: false });
         },
 
-        // --- 2. DROPS API ---
-        getDrops() {
-            return getStored(KEYS.DROPS, []);
-        },
-
-        addDrop(dropData) {
-            const drops = this.getDrops();
-            const newDrop = {
-                id: 'drop-' + Date.now(),
-                name: (dropData.name || 'NEW_DROP').toUpperCase(),
-                code: dropData.code || 'VOL.' + (drops.length + 1),
-                status: dropData.status || 'LIVE',
-                passcode: dropData.passcode || '',
-                launchDate: dropData.launchDate || new Date().toISOString().split('T')[0]
-            };
-            drops.push(newDrop);
-            setStored(KEYS.DROPS, drops);
-            emitEvent('adr:drops-updated', { drops });
-            return newDrop;
+        // --- 2. METADATA CLOUD SYNC API ---
+        async saveMetaSection(sectionKey, data) {
+            try {
+                await fetch(`/api/meta/${encodeURIComponent(sectionKey)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            } catch (e) {
+                console.warn('[META SYNC FAILED]', e);
+            }
         },
 
         // --- 3. CART API ---
@@ -367,11 +305,8 @@
             const index = cart.findIndex(item => item.id === productId && item.size === size);
 
             if (index > -1) {
-                if (newQty <= 0) {
-                    cart.splice(index, 1);
-                } else {
-                    cart[index].qty = newQty;
-                }
+                if (newQty <= 0) cart.splice(index, 1);
+                else cart[index].qty = newQty;
                 setStored(KEYS.CART, cart);
                 emitEvent('adr:cart-updated', { cart, count: this.getCartCount() });
             }
@@ -396,12 +331,12 @@
             return cart.reduce((total, item) => total + (item.price * item.qty), 0);
         },
 
-        // --- 4. ORDERS API ---
+        // --- 4. ORDERS API (SERVER SYNCED) ---
         getOrders() {
             return getStored(KEYS.ORDERS, []);
         },
 
-        createOrder(orderPayload) {
+        async createOrder(orderPayload) {
             const cart = this.getCart();
             if (cart.length === 0 && (!orderPayload.items || orderPayload.items.length === 0)) {
                 throw new Error('CART_EMPTY: Cannot create empty dispatch order.');
@@ -420,7 +355,6 @@
             const baseShipping = settings.shippingFee || 800;
             const freeThreshold = settings.freeShippingThreshold || 15000;
             const shippingFee = (subtotal >= freeThreshold) ? 0 : baseShipping;
-
             const totalAmount = Math.max(0, subtotal - discountAmount + shippingFee);
 
             const newOrder = {
@@ -442,6 +376,7 @@
                 timestamp: new Date().toISOString()
             };
 
+            // Deduct Stock
             itemsToOrder.forEach(item => {
                 const prod = this.getProductById(item.id);
                 if (prod) {
@@ -453,92 +388,27 @@
             orders.unshift(newOrder);
             setStored(KEYS.ORDERS, orders);
             this.clearCart();
-
             emitEvent('adr:orders-updated', { orders });
+
+            // Post Order to Server
+            try {
+                await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newOrder)
+                });
+            } catch (e) {
+                console.warn('[SERVER ORDER POST FAILED]', e);
+            }
+
             return newOrder;
         },
 
-        updateOrderStatus(orderId, newStatus) {
-            const orders = this.getOrders();
-            const order = orders.find(o => o.orderId === orderId);
-            if (order) {
-                order.status = newStatus;
-                setStored(KEYS.ORDERS, orders);
-                emitEvent('adr:orders-updated', { orders });
-                return order;
-            }
-            return null;
-        },
-
-        // --- 5. SETTINGS & PROMO CODES ---
         getSettings() {
             return getStored(KEYS.SETTINGS, DEFAULT_SETTINGS);
         },
 
-        validatePromoCode(code) {
-            if (!code) return { valid: false, discount: 0 };
-            const settings = this.getSettings();
-            const cleanCode = code.trim().toUpperCase();
-            if (settings.promoCodes && settings.promoCodes[cleanCode]) {
-                return {
-                    valid: true,
-                    code: cleanCode,
-                    discount: settings.promoCodes[cleanCode]
-                };
-            }
-            return { valid: false, discount: 0 };
-        },
-
-        // --- 6. FULL BACKUP & EXPORT/IMPORT SYSTEM ---
-        exportFullBackup() {
-            const state = {};
-            Object.values(KEYS).forEach(k => {
-                state[k] = localStorage.getItem(k);
-            });
-            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `ADRASTIA_STATE_BACKUP_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        },
-
-        importFullBackup(jsonString) {
-            try {
-                const parsed = typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
-                Object.entries(parsed).forEach(([key, val]) => {
-                    if (val !== null && val !== undefined) {
-                        localStorage.setItem(key, typeof val === 'object' ? JSON.stringify(val) : val);
-                    }
-                });
-                alert('SYSTEM_RESTORE: Full database state successfully imported.');
-                location.reload();
-            } catch (e) {
-                alert('RESTORE_ERROR: Invalid backup JSON structure: ' + e.message);
-            }
-        },
-
-        fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                if (!file) {
-                    reject('No file provided');
-                    return;
-                }
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        },
-
-        factoryReset() {
-            Object.values(KEYS).forEach(k => localStorage.removeItem(k));
-            initStore();
-            emitEvent('adr:cart-updated', { cart: [], count: 0 });
-            emitEvent('adr:products-updated', { products: DEFAULT_PRODUCTS });
-        }
+        sync: syncWithServer
     };
 
     window.AdrastiaStore = AdrastiaStore;
