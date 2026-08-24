@@ -519,24 +519,28 @@
                     <span>03. NEW DROP // HERO</span>
                     <span>&gt;</span>
                 </button>
+                <button class="nav-btn" data-target="home-manifesto-config">
+                    <span>04. HOMEPAGE // MANIFESTO</span>
+                    <span>&gt;</span>
+                </button>
                 <button class="nav-btn" data-target="lookbook-config">
-                    <span>04. ARCHIVE // LOOKBOOK</span>
+                    <span>05. ARCHIVE // LOOKBOOK</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="manifesto-config">
-                    <span>05. MANIFESTO // ABOUT</span>
+                    <span>06. MANIFESTO // ABOUT</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="audio-config">
-                    <span>06. AUDIO // SOUNDTRACK</span>
+                    <span>07. AUDIO // SOUNDTRACK</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="orders">
-                    <span>07. DISPATCH LOG</span>
+                    <span>08. DISPATCH LOG</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="settings">
-                    <span>08. SYSTEM OVERRIDE</span>
+                    <span>09. SYSTEM OVERRIDE</span>
                     <span>&gt;</span>
                 </button>
 
@@ -764,7 +768,63 @@
                 </div>
             </section>
 
-            <!-- SECTION 4: ARCHIVE // LOOKBOOK CONTROLLER -->
+            <!-- SECTION 4: HOMEPAGE // MANIFESTO FEATURE CONTROLLER -->
+            <section id="view-home-manifesto-config" class="view-section">
+                <div class="top-bar">
+                    <div>
+                        <h1 class="page-headline">HOMEPAGE_MANIFESTO // CONTROLLER</h1>
+                        <p class="page-tag">OVERRIDE MAIN LANDING PAGE "WE ARE THE GLITCH" HEADLINE, TEXT & VISUAL ARTIFACT</p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <a href="index.html" target="_blank" class="btn-ghost" style="color:var(--neon-green); border-color:var(--neon-green);">
+                            [ VIEW LIVE HOMEPAGE ↗ ]
+                        </a>
+                        <button type="button" class="btn-ghost" id="btnResetHomeManifesto">
+                            &#x21bb; RESTORE DEFAULTS
+                        </button>
+                    </div>
+                </div>
+
+                <div id="homeManToast" class="toast-msg">
+                    // SUCCESS: HOMEPAGE MANIFESTO SECTION UPDATED & SAVED!
+                </div>
+
+                <div style="background:var(--bg-card); border:1px solid var(--neon-pink); padding:2rem; box-shadow:0 0 20px rgba(255,0,85,0.1); margin-bottom:2rem;">
+                    <form id="homeManifestoForm">
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>HOMEPAGE MANIFESTO HEADLINE (SUPPORTS HTML TAGS) *</label>
+                            <input type="text" id="homeManTitleInput" class="form-input" placeholder='WE ARE <br><span class="neon-pink">THE GLITCH</span> <br>IN THE SYSTEM.' required>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>MANIFESTO BODY DESCRIPTION *</label>
+                            <textarea id="homeManDescInput" class="form-textarea" rows="3" placeholder="Born from digital static and concrete..." required></textarea>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>MANIFESTO FEATURE ARTIFACT IMAGE (UPLOAD OR URL) *</label>
+                            <div class="upload-box" id="homeManDropBox">
+                                <label for="homeManImgFile" class="btn-upload-file">[ 📁 SELECT HOMEPAGE FEATURE IMAGE ]</label>
+                                <input type="file" id="homeManImgFile" accept="image/*" style="display:none;">
+                                <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP FILE HERE</p>
+                                <div class="preview-img-wrap">
+                                    <img id="homeManImgPreview" src="https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=2000&auto=format&fit=crop" alt="Home Manifesto Image Preview">
+                                </div>
+                            </div>
+                            <div style="margin-top:10px;">
+                                <label style="font-size:0.7rem; color:#888;">OR PASTE DIRECT WEB URL:</label>
+                                <input type="url" id="homeManImgUrl" class="form-input" placeholder="https://..." style="width:100%; margin-top:4px;">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-glitch" style="width:100%; justify-content:center; padding:16px;">
+                            COMMIT & SAVE HOMEPAGE MANIFESTO [OVERRIDE]
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- SECTION 5: ARCHIVE // LOOKBOOK CONTROLLER -->
             <section id="view-lookbook-config" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -823,7 +883,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 5: MANIFESTO // ABOUT CONTROLLER -->
+            <!-- SECTION 6: MANIFESTO // ABOUT CONTROLLER -->
             <section id="view-manifesto-config" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -1079,7 +1139,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 6: AUDIO // SOUNDTRACK CONTROLLER (INDEXEDDB UNLIMITED CAPACITY) -->
+            <!-- SECTION 7: AUDIO // SOUNDTRACK CONTROLLER (INDEXEDDB UNLIMITED CAPACITY) -->
             <section id="view-audio-config" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -1134,7 +1194,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 7: DISPATCH LOG / ORDERS -->
+            <!-- SECTION 8: DISPATCH LOG / ORDERS -->
             <section id="view-orders" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -1162,7 +1222,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 8: SYSTEM OVERRIDE / SETTINGS -->
+            <!-- SECTION 9: SYSTEM OVERRIDE / SETTINGS -->
             <section id="view-settings" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -1252,7 +1312,7 @@
         window.AdrastiaIDB = AdrastiaIDB;
     </script>
 
-    <!-- Native Direct Controller for Collection Hero, Archive Lookbook, Manifesto & Audio Engine -->
+    <!-- Native Direct Controller for Collection Hero, Homepage Manifesto, Archive Lookbook, Manifesto & Audio Engine -->
     <script>
         (function() {
             // === 1. COLLECTION HERO CONTROLLER ===
@@ -1372,7 +1432,120 @@
                 });
             }
 
-            // === 2. ARCHIVE // LOOKBOOK TEXTS CONTROLLER ===
+            // === 2. HOMEPAGE MANIFESTO CONTROLLER ===
+            const STORAGE_KEY_HOME_MAN = 'adrastia_home_manifesto_meta';
+            const DEFAULT_HOME_MAN_META = {
+                title: 'WE ARE <br><span class="neon-pink">THE GLITCH</span> <br>IN THE SYSTEM.',
+                desc: "Born from digital static and concrete. Adrastia isn't just clothing; it's a rejection of polished, algorithmic fashion. Wear the chaos.",
+                image: "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=2000&auto=format&fit=crop"
+            };
+
+            let activeHomeManImage = "";
+            const homeManTitleIn = document.getElementById('homeManTitleInput');
+            const homeManDescIn = document.getElementById('homeManDescInput');
+            const homeManFileIn = document.getElementById('homeManImgFile');
+            const homeManUrlIn = document.getElementById('homeManImgUrl');
+            const homeManPreview = document.getElementById('homeManImgPreview');
+            const homeManDropBox = document.getElementById('homeManDropBox');
+            const homeManForm = document.getElementById('homeManifestoForm');
+            const homeManResetBtn = document.getElementById('btnResetHomeManifesto');
+            const homeManToast = document.getElementById('homeManToast');
+
+            function loadHomeManData() {
+                let data = DEFAULT_HOME_MAN_META;
+                const raw = localStorage.getItem(STORAGE_KEY_HOME_MAN);
+                if (raw) {
+                    try { data = { ...DEFAULT_HOME_MAN_META, ...JSON.parse(raw) }; } catch(e) {}
+                }
+
+                if (homeManTitleIn) homeManTitleIn.value = data.title;
+                if (homeManDescIn) homeManDescIn.value = data.desc;
+                if (homeManPreview) homeManPreview.src = data.image;
+                activeHomeManImage = data.image;
+                if (homeManUrlIn) homeManUrlIn.value = data.image.startsWith('data:') ? '' : data.image;
+            }
+
+            if (homeManFileIn) {
+                homeManFileIn.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        activeHomeManImage = evt.target.result;
+                        if (homeManPreview) homeManPreview.src = activeHomeManImage;
+                        if (homeManUrlIn) homeManUrlIn.value = '';
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            if (homeManDropBox) {
+                homeManDropBox.addEventListener('dragover', function(e) { e.preventDefault(); homeManDropBox.style.borderColor = 'var(--neon-pink)'; });
+                homeManDropBox.addEventListener('dragleave', function() { homeManDropBox.style.borderColor = '#333'; });
+                homeManDropBox.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    homeManDropBox.style.borderColor = '#333';
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            activeHomeManImage = evt.target.result;
+                            if (homeManPreview) homeManPreview.src = activeHomeManImage;
+                            if (homeManUrlIn) homeManUrlIn.value = '';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            if (homeManUrlIn) {
+                homeManUrlIn.addEventListener('input', function(e) {
+                    const val = e.target.value.trim();
+                    if (val) {
+                        activeHomeManImage = val;
+                        if (homeManPreview) homeManPreview.src = val;
+                    }
+                });
+            }
+
+            if (homeManForm) {
+                homeManForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const payload = {
+                        title: homeManTitleIn ? homeManTitleIn.value.trim() : DEFAULT_HOME_MAN_META.title,
+                        desc: homeManDescIn ? homeManDescIn.value.trim() : DEFAULT_HOME_MAN_META.desc,
+                        image: activeHomeManImage || (homeManPreview ? homeManPreview.src : DEFAULT_HOME_MAN_META.image)
+                    };
+
+                    localStorage.setItem(STORAGE_KEY_HOME_MAN, JSON.stringify(payload));
+                    window.dispatchEvent(new CustomEvent('adr:home-manifesto-updated', { detail: payload }));
+
+                    if (homeManToast) {
+                        homeManToast.classList.add('show');
+                        setTimeout(() => homeManToast.classList.remove('show'), 3500);
+                    }
+                });
+            }
+
+            if (homeManResetBtn) {
+                homeManResetBtn.addEventListener('click', function() {
+                    if (confirm("Restore original Homepage Manifesto feature section?")) {
+                        localStorage.setItem(STORAGE_KEY_HOME_MAN, JSON.stringify(DEFAULT_HOME_MAN_META));
+                        loadHomeManData();
+                        window.dispatchEvent(new CustomEvent('adr:home-manifesto-updated', { detail: DEFAULT_HOME_MAN_META }));
+                        if (homeManToast) {
+                            homeManToast.textContent = "// HOMEPAGE MANIFESTO RESTORED TO DEFAULTS.";
+                            homeManToast.classList.add('show');
+                            setTimeout(() => {
+                                homeManToast.textContent = "// SUCCESS: HOMEPAGE MANIFESTO SECTION UPDATED & SAVED!";
+                                homeManToast.classList.remove('show');
+                            }, 3000);
+                        }
+                    }
+                });
+            }
+
+            // === 3. ARCHIVE // LOOKBOOK TEXTS CONTROLLER ===
             const STORAGE_KEY_LB = 'adrastia_lookbook_meta';
             const DEFAULT_LB_META = {
                 title: "// VOL.2: DIGITAL_DECAY",
@@ -1444,7 +1617,7 @@
                 });
             }
 
-            // === 3. MANIFESTO // FULL SUITE CONTROLLER ===
+            // === 4. MANIFESTO // FULL SUITE CONTROLLER ===
             const STORAGE_KEY_MAN = 'adrastia_manifesto_meta';
             const DEFAULT_MAN_META = {
                 heroTitle: "SYSTEM_FAILURE",
@@ -1670,7 +1843,7 @@
                 });
             }
 
-            // === 4. SOUNDTRACK // INDEXEDDB PERSISTENT ENGINE ===
+            // === 5. SOUNDTRACK // INDEXEDDB PERSISTENT ENGINE ===
             const DEFAULT_AUDIO_TRACK = 'https://assets.mixkit.co/music/preview/mixkit-cyber-city-dark-synthwave-1188.mp3';
             let activeAudioBlobOrUrl = null;
 
@@ -1686,7 +1859,6 @@
 
             async function loadAudioData() {
                 try {
-                    // Try IndexedDB first
                     const savedRecord = await AdrastiaIDB.get('soundtrack_track');
                     if (savedRecord && savedRecord.blob) {
                         activeAudioBlobOrUrl = savedRecord.blob;
@@ -1708,13 +1880,11 @@
                     console.warn('[ADRASTIA IDB] Error loading track:', err);
                 }
 
-                // Fallback to default
                 activeAudioBlobOrUrl = DEFAULT_AUDIO_TRACK;
                 if (audioPreviewPlayer) audioPreviewPlayer.src = DEFAULT_AUDIO_TRACK;
                 if (audioFileNameDisplay) audioFileNameDisplay.textContent = '// DEFAULT SYNTHWAVE STREAM ACTIVE';
             }
 
-            // File selection
             if (audioFileIn) {
                 audioFileIn.addEventListener('change', function(e) {
                     const file = e.target.files[0];
@@ -1728,7 +1898,6 @@
                 });
             }
 
-            // Drag and drop audio
             if (audioDropBox) {
                 audioDropBox.addEventListener('dragover', function(e) { e.preventDefault(); audioDropBox.style.borderColor = 'var(--neon-pink)'; });
                 audioDropBox.addEventListener('dragleave', function() { audioDropBox.style.borderColor = '#333'; });
@@ -1757,7 +1926,6 @@
                 });
             }
 
-            // Save Soundtrack to IndexedDB
             if (audioForm) {
                 audioForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
@@ -1792,7 +1960,6 @@
                 });
             }
 
-            // Test play/pause
             if (btnTestPlay && audioPreviewPlayer) {
                 btnTestPlay.addEventListener('click', function() {
                     if (audioPreviewPlayer.paused) {
@@ -1807,7 +1974,6 @@
                 });
             }
 
-            // Reset soundtrack
             if (btnResetAudio) {
                 btnResetAudio.addEventListener('click', async function() {
                     if (confirm("Restore default underground ambient soundtrack?")) {
@@ -1826,6 +1992,7 @@
 
             // Initial Load
             loadCollData();
+            loadHomeManData();
             loadLbData();
             loadManData();
             loadAudioData();
