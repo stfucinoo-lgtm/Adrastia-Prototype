@@ -118,10 +118,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <!-- Central Store and Global Scripts -->
+    <!-- Central Store, Audio and Global Scripts -->
     <script src="js/store.js"></script>
     <script src="js/global.js"></script>
     <script src="js/glitch.js"></script>
+    <script src="js/audio.js"></script>
 
     <!-- Dynamic Home Grid Engine -->
     <script>
@@ -132,7 +133,8 @@
             if (!homeGrid || !window.AdrastiaStore) return;
 
             const renderHomeProducts = () => {
-                const products = window.AdrastiaStore.getProducts().slice(0, 4);
+                // Fetch ONLY active products
+                const products = window.AdrastiaStore.getActiveProducts().slice(0, 4);
 
                 homeGrid.innerHTML = products.map(prod => {
                     const isDead = prod.isSoldOut || prod.totalStock <= 0;
@@ -156,20 +158,18 @@
                                     <h3 class="product-name">${prod.name}</h3>
                                 </a>
                                 <span class="product-price ${isDead ? 'neon-pink' : ''}">
-                                    ${isDead ? 'EXHAUSTED' : '$' + prod.price.toFixed(2)}
+                                    ${isDead ? 'EXHAUSTED' : window.AdrastiaStore.formatMoney(prod.price)}
                                 </span>
                             </div>
                         </article>
                     `;
                 }).join("");
 
-                // Reattach custom cursor listeners
                 if (window.attachCursorHoverListeners) window.attachCursorHoverListeners();
             };
 
             renderHomeProducts();
 
-            // Re-render if products update in store
             window.addEventListener("adr:products-updated", renderHomeProducts);
         });
     </script>
