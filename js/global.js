@@ -1,8 +1,8 @@
 /**
  * ==========================================================================
  * ADRASTIA // GLOBAL INTERACTIONS & CART DRAWER CONTROLLER (js/global.js)
- * Features: Custom Cursor, Auto-Injected Cart Drawer, Dynamic Cart State Sync
- * Version: 2.0.0
+ * Features: Custom Cursor, Auto-Injected Cart Drawer, DA Currency Sync
+ * Version: 2.1.0
  * ==========================================================================
  */
 
@@ -13,13 +13,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const cursor = document.querySelector(".custom-cursor");
 
     if (cursor) {
-        // Track mouse coordinates
         document.addEventListener("mousemove", (e) => {
             cursor.style.top = e.clientY + "px";
             cursor.style.left = e.clientX + "px";
         });
 
-        // Elements that trigger cursor morphing
         const attachCursorHoverListeners = () => {
             const interactives = document.querySelectorAll(
                 "a, button, input, select, textarea, .product-card, .cart-item, .chaotic-card, .drop-product, .grid-product-card"
@@ -38,17 +36,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         attachCursorHoverListeners();
 
-        // Hide/Show cursor at window boundaries
         document.addEventListener("mouseleave", () => { cursor.style.display = "none"; });
         document.addEventListener("mouseenter", () => { cursor.style.display = "block"; });
 
-        // Expose helper to reattach on dynamic DOM changes
         window.attachCursorHoverListeners = attachCursorHoverListeners;
     }
 
     // --- 2. Dynamic Cart Drawer Injection ---
     const injectCartDrawerMarkup = () => {
-        if (document.getElementById("adrCartDrawer")) return; // Prevent double injection
+        if (document.getElementById("adrCartDrawer")) return;
 
         const cartMarkup = `
             <div class="cart-backdrop" id="adrCartBackdrop"></div>
@@ -65,10 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="cart-drawer-footer" id="adrCartFooter">
                     <div class="cart-subtotal-row">
                         <span>ESTIMATED_TOTAL:</span>
-                        <span class="cart-subtotal-val" id="adrCartSubtotal">$0.00</span>
+                        <span class="cart-subtotal-val" id="adrCartSubtotal">0 DA</span>
                     </div>
                     <div class="cart-shipping-notice" id="adrShippingNotice">
-                        // DISPATCH: CALCULATED AT TERMINAL CHECKOUT.
+                        // DISPATCH: CALCULATED AT TERMINAL CHECKOUT (800 DA / FREE OVER 15,000 DA).
                     </div>
                     <a href="checkout.html" class="cart-checkout-btn" id="adrCheckoutBtn">
                         INITIATE CHECKOUT &gt;
@@ -92,16 +88,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const navCartCounts = document.querySelectorAll(".cart-count");
     const cartToggles = document.querySelectorAll(".cart-toggle");
 
-    // Open Cart Drawer
     const openCartDrawer = () => {
         if (!cartDrawer || !cartBackdrop) return;
         renderCartItems();
         cartDrawer.classList.add("open");
         cartBackdrop.classList.add("open");
-        document.body.style.overflow = "hidden"; // Prevent background scroll
+        document.body.style.overflow = "hidden";
     };
 
-    // Close Cart Drawer
     const closeCartDrawer = () => {
         if (!cartDrawer || !cartBackdrop) return;
         cartDrawer.classList.remove("open");
@@ -109,7 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.style.overflow = "";
     };
 
-    // Attach Toggle Listeners
     cartToggles.forEach(toggle => {
         toggle.addEventListener("click", (e) => {
             e.preventDefault();
@@ -120,14 +113,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (cartCloseBtn) cartCloseBtn.addEventListener("click", closeCartDrawer);
     if (cartBackdrop) cartBackdrop.addEventListener("click", closeCartDrawer);
 
-    // Close on Escape key press
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && cartDrawer && cartDrawer.classList.contains("open")) {
             closeCartDrawer();
         }
     });
 
-    // --- 4. Render Cart Items from AdrastiaStore ---
+    // --- 4. Render Cart Items (In DA) ---
     const renderCartItems = () => {
         if (!window.AdrastiaStore || !cartBody) return;
 
@@ -135,12 +127,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const count = window.AdrastiaStore.getCartCount();
         const total = window.AdrastiaStore.getCartTotal();
 
-        // Update counts across Navbar and Drawer Header
         navCartCounts.forEach(el => el.innerText = count);
         if (drawerTotalCount) drawerTotalCount.innerText = count;
-        if (cartSubtotal) cartSubtotal.innerText = `$${total.toFixed(2)}`;
+        if (cartSubtotal) cartSubtotal.innerText = window.AdrastiaStore.formatMoney(total);
 
-        // Render Empty State if no items
         if (cart.length === 0) {
             cartBody.innerHTML = `
                 <div class="cart-empty-state">
@@ -159,14 +149,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Enable Checkout Button
         const checkoutBtn = document.getElementById("adrCheckoutBtn");
         if (checkoutBtn) {
             checkoutBtn.style.pointerEvents = "auto";
             checkoutBtn.style.opacity = "1";
         }
 
-        // Render Items List
         cartBody.innerHTML = cart.map(item => `
             <div class="cart-item" data-id="${item.id}" data-size="${item.size}">
                 <img src="${item.image}" alt="${item.name}" class="cart-item-img">
@@ -185,12 +173,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div style="display:flex; flex-direction:column; justify-content:space-between; align-items:flex-end;">
                     <button class="cart-item-remove btn-item-remove" data-id="${item.id}" data-size="${item.size}" title="Remove Item">&times;</button>
-                    <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</div>
+                    <div class="cart-item-price">${window.AdrastiaStore.formatMoney(item.price * item.qty)}</div>
                 </div>
             </div>
         `).join("");
 
-        // Attach Quantity and Delete Actions
         cartBody.querySelectorAll(".btn-qty-minus").forEach(btn => {
             btn.addEventListener("click", () => {
                 const id = btn.getAttribute("data-id");
@@ -217,70 +204,61 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // Re-attach custom cursor hover listeners to newly generated elements
         if (window.attachCursorHoverListeners) window.attachCursorHoverListeners();
     };
 
-    // Listen for Store Cart Updates globally
     window.addEventListener("adr:cart-updated", () => {
         renderCartItems();
     });
 
-    // Initial Render of Cart Counter
     if (window.AdrastiaStore) {
         const count = window.AdrastiaStore.getCartCount();
         navCartCounts.forEach(el => el.innerText = count);
     }
 
-    // --- 5. Universal Quick Add-to-Cart Listener ---
+    // --- 5. Quick Add-to-Cart Listener ---
     const handleQuickAddClick = (e) => {
         const btn = e.target.closest(".quick-add-btn, .massive-add-btn");
         if (!btn || !window.AdrastiaStore) return;
 
         e.preventDefault();
 
-        // 1. Try to find Selected Size (e.g., from product.html form)
         let selectedSize = "M";
         const sizeInput = document.querySelector('input[name="size"]:checked');
         if (sizeInput) selectedSize = sizeInput.value.toUpperCase();
 
-        // 2. Resolve Product by data attribute OR text context
         let targetProduct = null;
         const productIdAttr = btn.getAttribute("data-product-id");
 
         if (productIdAttr) {
             targetProduct = window.AdrastiaStore.getProductById(productIdAttr);
         } else {
-            // Fallback: match by product title inside the parent card or header
             const container = btn.closest(".product-card, .drop-product, .grid-product-card, .stl-card, .single-product-section");
             if (container) {
                 const titleEl = container.querySelector(".product-name, h3, h4, .product-title");
                 if (titleEl) {
                     const cleanName = titleEl.innerText.trim().toUpperCase();
-                    const allProducts = window.AdrastiaStore.getProducts();
-                    targetProduct = allProducts.find(p => p.name === cleanName || cleanName.includes(p.name));
+                    const activeProducts = window.AdrastiaStore.getActiveProducts();
+                    targetProduct = activeProducts.find(p => p.name === cleanName || cleanName.includes(p.name));
                 }
             }
         }
 
-        // Default to first product if not found
         if (!targetProduct) {
-            targetProduct = window.AdrastiaStore.getProducts()[0];
+            const activeList = window.AdrastiaStore.getActiveProducts();
+            if (activeList.length > 0) targetProduct = activeList[0];
         }
 
-        if (!targetProduct) return;
+        if (!targetProduct || targetProduct.isKilled) return;
 
-        // Add to Central Store
         const success = window.AdrastiaStore.addToCart(targetProduct.id, selectedSize, 1);
 
         if (success) {
-            // Button Feedback Animation
             const originalText = btn.innerText;
             btn.innerText = "ADDED_ [✓]";
             btn.style.backgroundColor = "var(--accent-green)";
             btn.style.color = "#000";
 
-            // Trigger Shake on Cart Toggle buttons
             cartToggles.forEach(t => t.classList.add("cart-shake"));
 
             setTimeout(() => {
@@ -290,7 +268,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 cartToggles.forEach(t => t.classList.remove("cart-shake"));
             }, 1200);
 
-            // Automatically open cart drawer after short delay
             setTimeout(() => {
                 openCartDrawer();
             }, 400);
