@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACID_WASH TEE | ADRASTIA</title>
+    <title>HARDWARE SPECIMEN | ADRASTIA</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700;900&display=swap" rel="stylesheet">
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/base.css">
@@ -21,7 +21,7 @@
     <div class="noise-overlay"></div>
     <div class="custom-cursor"></div>
 
-    <!-- Navigation -->
+    <!-- Brutalist Navigation -->
     <nav class="brutalist-nav">
         <div class="nav-left">
             <a href="index.html" class="brand-logo glitch-hover" data-text="ADRASTIA">ADRASTIA</a>
@@ -30,6 +30,7 @@
             <a href="products.html" class="nav-link">SHOP_ALL</a>
             <a href="collection.html" class="nav-link">NEW_DROP</a>
             <a href="lookbook.html" class="nav-link">ARCHIVE</a>
+            <a href="admin.html" class="nav-link">DASHBOARD</a>
         </div>
         <div class="nav-right">
             <a href="about.html" class="nav-link hidden-mobile">MANIFESTO</a>
@@ -39,43 +40,50 @@
         </div>
     </nav>
 
-    <!-- Main Single Product Detail Section -->
-    <main class="single-product-section border-bottom">
+    <!-- Main Single Product Detail Section (Dynamic Hydration) -->
+    <main class="single-product-section border-bottom" id="singleProductContainer">
+        
+        <!-- Visual Left Side -->
         <div class="product-visual">
-            <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1200&auto=format&fit=crop" alt="Acid Wash Graphic Tee" class="glitch-img-target">
-            <div class="visual-tag">// 100% HEAVYWEIGHT COTTON. ACID TREATED.</div>
+            <img id="singleProdImg" src="" alt="Product Hardware" class="glitch-img-target">
+            <div class="visual-tag" id="singleProdTag">// 100% HEAVYWEIGHT HARDWARE. HAND CORRODED.</div>
         </div>
         
+        <!-- Info Right Side -->
         <div class="product-info">
             <div class="info-header">
-                <span class="stock-status neon-green">IN STOCK // READY TO SHIP</span>
-                <h1 class="product-title glitch" data-text="ACID_WASH TEE">ACID_WASH TEE</h1>
-                <p class="product-price">$45.00 <span class="currency">USD</span></p>
+                <span class="stock-status neon-green" id="singleProdStockStatus">IN STOCK // READY TO SHIP</span>
+                <h1 class="product-title glitch" id="singleProdTitle" data-text="HARDWARE_TITLE">HARDWARE_TITLE</h1>
+                <p class="product-price">
+                    <span id="singleProdPrice">$0.00</span> 
+                    <span class="currency">USD</span>
+                </p>
             </div>
             
             <div class="product-description">
-                <p>Oversized fit. Hand-distressed edges. Each piece is uniquely corroded. Rejects standard manufacturing norms. Do not iron the graphic. Wear until destroyed.</p>
+                <p id="singleProdDesc">Loading technical specimen details...</p>
             </div>
 
-            <form class="add-to-cart-form">
+            <!-- Size Selector & Add to Cart Form -->
+            <form class="add-to-cart-form" id="singleAddToCartForm">
                 <div class="size-selector">
-                    <span class="label">SELECT SIZE:</span>
-                    <div class="size-options">
-                        <input type="radio" id="size-s" name="size" value="s">
+                    <span class="label">SELECT SIZE CONFIGURATION:</span>
+                    <div class="size-options" id="sizeOptionsContainer">
+                        <input type="radio" id="size-s" name="size" value="S">
                         <label for="size-s">S</label>
                         
-                        <input type="radio" id="size-m" name="size" value="m" checked>
+                        <input type="radio" id="size-m" name="size" value="M" checked>
                         <label for="size-m">M</label>
                         
-                        <input type="radio" id="size-l" name="size" value="l">
+                        <input type="radio" id="size-l" name="size" value="L">
                         <label for="size-l">L</label>
                         
-                        <input type="radio" id="size-xl" name="size" value="xl">
+                        <input type="radio" id="size-xl" name="size" value="XL">
                         <label for="size-xl">XL</label>
                     </div>
                 </div>
                 
-                <button type="submit" class="massive-add-btn quick-add-btn">
+                <button type="submit" class="massive-add-btn" id="singleAddBtn">
                     ADD TO CART [ + ]
                 </button>
             </form>
@@ -86,50 +94,13 @@
     <header class="archive-header border-bottom">
         <h2 class="archive-title glitch" data-text="DROP ARCHIVE">DROP ARCHIVE</h2>
         <div class="archive-meta">
-            <p>// PREVIOUS COLLECTIONS. CULTURAL ARTIFACTS.</p>
-            <div class="brutalist-filter">
-                <span>FILTER:</span>
-                <button class="active">ALL</button>
-                <button>TOPS</button>
-                <button>BOTTOMS</button>
-            </div>
+            <p>// OTHER ARTIFACTS IN THE MAINFRAME</p>
         </div>
     </header>
 
-    <!-- Chaotic Grid Layout -->
-    <section class="chaotic-grid border-bottom">
-        <!-- Item 1 (Large) -->
-        <a href="#" class="chaotic-card span-2">
-            <img src="https://images.unsplash.com/photo-1550614000-4b95dd2672bb?q=80&w=800&auto=format&fit=crop" alt="Archive Hoodie">
-            <div class="chaotic-overlay">
-                <h3>ERROR_HOODIE</h3>
-                <span>$80.00</span>
-            </div>
-        </a>
-        <!-- Item 2 (Standard) -->
-        <a href="#" class="chaotic-card">
-            <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=800&auto=format&fit=crop" alt="Archive Tee">
-            <div class="chaotic-overlay">
-                <h3>NOISE_TEE</h3>
-                <span>$35.00</span>
-            </div>
-        </a>
-        <!-- Item 3 (Tall) -->
-        <a href="#" class="chaotic-card row-span-2">
-            <img src="https://images.unsplash.com/photo-1517502699925-502a9446f7ff?q=80&w=800&auto=format&fit=crop" alt="Cargo Pants">
-            <div class="chaotic-overlay">
-                <h3>VOID_PANTS</h3>
-                <span>$120.00</span>
-            </div>
-        </a>
-        <!-- Item 4 (Standard) -->
-        <a href="#" class="chaotic-card">
-            <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=800&auto=format&fit=crop" alt="Beanie">
-            <div class="chaotic-overlay">
-                <h3>STATIC_BEANIE</h3>
-                <span>$25.00</span>
-            </div>
-        </a>
+    <!-- Chaotic Grid Layout (Other Products) -->
+    <section class="chaotic-grid border-bottom" id="archiveChaoticGrid">
+        <!-- Injected dynamically via JS -->
     </section>
 
     <!-- Raw Textural CTA -->
@@ -149,9 +120,9 @@
                 <p>EST. 2024 // SYSTEM OVERRIDE</p>
             </div>
             <div class="footer-links">
-                <a href="#">INSTAGRAM</a>
-                <a href="#">TIKTOK</a>
-                <a href="#">DISCORD</a>
+                <a href="products.html">SHOP ALL</a>
+                <a href="collection.html">NEW DROP</a>
+                <a href="lookbook.html">ARCHIVE</a>
             </div>
             <div class="footer-legal">
                 <a href="#">SHIPPING & RETURNS</a>
@@ -165,8 +136,143 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <!-- Custom Scripts -->
+    <!-- Central Store and Global Scripts -->
+    <script src="js/store.js"></script>
     <script src="js/global.js"></script>
     <script src="js/glitch.js"></script>
+
+    <!-- Dynamic Product Hydration Engine -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            'use strict';
+
+            if (!window.AdrastiaStore) return;
+
+            // 1. Extract Product ID from URL (?id=...)
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetId = urlParams.get('id');
+            const allProducts = window.AdrastiaStore.getProducts();
+
+            // Find matching product or fallback to first product
+            let currentProduct = null;
+            if (targetId) {
+                currentProduct = window.AdrastiaStore.getProductById(targetId);
+            }
+            if (!currentProduct && allProducts.length > 0) {
+                currentProduct = allProducts[0];
+            }
+
+            if (!currentProduct) {
+                document.getElementById("singleProdDesc").innerText = "ERROR_404: Hardware specimen not found in mainframe.";
+                return;
+            }
+
+            // 2. Hydrate Main Specimen UI
+            document.title = `${currentProduct.name} | ADRASTIA`;
+
+            const imgEl = document.getElementById("singleProdImg");
+            const tagEl = document.getElementById("singleProdTag");
+            const titleEl = document.getElementById("singleProdTitle");
+            const priceEl = document.getElementById("singleProdPrice");
+            const statusEl = document.getElementById("singleProdStockStatus");
+            const descEl = document.getElementById("singleProdDesc");
+            const addBtn = document.getElementById("singleAddBtn");
+            const sizeContainer = document.getElementById("sizeOptionsContainer");
+
+            imgEl.src = currentProduct.image;
+            imgEl.alt = currentProduct.name;
+            titleEl.innerText = currentProduct.name;
+            titleEl.setAttribute("data-text", currentProduct.name);
+            priceEl.innerText = `$${currentProduct.price.toFixed(2)}`;
+            descEl.innerText = currentProduct.description || "Oversized fit. Hand-distressed edges. Each piece is uniquely corroded. Do not iron the graphic. Wear until destroyed.";
+            tagEl.innerText = `// SKU: ${currentProduct.sku} // COLLECTION: ${currentProduct.collection || 'DIGITAL_DECAY'}`;
+
+            // Stock Status Logic
+            const isDead = currentProduct.isSoldOut || currentProduct.totalStock <= 0;
+            const isCritical = currentProduct.totalStock > 0 && currentProduct.totalStock <= 5;
+
+            if (isDead) {
+                statusEl.className = "stock-status neon-pink";
+                statusEl.innerText = "SOLD OUT // SPECIMEN EXHAUSTED";
+                addBtn.disabled = true;
+                addBtn.innerText = "SOLD OUT [UNAVAILABLE]";
+                addBtn.style.opacity = "0.4";
+                addBtn.style.cursor = "not-allowed";
+            } else if (isCritical) {
+                statusEl.className = "stock-status neon-pink";
+                statusEl.innerText = `CRITICAL SCARCITY // ONLY ${currentProduct.totalStock} UNITS REMAINING`;
+            } else {
+                statusEl.className = "stock-status neon-green";
+                statusEl.innerText = `IN STOCK // READY TO SHIP (${currentProduct.totalStock} AVAILABLE)`;
+            }
+
+            // 3. Render Available Sizes Dynamically
+            if (currentProduct.stock) {
+                const sizes = ["S", "M", "L", "XL"];
+                let firstAvailableChecked = false;
+
+                sizeContainer.innerHTML = sizes.map(size => {
+                    const qty = currentProduct.stock[size] || 0;
+                    const isAvailable = qty > 0 && !isDead;
+                    let checkedAttr = "";
+
+                    if (isAvailable && !firstAvailableChecked) {
+                        checkedAttr = "checked";
+                        firstAvailableChecked = true;
+                    }
+
+                    return `
+                        <input type="radio" id="size-${size.toLowerCase()}" name="size" value="${size}" ${checkedAttr} ${!isAvailable ? 'disabled' : ''}>
+                        <label for="size-${size.toLowerCase()}" style="${!isAvailable ? 'opacity:0.25; text-decoration:line-through; cursor:not-allowed;' : ''}">${size}</label>
+                    `;
+                }).join("");
+            }
+
+            // 4. Form Submit Listener (Add to Cart)
+            const form = document.getElementById("singleAddToCartForm");
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                if (isDead) return;
+
+                const selectedSizeInput = document.querySelector('input[name="size"]:checked');
+                const selectedSize = selectedSizeInput ? selectedSizeInput.value : "M";
+
+                const success = window.AdrastiaStore.addToCart(currentProduct.id, selectedSize, 1);
+
+                if (success) {
+                    addBtn.innerText = "ADDED TO BUFFER_ [✓]";
+                    addBtn.style.backgroundColor = "var(--accent-green)";
+                    addBtn.style.color = "#000";
+
+                    setTimeout(() => {
+                        addBtn.innerText = "ADD TO CART [ + ]";
+                        addBtn.style.backgroundColor = "";
+                        addBtn.style.color = "";
+                    }, 1500);
+                }
+            });
+
+            // 5. Hydrate Chaotic Archive Grid
+            const archiveGrid = document.getElementById("archiveChaoticGrid");
+            const otherProducts = allProducts.filter(p => p.id !== currentProduct.id).slice(0, 4);
+
+            if (archiveGrid && otherProducts.length > 0) {
+                const layoutClasses = ["span-2", "", "row-span-2", ""];
+                archiveGrid.innerHTML = otherProducts.map((p, idx) => `
+                    <a href="product.html?id=${p.id}" class="chaotic-card ${layoutClasses[idx] || ''}">
+                        <img src="${p.image}" alt="${p.name}">
+                        <div class="chaotic-overlay">
+                            <h3>${p.name}</h3>
+                            <span>$${p.price.toFixed(2)}</span>
+                        </div>
+                    </a>
+                `).join("");
+            }
+
+            // Reattach cursor listeners
+            if (window.attachCursorHoverListeners) window.attachCursorHoverListeners();
+        });
+    </script>
 </body>
 </html>
