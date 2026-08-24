@@ -22,10 +22,10 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            cursor: default !important; /* Restores visible system cursor */
+            cursor: default !important;
         }
 
-        a, button, select, .nav-btn, .btn-glitch, .btn-ghost, .btn-kill, .btn-del, .upload-dropzone, input[type="file"], input[type="submit"] {
+        a, button, select, .nav-btn, .btn-glitch, .btn-ghost, .btn-kill, .btn-del, .upload-box, label[for], input[type="file"], input[type="submit"], input[type="button"] {
             cursor: pointer !important;
         }
 
@@ -59,19 +59,6 @@
                 linear-gradient(rgba(255, 0, 85, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
             background-size: 40px 40px;
-        }
-
-        /* Scanline Overlay */
-        body::after {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 4px;
-            z-index: 999;
-            pointer-events: none;
-            opacity: 0.6;
         }
 
         .app-shell {
@@ -174,7 +161,7 @@
         }
         .nav-btn.exit:hover { color: var(--neon-pink); }
 
-        /* Main Content */
+        /* Main Content Area */
         .content-area {
             flex-grow: 1;
             padding: 36px 48px;
@@ -308,7 +295,7 @@
         .badge-gray { color: #888; border-color: #444; background: rgba(255,255,255,0.02); }
         .badge-cyan { color: var(--neon-cyan); border-color: var(--neon-cyan); background: rgba(0,240,255,0.08); }
 
-        /* Forms & Modals */
+        /* Forms */
         .form-drawer {
             background: rgba(14, 14, 20, 0.95);
             border: 1px solid var(--neon-pink);
@@ -355,29 +342,54 @@
             box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
         }
 
-        /* Image Upload Box */
-        .upload-dropzone {
+        /* Upload Component */
+        .upload-box {
             border: 2px dashed #333;
-            padding: 2rem;
-            text-align: center;
+            padding: 1.5rem;
             background: #09090e;
-            transition: all 0.2s;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+            transition: border-color 0.2s;
         }
-        .upload-dropzone:hover, .upload-dropzone.dragover {
+        .upload-box:hover {
             border-color: var(--neon-green);
-            background: rgba(0, 255, 102, 0.03);
-        }
-        .upload-preview {
-            max-width: 120px;
-            max-height: 140px;
-            object-fit: cover;
-            border: 1px solid var(--neon-green);
-            margin-top: 1rem;
-            display: none;
         }
 
-        /* Action Buttons */
+        .btn-upload-file {
+            background: rgba(0, 255, 102, 0.1);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 8px 16px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .btn-upload-file:hover {
+            background: var(--neon-green);
+            color: #000;
+        }
+
+        .preview-img-wrap {
+            max-width: 220px;
+            max-height: 220px;
+            border: 1px solid #333;
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .preview-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Buttons */
         .btn-glitch {
             background: #fff;
             color: #000;
@@ -438,6 +450,20 @@
             margin-left: 4px;
         }
         .btn-del:hover { color: #fff; border-color: #fff; }
+
+        /* Notification Toast */
+        .toast-msg {
+            display: none;
+            background: rgba(0, 255, 102, 0.15);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 12px 16px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+        .toast-msg.show { display: block; animation: appear 0.3s ease; }
 
         /* View Section Controller */
         .view-section { display: none; }
@@ -501,7 +527,7 @@
             </nav>
         </aside>
 
-        <!-- MAIN VIEW AREA -->
+        <!-- MAIN CONTENT AREA -->
         <main class="content-area">
             
             <!-- SECTION 1: LIVE METRICS & FEED -->
@@ -514,11 +540,10 @@
                     <button class="btn-ghost" onclick="location.reload()">&#x21bb; REFRESH FEED</button>
                 </div>
 
-                <!-- KPI Cards -->
                 <div class="kpi-row">
                     <div class="kpi-panel">
                         <div class="kpi-title">GROSS REVENUE (ALL TIME)</div>
-                        <div class="kpi-number text-green" id="kpiGrossRevenue">$0.00</div>
+                        <div class="kpi-number text-green" id="kpiGrossRevenue">0 DA</div>
                         <div class="kpi-sub text-green">&#x2191; SYNCHRONIZED WITH STORE</div>
                     </div>
 
@@ -541,7 +566,6 @@
                     </div>
                 </div>
 
-                <!-- CSS Terminal Bar Chart & Feed -->
                 <div style="display:grid; grid-template-columns: 1.6fr 1fr; gap: 24px;">
                     <div style="background:var(--bg-card); border:1px solid var(--border-dim); padding:24px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
@@ -559,15 +583,12 @@
                         </div>
                     </div>
 
-                    <!-- Terminal Logs Feed -->
                     <div style="background:var(--bg-card); border:1px solid var(--border-dim); padding:24px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
                             <h3 style="font-family:var(--font-head); font-size:0.85rem; letter-spacing:2px;">// TERMINAL_ALERTS</h3>
                             <span class="badge badge-pink" id="badgeLogCount">LIVE LOG</span>
                         </div>
-                        <div id="terminalAlertsFeed" style="display:flex; flex-direction:column; gap:10px; font-size:0.75rem;">
-                            <!-- Injected dynamically -->
-                        </div>
+                        <div id="terminalAlertsFeed" style="display:flex; flex-direction:column; gap:10px; font-size:0.75rem;"></div>
                     </div>
                 </div>
             </section>
@@ -582,7 +603,6 @@
                     <button class="btn-glitch" id="btnToggleAddForm">+ DEPLOY NEW HARDWARE</button>
                 </div>
 
-                <!-- ADD NEW PRODUCT FORM DRAWER -->
                 <div class="form-drawer" id="addProductDrawer">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; border-bottom:1px solid #333; padding-bottom:1rem;">
                         <h2 style="font-family:var(--font-head); font-size:1.1rem; color:var(--neon-green);">// SPECIMEN INGESTION PROTOCOL</h2>
@@ -616,21 +636,16 @@
                             </div>
                         </div>
 
-                        <!-- Real Image Upload System -->
                         <div class="form-group" style="margin-bottom:1.5rem;">
                             <label>VISUAL ARTIFACT (IMAGE UPLOAD OR URL) *</label>
-                            
-                            <div class="upload-dropzone" id="uploadDropzone">
+                            <div class="upload-box" id="uploadDropzone">
+                                <label for="prodImgFile" class="btn-upload-file">[ BROWSE IMAGE FROM DEVICE ]</label>
                                 <input type="file" id="prodImgFile" accept="image/*" style="display:none;">
-                                <p style="font-size:0.85rem; color:#aaa; margin-bottom:8px;">
-                                    <strong>CLICK TO BROWSE IMAGE</strong> OR DRAG & DROP FILE HERE
-                                </p>
-                                <span style="font-size:0.7rem; color:#666;">(AUTOMATICALLY ENCODED TO LOCAL SYSTEM STORAGE)</span>
-                                <div>
-                                    <img id="imgPreview" class="upload-preview" alt="Preview">
+                                <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP FILE DIRECTLY HERE</p>
+                                <div class="preview-img-wrap" id="prodPreviewWrap" style="display:none;">
+                                    <img id="imgPreview" alt="Preview">
                                 </div>
                             </div>
-                            
                             <div style="margin-top:8px;">
                                 <input type="url" id="prodImgUrl" class="form-input" placeholder="Or enter direct image URL (https://...)" style="width:100%;">
                             </div>
@@ -647,7 +662,6 @@
                     </form>
                 </div>
 
-                <!-- Products Table -->
                 <div class="table-wrap">
                     <table class="ad-table">
                         <thead>
@@ -661,64 +675,76 @@
                                 <th>ACTIONS</th>
                             </tr>
                         </thead>
-                        <tbody id="inventoryTableBody">
-                            <!-- Injected dynamically via JS -->
-                        </tbody>
+                        <tbody id="inventoryTableBody"></tbody>
                     </table>
                 </div>
             </section>
 
-            <!-- SECTION 3: COLLECTION DROP // HERO CONTROLLER -->
+            <!-- SECTION 3: NEW DROP // HERO CONTROLLER -->
             <section id="view-collection-config" class="view-section">
                 <div class="top-bar">
                     <div>
                         <h1 class="page-headline">COLLECTION_HERO // CONTROLLER</h1>
-                        <p class="page-tag">CUSTOMIZE VOID_CORE DROP TITLE, BADGE, DESCRIPTION & HERO VISUAL</p>
+                        <p class="page-tag">OVERRIDE VOID_CORE DROP TITLE, BADGE, DESCRIPTION & HERO IMAGE</p>
                     </div>
-                    <button class="btn-ghost" id="btnResetCollectionMeta">&#x21bb; RESTORE DEFAULT HERO</button>
+                    <div style="display:flex; gap:10px;">
+                        <a href="collection.html" target="_blank" class="btn-ghost" style="color:var(--neon-green); border-color:var(--neon-green);">
+                            [ VIEW LIVE COLLECTION ↗ ]
+                        </a>
+                        <button type="button" class="btn-ghost" id="btnResetCollHero">
+                            &#x21bb; RESTORE DEFAULTS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Success Toast Notification -->
+                <div id="collToast" class="toast-msg">
+                    // SUCCESS: COLLECTION HERO DATA OVERRIDDEN & SAVED TO STORAGE!
                 </div>
 
                 <div style="background:var(--bg-card); border:1px solid var(--neon-pink); padding:2rem; box-shadow:0 0 20px rgba(255,0,85,0.1); margin-bottom:2rem;">
-                    <form id="collectionMetaForm">
+                    <form id="collectionHeroForm">
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>COLLECTION / DROP TITLE *</label>
-                                <input type="text" id="collMetaTitle" class="form-input" placeholder="VOID_CORE" value="VOID_CORE" required>
+                                <input type="text" id="collTitleInput" class="form-input" placeholder="VOID_CORE" required>
                             </div>
 
                             <div class="form-group">
-                                <label>DROP STATUS BADGE *</label>
-                                <input type="text" id="collMetaStatus" class="form-input" placeholder="// STATUS: LIVE // INVENTORY: CRITICAL" value="// STATUS: LIVE // INVENTORY: CRITICAL" required>
+                                <label>STATUS BADGE *</label>
+                                <input type="text" id="collStatusInput" class="form-input" placeholder="// STATUS: LIVE // INVENTORY: CRITICAL" required>
                             </div>
                         </div>
 
                         <div class="form-group" style="margin-bottom:1.5rem;">
                             <label>DROP MANIFESTO / DESCRIPTION *</label>
-                            <textarea id="collMetaDesc" class="form-textarea" rows="3" placeholder="A brutalist exploration of the empty spaces..." required>A brutalist exploration of the empty spaces between the digital and physical worlds. Limited to 50 pieces per garment. No restocks.</textarea>
+                            <textarea id="collDescInput" class="form-textarea" rows="3" placeholder="A brutalist exploration of the empty spaces..." required></textarea>
                         </div>
 
                         <!-- Drop Hero Image Upload -->
                         <div class="form-group" style="margin-bottom:1.5rem;">
-                            <label>DROP HERO IMAGE (UPLOAD FILE OR PASTE DIRECT URL) *</label>
+                            <label>COLLECTION HERO IMAGE (UPLOAD FILE OR URL) *</label>
                             
-                            <div class="upload-dropzone" id="collDropzone">
-                                <input type="file" id="collMetaImgFile" accept="image/*" style="display:none;">
-                                <p style="font-size:0.85rem; color:#aaa; margin-bottom:8px;">
-                                    <strong>CLICK TO SELECT HERO IMAGE</strong> OR DRAG & DROP
-                                </p>
-                                <span style="font-size:0.7rem; color:#666;">(STORED DIRECTLY IN SYSTEM REPOSITORY)</span>
-                                <div>
-                                    <img id="collImgPreview" class="upload-preview" style="display:inline-block; max-width:200px; max-height:200px;" alt="Hero Preview" src="https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop">
+                            <div class="upload-box" id="collDropBox">
+                                <label for="collFileInput" class="btn-upload-file">
+                                    [ 📁 SELECT NEW HERO IMAGE FROM DEVICE ]
+                                </label>
+                                <input type="file" id="collFileInput" accept="image/*" style="display:none;">
+                                <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP ANY IMAGE FILE HERE</p>
+                                
+                                <div class="preview-img-wrap">
+                                    <img id="collImagePreview" src="https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop" alt="Hero Preview">
                                 </div>
                             </div>
                             
-                            <div style="margin-top:8px;">
-                                <input type="url" id="collMetaImgUrl" class="form-input" placeholder="Or enter direct image URL (https://...)" style="width:100%;">
+                            <div style="margin-top:10px;">
+                                <label style="font-size:0.7rem; color:#888;">OR PASTE DIRECT WEB URL:</label>
+                                <input type="url" id="collDirectUrlInput" class="form-input" placeholder="https://..." style="width:100%; margin-top:4px;">
                             </div>
                         </div>
 
                         <button type="submit" class="btn-glitch" style="width:100%; justify-content:center; padding:16px;">
-                            SAVE COLLECTION HERO CONFIG [OVERRIDE]
+                            COMMIT & SAVE COLLECTION HERO [OVERRIDE]
                         </button>
                     </form>
                 </div>
@@ -747,9 +773,7 @@
                                 <th>OVERRIDE STATUS</th>
                             </tr>
                         </thead>
-                        <tbody id="ordersTableBody">
-                            <!-- Injected dynamically via JS -->
-                        </tbody>
+                        <tbody id="ordersTableBody"></tbody>
                     </table>
                 </div>
             </section>
@@ -764,8 +788,6 @@
                 </div>
 
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:24px;">
-                    
-                    <!-- Promo Code Manager -->
                     <div style="background:var(--bg-card); border:1px solid var(--border-dim); padding:24px;">
                         <h3 style="font-family:var(--font-head); font-size:0.9rem; margin-bottom:1rem; color:var(--neon-green);">
                             // ACTIVE BYPASS CODES (PROMO)
@@ -773,24 +795,20 @@
                         <p style="font-size:0.75rem; color:#888; margin-bottom:1.5rem;">
                             Customers can apply these codes in the Terminal Checkout drawer for instant discounts.
                         </p>
-                        <div id="promoCodesList" style="display:flex; flex-direction:column; gap:8px; font-size:0.8rem;">
-                            <!-- Injected dynamically -->
-                        </div>
+                        <div id="promoCodesList" style="display:flex; flex-direction:column; gap:8px; font-size:0.8rem;"></div>
                     </div>
 
-                    <!-- Factory Purge / Reset -->
                     <div style="background:var(--bg-card); border:1px solid #4a1520; padding:24px;">
                         <h3 style="font-family:var(--font-head); font-size:0.9rem; margin-bottom:1rem; color:var(--neon-pink);">
                             // DANGER ZONE: FACTORY PURGE
                         </h3>
                         <p style="font-size:0.75rem; color:#888; margin-bottom:1.5rem; line-height:1.6;">
-                            Reset all products, drops, orders, and cart items to original factory defaults. This clears LocalStorage state.
+                            Reset all products, drops, orders, and cart items to original factory defaults.
                         </p>
                         <button class="btn-kill" id="btnFactoryReset" style="width:100%; padding:14px; font-weight:700;">
                             &#9888; PURGE ALL & RESTORE DEFAULTS
                         </button>
                     </div>
-
                 </div>
             </section>
 
@@ -800,5 +818,148 @@
     <!-- Scripts -->
     <script src="js/store.js"></script>
     <script src="js/admin.js"></script>
+
+    <!-- Native Direct Controller for Collection Hero (Guaranteed Execution) -->
+    <script>
+        (function() {
+            const STORAGE_KEY = 'adrastia_collection_meta';
+            const DEFAULT_META = {
+                title: "VOID_CORE",
+                status: "// STATUS: LIVE // INVENTORY: CRITICAL",
+                description: "A brutalist exploration of the empty spaces between the digital and physical worlds. Limited to 50 pieces per garment. No restocks.",
+                image: "https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop"
+            };
+
+            let activeImageSource = "";
+
+            const titleIn = document.getElementById('collTitleInput');
+            const statusIn = document.getElementById('collStatusInput');
+            const descIn = document.getElementById('collDescInput');
+            const urlIn = document.getElementById('collDirectUrlInput');
+            const fileIn = document.getElementById('collFileInput');
+            const previewImg = document.getElementById('collImagePreview');
+            const dropBox = document.getElementById('collDropBox');
+            const form = document.getElementById('collectionHeroForm');
+            const resetBtn = document.getElementById('btnResetCollHero');
+            const toast = document.getElementById('collToast');
+
+            // Load saved data into inputs
+            function loadHeroData() {
+                let data = DEFAULT_META;
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    try { data = { ...DEFAULT_META, ...JSON.parse(raw) }; } catch(e) {}
+                }
+
+                if (titleIn) titleIn.value = data.title;
+                if (statusIn) statusIn.value = data.status;
+                if (descIn) descIn.value = data.description;
+                if (previewImg) previewImg.src = data.image;
+                
+                activeImageSource = data.image;
+
+                if (urlIn) {
+                    urlIn.value = data.image.startsWith('data:') ? '' : data.image;
+                }
+            }
+
+            // File selection reader
+            if (fileIn) {
+                fileIn.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        activeImageSource = evt.target.result;
+                        if (previewImg) previewImg.src = activeImageSource;
+                        if (urlIn) urlIn.value = '';
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Drag and drop image
+            if (dropBox) {
+                dropBox.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    dropBox.style.borderColor = 'var(--neon-green)';
+                });
+                dropBox.addEventListener('dragleave', function() {
+                    dropBox.style.borderColor = '#333';
+                });
+                dropBox.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    dropBox.style.borderColor = '#333';
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            activeImageSource = evt.target.result;
+                            if (previewImg) previewImg.src = activeImageSource;
+                            if (urlIn) urlIn.value = '';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // URL input change
+            if (urlIn) {
+                urlIn.addEventListener('input', function(e) {
+                    const val = e.target.value.trim();
+                    if (val) {
+                        activeImageSource = val;
+                        if (previewImg) previewImg.src = val;
+                    }
+                });
+            }
+
+            // Form Submit & Save
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const payload = {
+                        title: titleIn ? titleIn.value.trim() : DEFAULT_META.title,
+                        status: statusIn ? statusIn.value.trim() : DEFAULT_META.status,
+                        description: descIn ? descIn.value.trim() : DEFAULT_META.description,
+                        image: activeImageSource || (previewImg ? previewImg.src : DEFAULT_META.image)
+                    };
+
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+                    window.dispatchEvent(new CustomEvent('adr:collection-updated', { detail: payload }));
+
+                    // Show success toast
+                    if (toast) {
+                        toast.classList.add('show');
+                        setTimeout(() => toast.classList.remove('show'), 3500);
+                    }
+                });
+            }
+
+            // Restore defaults
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function() {
+                    if (confirm("Restore original VOID_CORE drop title and images?")) {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_META));
+                        loadHeroData();
+                        window.dispatchEvent(new CustomEvent('adr:collection-updated', { detail: DEFAULT_META }));
+                        if (toast) {
+                            toast.textContent = "// HERO RESTORED TO FACTORY DEFAULTS.";
+                            toast.classList.add('show');
+                            setTimeout(() => {
+                                toast.textContent = "// SUCCESS: COLLECTION HERO DATA OVERRIDDEN & SAVED TO STORAGE!";
+                                toast.classList.remove('show');
+                            }, 3000);
+                        }
+                    }
+                });
+            }
+
+            // Initial load
+            loadHeroData();
+        })();
+    </script>
 </body>
 </html>
