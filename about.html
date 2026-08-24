@@ -63,68 +63,19 @@
         </div>
     </section>
 
-    <!-- Design-to-Drop Process -->
+    <!-- Design-to-Drop Process (Dynamic Hydration) -->
     <section class="process-section border-bottom">
-        <h2 class="section-heading">THE_PROCESS // ALGORITHM BYPASS</h2>
-        <div class="process-grid">
-            <div class="process-step">
-                <span class="step-num">01.</span>
-                <h3>CORRUPTION</h3>
-                <p>We source heavy-weight, ethically produced blanks and immediately begin destroying them. Acid washes, distressing, and enzyme treatments to remove the "new" feeling.</p>
-            </div>
-            <div class="process-step">
-                <span class="step-num">02.</span>
-                <h3>SCREEN_PRINTING</h3>
-                <p>Graphics are designed digitally, corrupted via analog VHS feedback loops, and hand-screened using toxic-looking, but eco-friendly, neon inks.</p>
-            </div>
-            <div class="process-step">
-                <span class="step-num">03.</span>
-                <h3>THE_DROP</h3>
-                <p>Strictly limited runs. No pre-orders. No restocks. Once the inventory hits zero, the hardware is archived forever. Speed is survival.</p>
-            </div>
+        <h2 class="section-heading" id="processSectionHeading">THE_PROCESS // ALGORITHM BYPASS</h2>
+        <div class="process-grid" id="processGrid">
+            <!-- Rendered dynamically -->
         </div>
     </section>
 
-    <!-- Zine-Style Team Section -->
+    <!-- Zine-Style Team Section (Dynamic Hydration) -->
     <section class="team-section border-bottom">
-        <h2 class="section-heading">THE_CREW // ARCHITECTS OF DECAY</h2>
-        <div class="zine-grid">
-            <!-- Team Member 1 -->
-            <div class="zine-card">
-                <div class="zine-img-wrap">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="Founder">
-                </div>
-                <div class="zine-info">
-                    <h3>XEN // FOUNDER</h3>
-                    <p class="role">CREATIVE_DIRECTOR</p>
-                    <p class="bio">Ex-corporate designer. Burnt out. Now strictly deals in vectors and chaos.</p>
-                    <p class="meta"><strong>CURRENT TRACK:</strong> Crystal Castles - Crimewave</p>
-                </div>
-            </div>
-            <!-- Team Member 2 -->
-            <div class="zine-card offset">
-                <div class="zine-img-wrap">
-                    <img src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?q=80&w=800&auto=format&fit=crop" alt="Lead Printer">
-                </div>
-                <div class="zine-info">
-                    <h3>K4L // PRINTER</h3>
-                    <p class="role">LEAD_MANUFACTURING</p>
-                    <p class="bio">Spends 90% of life covered in plastisol ink. Hates perfectly registered prints.</p>
-                    <p class="meta"><strong>CURRENT TRACK:</strong> Death Grips - Guillotine</p>
-                </div>
-            </div>
-            <!-- Team Member 3 -->
-            <div class="zine-card">
-                <div class="zine-img-wrap">
-                    <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=800&auto=format&fit=crop" alt="Digital Lead">
-                </div>
-                <div class="zine-info">
-                    <h3>ZERO // WEB</h3>
-                    <p class="role">DIGITAL_ARCHITECT</p>
-                    <p class="bio">Wrote the custom checkout script to block reseller bots. Lives in the terminal.</p>
-                    <p class="meta"><strong>CURRENT TRACK:</strong> Aphex Twin - Vordhosbn</p>
-                </div>
-            </div>
+        <h2 class="section-heading" id="teamSectionHeading">THE_CREW // ARCHITECTS OF DECAY</h2>
+        <div class="zine-grid" id="teamZineGrid">
+            <!-- Rendered dynamically -->
         </div>
     </section>
 
@@ -177,12 +128,57 @@
     <script src="js/global.js"></script>
     <script src="js/glitch.js"></script>
 
-    <!-- Dynamic Manifesto Hydration Engine -->
+    <!-- Dynamic Full Manifesto Hydration Engine -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             'use strict';
 
-            const hydrateManifesto = () => {
+            const DEFAULT_PROCESS = [
+                {
+                    num: "01.",
+                    title: "CORRUPTION",
+                    desc: "We source heavy-weight, ethically produced blanks and immediately begin destroying them. Acid washes, distressing, and enzyme treatments to remove the \"new\" feeling."
+                },
+                {
+                    num: "02.",
+                    title: "SCREEN_PRINTING",
+                    desc: "Graphics are designed digitally, corrupted via analog VHS feedback loops, and hand-screened using toxic-looking, but eco-friendly, neon inks."
+                },
+                {
+                    num: "03.",
+                    title: "THE_DROP",
+                    desc: "Strictly limited runs. No pre-orders. No restocks. Once the inventory hits zero, the hardware is archived forever. Speed is survival."
+                }
+            ];
+
+            const DEFAULT_TEAM = [
+                {
+                    name: "XEN // FOUNDER",
+                    role: "CREATIVE_DIRECTOR",
+                    bio: "Ex-corporate designer. Burnt out. Now strictly deals in vectors and chaos.",
+                    track: "Crystal Castles - Crimewave",
+                    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop",
+                    offset: false
+                },
+                {
+                    name: "K4L // PRINTER",
+                    role: "LEAD_MANUFACTURING",
+                    bio: "Spends 90% of life covered in plastisol ink. Hates perfectly registered prints.",
+                    track: "Death Grips - Guillotine",
+                    image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?q=80&w=800&auto=format&fit=crop",
+                    offset: true
+                },
+                {
+                    name: "ZERO // WEB",
+                    role: "DIGITAL_ARCHITECT",
+                    bio: "Wrote the custom checkout script to block reseller bots. Lives in the terminal.",
+                    track: "Aphex Twin - Vordhosbn",
+                    image: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=800&auto=format&fit=crop",
+                    offset: false
+                }
+            ];
+
+            const hydrateFullManifesto = () => {
                 const headerBg = document.getElementById("aboutHeaderBg");
                 const heroTitle = document.getElementById("aboutHeroTitle");
                 const heroSubtext = document.getElementById("aboutHeroSubtext");
@@ -190,43 +186,70 @@
                 const originP1 = document.getElementById("aboutOriginP1");
                 const originP2 = document.getElementById("aboutOriginP2");
                 const originImage = document.getElementById("aboutOriginImage");
+                const processHeading = document.getElementById("processSectionHeading");
+                const processGrid = document.getElementById("processGrid");
+                const teamHeading = document.getElementById("teamSectionHeading");
+                const teamGrid = document.getElementById("teamZineGrid");
 
+                let meta = {};
                 const raw = localStorage.getItem("adrastia_manifesto_meta");
                 if (raw) {
                     try {
-                        const meta = JSON.parse(raw);
-                        if (meta.heroTitle && heroTitle) {
-                            heroTitle.textContent = meta.heroTitle;
-                            heroTitle.setAttribute("data-text", meta.heroTitle);
-                        }
-                        if (meta.heroSubtext && heroSubtext) {
-                            heroSubtext.textContent = meta.heroSubtext;
-                        }
-                        if (meta.headerBg && headerBg) {
-                            headerBg.src = meta.headerBg;
-                        }
-                        if (meta.originTitle && originTitle) {
-                            originTitle.innerHTML = meta.originTitle;
-                        }
-                        if (meta.originP1 && originP1) {
-                            originP1.textContent = meta.originP1;
-                        }
-                        if (meta.originP2 && originP2) {
-                            originP2.textContent = meta.originP2;
-                        }
-                        if (meta.originImage && originImage) {
-                            originImage.src = meta.originImage;
-                        }
+                        meta = JSON.parse(raw);
                     } catch (e) {
-                        console.error("[ADRASTIA] Error hydrating manifesto data:", e);
+                        console.error("[ADRASTIA] Error parsing manifesto meta:", e);
                     }
+                }
+
+                // 1. Header & Origin
+                if (meta.heroTitle && heroTitle) {
+                    heroTitle.textContent = meta.heroTitle;
+                    heroTitle.setAttribute("data-text", meta.heroTitle);
+                }
+                if (meta.heroSubtext && heroSubtext) heroSubtext.textContent = meta.heroSubtext;
+                if (meta.headerBg && headerBg) headerBg.src = meta.headerBg;
+                if (meta.originTitle && originTitle) originTitle.innerHTML = meta.originTitle;
+                if (meta.originP1 && originP1) originP1.textContent = meta.originP1;
+                if (meta.originP2 && originP2) originP2.textContent = meta.originP2;
+                if (meta.originImage && originImage) originImage.src = meta.originImage;
+
+                // 2. The Process Steps
+                if (processHeading && meta.processHeading) processHeading.textContent = meta.processHeading;
+                if (processGrid) {
+                    const processSteps = (meta.process && meta.process.length > 0) ? meta.process : DEFAULT_PROCESS;
+                    processGrid.innerHTML = processSteps.map(step => `
+                        <div class="process-step">
+                            <span class="step-num">${step.num}</span>
+                            <h3>${step.title}</h3>
+                            <p>${step.desc}</p>
+                        </div>
+                    `).join("");
+                }
+
+                // 3. The Crew / Team Grid
+                if (teamHeading && meta.teamHeading) teamHeading.textContent = meta.teamHeading;
+                if (teamGrid) {
+                    const teamMembers = (meta.team && meta.team.length > 0) ? meta.team : DEFAULT_TEAM;
+                    teamGrid.innerHTML = teamMembers.map((m, idx) => `
+                        <div class="zine-card ${idx === 1 ? 'offset' : ''}">
+                            <div class="zine-img-wrap">
+                                <img src="${m.image}" alt="${m.name}">
+                            </div>
+                            <div class="zine-info">
+                                <h3>${m.name}</h3>
+                                <p class="role">${m.role}</p>
+                                <p class="bio">${m.bio}</p>
+                                <p class="meta"><strong>CURRENT TRACK:</strong> ${m.track}</p>
+                            </div>
+                        </div>
+                    `).join("");
                 }
             };
 
-            hydrateManifesto();
+            hydrateFullManifesto();
 
-            // Real-time synchronization event
-            window.addEventListener("adr:manifesto-updated", hydrateManifesto);
+            // Real-time synchronization listener
+            window.addEventListener("adr:manifesto-updated", hydrateFullManifesto);
         });
     </script>
 </body>
