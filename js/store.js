@@ -2,20 +2,25 @@
  * ==========================================================================
  * ADRASTIA // CENTRAL DATA STORE & STATE ENGINE (js/store.js)
  * Currency: Algerian Dinar (DA)
- * Version: 2.1.0 (Kill Drop Isolation & Currency Localization)
+ * Version: 3.0.0 (Unified State Synchronization, Export/Import & DA Engine)
  * ==========================================================================
  */
 
 (function (window) {
     'use strict';
 
-    // LocalStorage Keys
+    // Core LocalStorage Storage Keys
     const KEYS = {
         PRODUCTS: 'ADRASTIA_PRODUCTS_V3',
         DROPS: 'ADRASTIA_DROPS_V3',
         ORDERS: 'ADRASTIA_ORDERS_V3',
         CART: 'ADRASTIA_CART_V3',
-        SETTINGS: 'ADRASTIA_SETTINGS_V3'
+        SETTINGS: 'ADRASTIA_SETTINGS_V3',
+        COLLECTION_META: 'adrastia_collection_meta',
+        LOOKBOOK_META: 'adrastia_lookbook_meta',
+        MANIFESTO_META: 'adrastia_manifesto_meta',
+        HOME_MANIFESTO_META: 'adrastia_home_manifesto_meta',
+        AUDIO_TRACK: 'adrastia_audio_track'
     };
 
     // Default Seed Data (In Algerian Dinars - DA)
@@ -153,23 +158,6 @@
             paymentMethod: 'COD',
             status: 'DISPATCHED',
             timestamp: new Date(Date.now() - 3600000 * 4).toISOString()
-        },
-        {
-            orderId: 'ADR-98441',
-            customer: {
-                name: 'Ghost Runner',
-                email: 'ghost_runner@algiers.net',
-                phone: '+213 555-0142',
-                address: 'Oran Unit B-12'
-            },
-            items: [
-                { id: 'prod-001', name: 'ACID_WASH TEE', size: 'XL', qty: 2, price: 4500 },
-                { id: 'prod-004', name: 'VOID_CARGO PANTS', size: 'M', qty: 1, price: 11000 }
-            ],
-            totalAmount: 20000,
-            paymentMethod: 'CARD',
-            status: 'PROCESSING',
-            timestamp: new Date(Date.now() - 3600000 * 8).toISOString()
         }
     ];
 
@@ -177,12 +165,12 @@
         killSwitch: false,
         currency: 'DA',
         promoCodes: {
-            'GLITCH20': 20, // 20% off
-            'VOID10': 10,   // 10% off
-            'OVERRIDE': 50  // 50% VIP
+            'GLITCH20': 20,
+            'VOID10': 10,
+            'OVERRIDE': 50
         },
-        shippingFee: 800, // 800 DA Standard Dispatch
-        freeShippingThreshold: 15000 // Free dispatch for orders >= 15000 DA
+        shippingFee: 800,
+        freeShippingThreshold: 15000
     };
 
     // Internal Helper: LocalStorage Safe JSON
@@ -244,12 +232,10 @@
         },
 
         // --- 1. PRODUCTS API ---
-        // Returns all products (for Admin Panel)
         getProducts() {
             return getStored(KEYS.PRODUCTS, []);
         },
 
-        // Returns ONLY active, non-killed products (for Storefront, Catalog, Home, etc.)
         getActiveProducts() {
             return this.getProducts().filter(p => !p.isKilled);
         },
@@ -274,7 +260,7 @@
                 description: productData.description || 'Raw underground garment. Handle with chaos.',
                 isSoldOut: false,
                 isCritical: false,
-                isKilled: false, // Active by default
+                isKilled: false,
                 dateAdded: new Date().toISOString().split('T')[0]
             };
 
@@ -313,18 +299,12 @@
             emitEvent('adr:products-updated', { products });
         },
 
-        // KILL DROP: Completely deactivates product from storefront
         killProduct(id) {
-            return this.updateProduct(id, {
-                isKilled: true
-            });
+            return this.updateProduct(id, { isKilled: true });
         },
 
-        // RESTORE DROP: Reactivates product back to storefront
         restoreProduct(id) {
-            return this.updateProduct(id, {
-                isKilled: false
-            });
+            return this.updateProduct(id, { isKilled: false });
         },
 
         // --- 2. DROPS API ---
@@ -431,7 +411,6 @@
             const itemsToOrder = orderPayload.items || cart;
             const subtotal = itemsToOrder.reduce((acc, it) => acc + (it.price * it.qty), 0);
 
-            // Apply Discount if exists
             let discountAmount = 0;
             if (orderPayload.discountPercent) {
                 discountAmount = (subtotal * orderPayload.discountPercent) / 100;
@@ -463,7 +442,6 @@
                 timestamp: new Date().toISOString()
             };
 
-            // Deduct Stock
             itemsToOrder.forEach(item => {
                 const prod = this.getProductById(item.id);
                 if (prod) {
@@ -511,6 +489,37 @@
             return { valid: false, discount: 0 };
         },
 
+        // --- 6. FULL BACKUP & EXPORT/IMPORT SYSTEM ---
+        exportFullBackup() {
+            const state = {};
+            Object.values(KEYS).forEach(k => {
+                state[k] = localStorage.getItem(k);
+            });
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ADRASTIA_STATE_BACKUP_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        },
+
+        importFullBackup(jsonString) {
+            try {
+                const parsed = typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
+                Object.entries(parsed).forEach(([key, val]) => {
+                    if (val !== null && val !== undefined) {
+                        localStorage.setItem(key, typeof val === 'object' ? JSON.stringify(val) : val);
+                    }
+                });
+                alert('SYSTEM_RESTORE: Full database state successfully imported.');
+                location.reload();
+            } catch (e) {
+                alert('RESTORE_ERROR: Invalid backup JSON structure: ' + e.message);
+            }
+        },
+
         fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 if (!file) {
@@ -525,11 +534,7 @@
         },
 
         factoryReset() {
-            localStorage.removeItem(KEYS.PRODUCTS);
-            localStorage.removeItem(KEYS.DROPS);
-            localStorage.removeItem(KEYS.ORDERS);
-            localStorage.removeItem(KEYS.CART);
-            localStorage.removeItem(KEYS.SETTINGS);
+            Object.values(KEYS).forEach(k => localStorage.removeItem(k));
             initStore();
             emitEvent('adr:cart-updated', { cart: [], count: 0 });
             emitEvent('adr:products-updated', { products: DEFAULT_PRODUCTS });
