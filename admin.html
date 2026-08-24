@@ -512,12 +512,16 @@
                     <span>03. NEW DROP // HERO</span>
                     <span>&gt;</span>
                 </button>
+                <button class="nav-btn" data-target="lookbook-config">
+                    <span>04. ARCHIVE // LOOKBOOK</span>
+                    <span>&gt;</span>
+                </button>
                 <button class="nav-btn" data-target="orders">
-                    <span>04. DISPATCH LOG</span>
+                    <span>05. DISPATCH LOG</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="settings">
-                    <span>05. SYSTEM OVERRIDE</span>
+                    <span>06. SYSTEM OVERRIDE</span>
                     <span>&gt;</span>
                 </button>
 
@@ -750,7 +754,67 @@
                 </div>
             </section>
 
-            <!-- SECTION 4: DISPATCH LOG / ORDERS -->
+            <!-- SECTION 4: ARCHIVE // LOOKBOOK CONTROLLER -->
+            <section id="view-lookbook-config" class="view-section">
+                <div class="top-bar">
+                    <div>
+                        <h1 class="page-headline">ARCHIVE_TEXTS // CONTROLLER</h1>
+                        <p class="page-tag">OVERRIDE LOOKBOOK / ARCHIVE EDITORIAL HEADERS & MANIFESTO NARRATIVE</p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <a href="lookbook.html" target="_blank" class="btn-ghost" style="color:var(--neon-green); border-color:var(--neon-green);">
+                            [ VIEW LIVE ARCHIVE ↗ ]
+                        </a>
+                        <button type="button" class="btn-ghost" id="btnResetLbMeta">
+                            &#x21bb; RESTORE DEFAULTS
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Success Toast Notification -->
+                <div id="lbToast" class="toast-msg">
+                    // SUCCESS: ARCHIVE / LOOKBOOK EDITORIAL TEXTS SAVED & COMMITTED!
+                </div>
+
+                <div style="background:var(--bg-card); border:1px solid var(--neon-cyan); padding:2rem; box-shadow:0 0 20px rgba(0,240,255,0.1); margin-bottom:2rem;">
+                    <form id="lookbookMetaForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>ARCHIVE / LOOKBOOK MAIN TITLE *</label>
+                                <input type="text" id="lbTitleInput" class="form-input" placeholder="// VOL.2: DIGITAL_DECAY" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>SUB-HEADLINE (UPPERCASE) *</label>
+                                <input type="text" id="lbSubtitleInput" class="form-input" placeholder="A VISUAL EXPLORATION OF URBAN CORRUPTION AND Y2K NOSTALGIA." required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>NARRATIVE BREAK HEADLINE (Supports HTML/Neon tags) *</label>
+                            <input type="text" id="lbNarrativeTitleInput" class="form-input" placeholder='REJECT THE <br><span class="neon-green">ALGORITHM.</span>' required>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>NARRATIVE COLUMN 1 (PARAGRAPH 1) *</label>
+                                <textarea id="lbP1Input" class="form-textarea" rows="4" placeholder="Volume 2 was born from the static..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>NARRATIVE COLUMN 2 (PARAGRAPH 2) *</label>
+                                <textarea id="lbP2Input" class="form-textarea" rows="4" placeholder="Every piece in DIGITAL_DECAY is distressed..." required></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-glitch" style="width:100%; justify-content:center; padding:16px;">
+                            COMMIT & SAVE ARCHIVE TEXTS [OVERRIDE]
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- SECTION 5: DISPATCH LOG / ORDERS -->
             <section id="view-orders" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -778,7 +842,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 5: SYSTEM OVERRIDE / SETTINGS -->
+            <!-- SECTION 6: SYSTEM OVERRIDE / SETTINGS -->
             <section id="view-settings" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -819,11 +883,12 @@
     <script src="js/store.js"></script>
     <script src="js/admin.js"></script>
 
-    <!-- Native Direct Controller for Collection Hero (Guaranteed Execution) -->
+    <!-- Native Direct Controller for Collection Hero & Archive Lookbook -->
     <script>
         (function() {
-            const STORAGE_KEY = 'adrastia_collection_meta';
-            const DEFAULT_META = {
+            // === 1. COLLECTION HERO CONTROLLER ===
+            const STORAGE_KEY_COLL = 'adrastia_collection_meta';
+            const DEFAULT_COLL_META = {
                 title: "VOID_CORE",
                 status: "// STATUS: LIVE // INVENTORY: CRITICAL",
                 description: "A brutalist exploration of the empty spaces between the digital and physical worlds. Limited to 50 pieces per garment. No restocks.",
@@ -832,133 +897,200 @@
 
             let activeImageSource = "";
 
-            const titleIn = document.getElementById('collTitleInput');
-            const statusIn = document.getElementById('collStatusInput');
-            const descIn = document.getElementById('collDescInput');
-            const urlIn = document.getElementById('collDirectUrlInput');
-            const fileIn = document.getElementById('collFileInput');
-            const previewImg = document.getElementById('collImagePreview');
-            const dropBox = document.getElementById('collDropBox');
-            const form = document.getElementById('collectionHeroForm');
-            const resetBtn = document.getElementById('btnResetCollHero');
-            const toast = document.getElementById('collToast');
+            const collTitleIn = document.getElementById('collTitleInput');
+            const collStatusIn = document.getElementById('collStatusInput');
+            const collDescIn = document.getElementById('collDescInput');
+            const collUrlIn = document.getElementById('collDirectUrlInput');
+            const collFileIn = document.getElementById('collFileInput');
+            const collPreviewImg = document.getElementById('collImagePreview');
+            const collDropBox = document.getElementById('collDropBox');
+            const collForm = document.getElementById('collectionHeroForm');
+            const collResetBtn = document.getElementById('btnResetCollHero');
+            const collToast = document.getElementById('collToast');
 
-            // Load saved data into inputs
-            function loadHeroData() {
-                let data = DEFAULT_META;
-                const raw = localStorage.getItem(STORAGE_KEY);
+            function loadCollData() {
+                let data = DEFAULT_COLL_META;
+                const raw = localStorage.getItem(STORAGE_KEY_COLL);
                 if (raw) {
-                    try { data = { ...DEFAULT_META, ...JSON.parse(raw) }; } catch(e) {}
+                    try { data = { ...DEFAULT_COLL_META, ...JSON.parse(raw) }; } catch(e) {}
                 }
 
-                if (titleIn) titleIn.value = data.title;
-                if (statusIn) statusIn.value = data.status;
-                if (descIn) descIn.value = data.description;
-                if (previewImg) previewImg.src = data.image;
+                if (collTitleIn) collTitleIn.value = data.title;
+                if (collStatusIn) collStatusIn.value = data.status;
+                if (collDescIn) collDescIn.value = data.description;
+                if (collPreviewImg) collPreviewImg.src = data.image;
                 
                 activeImageSource = data.image;
 
-                if (urlIn) {
-                    urlIn.value = data.image.startsWith('data:') ? '' : data.image;
+                if (collUrlIn) {
+                    collUrlIn.value = data.image.startsWith('data:') ? '' : data.image;
                 }
             }
 
-            // File selection reader
-            if (fileIn) {
-                fileIn.addEventListener('change', function(e) {
+            if (collFileIn) {
+                collFileIn.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (!file) return;
 
                     const reader = new FileReader();
                     reader.onload = function(evt) {
                         activeImageSource = evt.target.result;
-                        if (previewImg) previewImg.src = activeImageSource;
-                        if (urlIn) urlIn.value = '';
+                        if (collPreviewImg) collPreviewImg.src = activeImageSource;
+                        if (collUrlIn) collUrlIn.value = '';
                     };
                     reader.readAsDataURL(file);
                 });
             }
 
-            // Drag and drop image
-            if (dropBox) {
-                dropBox.addEventListener('dragover', function(e) {
+            if (collDropBox) {
+                collDropBox.addEventListener('dragover', function(e) {
                     e.preventDefault();
-                    dropBox.style.borderColor = 'var(--neon-green)';
+                    collDropBox.style.borderColor = 'var(--neon-green)';
                 });
-                dropBox.addEventListener('dragleave', function() {
-                    dropBox.style.borderColor = '#333';
+                collDropBox.addEventListener('dragleave', function() {
+                    collDropBox.style.borderColor = '#333';
                 });
-                dropBox.addEventListener('drop', function(e) {
+                collDropBox.addEventListener('drop', function(e) {
                     e.preventDefault();
-                    dropBox.style.borderColor = '#333';
+                    collDropBox.style.borderColor = '#333';
                     const file = e.dataTransfer.files[0];
                     if (file && file.type.startsWith('image/')) {
                         const reader = new FileReader();
                         reader.onload = function(evt) {
                             activeImageSource = evt.target.result;
-                            if (previewImg) previewImg.src = activeImageSource;
-                            if (urlIn) urlIn.value = '';
+                            if (collPreviewImg) collPreviewImg.src = activeImageSource;
+                            if (collUrlIn) collUrlIn.value = '';
                         };
                         reader.readAsDataURL(file);
                     }
                 });
             }
 
-            // URL input change
-            if (urlIn) {
-                urlIn.addEventListener('input', function(e) {
+            if (collUrlIn) {
+                collUrlIn.addEventListener('input', function(e) {
                     const val = e.target.value.trim();
                     if (val) {
                         activeImageSource = val;
-                        if (previewImg) previewImg.src = val;
+                        if (collPreviewImg) collPreviewImg.src = val;
                     }
                 });
             }
 
-            // Form Submit & Save
-            if (form) {
-                form.addEventListener('submit', function(e) {
+            if (collForm) {
+                collForm.addEventListener('submit', function(e) {
                     e.preventDefault();
 
                     const payload = {
-                        title: titleIn ? titleIn.value.trim() : DEFAULT_META.title,
-                        status: statusIn ? statusIn.value.trim() : DEFAULT_META.status,
-                        description: descIn ? descIn.value.trim() : DEFAULT_META.description,
-                        image: activeImageSource || (previewImg ? previewImg.src : DEFAULT_META.image)
+                        title: collTitleIn ? collTitleIn.value.trim() : DEFAULT_COLL_META.title,
+                        status: collStatusIn ? collStatusIn.value.trim() : DEFAULT_COLL_META.status,
+                        description: collDescIn ? collDescIn.value.trim() : DEFAULT_COLL_META.description,
+                        image: activeImageSource || (collPreviewImg ? collPreviewImg.src : DEFAULT_COLL_META.image)
                     };
 
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+                    localStorage.setItem(STORAGE_KEY_COLL, JSON.stringify(payload));
                     window.dispatchEvent(new CustomEvent('adr:collection-updated', { detail: payload }));
 
-                    // Show success toast
-                    if (toast) {
-                        toast.classList.add('show');
-                        setTimeout(() => toast.classList.remove('show'), 3500);
+                    if (collToast) {
+                        collToast.classList.add('show');
+                        setTimeout(() => collToast.classList.remove('show'), 3500);
                     }
                 });
             }
 
-            // Restore defaults
-            if (resetBtn) {
-                resetBtn.addEventListener('click', function() {
+            if (collResetBtn) {
+                collResetBtn.addEventListener('click', function() {
                     if (confirm("Restore original VOID_CORE drop title and images?")) {
-                        localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_META));
-                        loadHeroData();
-                        window.dispatchEvent(new CustomEvent('adr:collection-updated', { detail: DEFAULT_META }));
-                        if (toast) {
-                            toast.textContent = "// HERO RESTORED TO FACTORY DEFAULTS.";
-                            toast.classList.add('show');
+                        localStorage.setItem(STORAGE_KEY_COLL, JSON.stringify(DEFAULT_COLL_META));
+                        loadCollData();
+                        window.dispatchEvent(new CustomEvent('adr:collection-updated', { detail: DEFAULT_COLL_META }));
+                        if (collToast) {
+                            collToast.textContent = "// HERO RESTORED TO FACTORY DEFAULTS.";
+                            collToast.classList.add('show');
                             setTimeout(() => {
-                                toast.textContent = "// SUCCESS: COLLECTION HERO DATA OVERRIDDEN & SAVED TO STORAGE!";
-                                toast.classList.remove('show');
+                                collToast.textContent = "// SUCCESS: COLLECTION HERO DATA OVERRIDDEN & SAVED TO STORAGE!";
+                                collToast.classList.remove('show');
                             }, 3000);
                         }
                     }
                 });
             }
 
-            // Initial load
-            loadHeroData();
+            // === 2. ARCHIVE // LOOKBOOK TEXTS CONTROLLER ===
+            const STORAGE_KEY_LB = 'adrastia_lookbook_meta';
+            const DEFAULT_LB_META = {
+                title: "// VOL.2: DIGITAL_DECAY",
+                subtitle: "A VISUAL EXPLORATION OF URBAN CORRUPTION AND Y2K NOSTALGIA.",
+                narrativeTitle: 'REJECT THE <br><span class="neon-green">ALGORITHM.</span>',
+                p1: "Volume 2 was born from the static of broken CRT monitors and the concrete of underground rave venues. We looked at the polished, algorithm-driven state of modern streetwear and decided to burn it down.",
+                p2: "Every piece in DIGITAL_DECAY is distressed, acid-washed, or misprinted by design. The glitches are intentional. The rawness is the point. This is clothing for the end of the internet."
+            };
+
+            const lbTitleIn = document.getElementById('lbTitleInput');
+            const lbSubtitleIn = document.getElementById('lbSubtitleInput');
+            const lbNarrativeTitleIn = document.getElementById('lbNarrativeTitleInput');
+            const lbP1In = document.getElementById('lbP1Input');
+            const lbP2In = document.getElementById('lbP2Input');
+            const lbForm = document.getElementById('lookbookMetaForm');
+            const lbResetBtn = document.getElementById('btnResetLbMeta');
+            const lbToast = document.getElementById('lbToast');
+
+            function loadLbData() {
+                let data = DEFAULT_LB_META;
+                const raw = localStorage.getItem(STORAGE_KEY_LB);
+                if (raw) {
+                    try { data = { ...DEFAULT_LB_META, ...JSON.parse(raw) }; } catch(e) {}
+                }
+
+                if (lbTitleIn) lbTitleIn.value = data.title;
+                if (lbSubtitleIn) lbSubtitleIn.value = data.subtitle;
+                if (lbNarrativeTitleIn) lbNarrativeTitleIn.value = data.narrativeTitle;
+                if (lbP1In) lbP1In.value = data.p1;
+                if (lbP2In) lbP2In.value = data.p2;
+            }
+
+            if (lbForm) {
+                lbForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const payload = {
+                        title: lbTitleIn ? lbTitleIn.value.trim() : DEFAULT_LB_META.title,
+                        subtitle: lbSubtitleIn ? lbSubtitleIn.value.trim() : DEFAULT_LB_META.subtitle,
+                        narrativeTitle: lbNarrativeTitleIn ? lbNarrativeTitleIn.value.trim() : DEFAULT_LB_META.narrativeTitle,
+                        p1: lbP1In ? lbP1In.value.trim() : DEFAULT_LB_META.p1,
+                        p2: lbP2In ? lbP2In.value.trim() : DEFAULT_LB_META.p2
+                    };
+
+                    localStorage.setItem(STORAGE_KEY_LB, JSON.stringify(payload));
+                    window.dispatchEvent(new CustomEvent('adr:lookbook-updated', { detail: payload }));
+
+                    if (lbToast) {
+                        lbToast.classList.add('show');
+                        setTimeout(() => lbToast.classList.remove('show'), 3500);
+                    }
+                });
+            }
+
+            if (lbResetBtn) {
+                lbResetBtn.addEventListener('click', function() {
+                    if (confirm("Restore original Lookbook & Archive editorial texts?")) {
+                        localStorage.setItem(STORAGE_KEY_LB, JSON.stringify(DEFAULT_LB_META));
+                        loadLbData();
+                        window.dispatchEvent(new CustomEvent('adr:lookbook-updated', { detail: DEFAULT_LB_META }));
+                        if (lbToast) {
+                            lbToast.textContent = "// ARCHIVE TEXTS RESTORED TO FACTORY DEFAULTS.";
+                            lbToast.classList.add('show');
+                            setTimeout(() => {
+                                lbToast.textContent = "// SUCCESS: ARCHIVE / LOOKBOOK EDITORIAL TEXTS SAVED & COMMITTED!";
+                                lbToast.classList.remove('show');
+                            }, 3000);
+                        }
+                    }
+                });
+            }
+
+            // Initial Load
+            loadCollData();
+            loadLbData();
         })();
     </script>
 </body>
