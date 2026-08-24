@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADRASTIA // SYSTEM OVERRIDE TERMINAL</title>
+    <title>ADRASTIA // SYSTEM OVERRIDE TERMINAL (ADMIN)</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700;900&display=swap" rel="stylesheet">
     
-    <style>
-        /* === RESET & SYSTEM THEME === */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/admin.css">
 
+    <style>
+        /* Embedded Terminal Architecture */
         :root {
             --bg-void: #050507;
             --bg-surface: #0c0c10;
-            --bg-card: rgba(18, 18, 24, 0.7);
+            --bg-card: rgba(18, 18, 24, 0.85);
             --border-glow: #ff0055;
             --border-dim: #1f1f28;
             --neon-pink: #ff0055;
@@ -43,10 +43,9 @@
                 linear-gradient(rgba(255, 0, 85, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
             background-size: 40px 40px;
-            position: relative;
         }
 
-        /* CRT Scanline Effect */
+        /* Scanline Overlay */
         body::after {
             content: " ";
             display: block;
@@ -59,22 +58,15 @@
             opacity: 0.6;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-void); }
-        ::-webkit-scrollbar-thumb { background: #333; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); }
-
-        /* === LAYOUT GRID === */
         .app-shell {
             display: flex;
             min-height: 100vh;
         }
 
-        /* === SIDEBAR NAVIGATION === */
+        /* Sidebar Navigation */
         .sidebar {
             width: 290px;
-            background: rgba(10, 10, 14, 0.95);
+            background: rgba(10, 10, 14, 0.98);
             border-right: 1px solid var(--border-dim);
             backdrop-filter: blur(20px);
             display: flex;
@@ -98,9 +90,6 @@
             letter-spacing: 3px;
             color: #fff;
             text-shadow: 0 0 12px rgba(255, 0, 85, 0.6);
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .brand-subtitle {
@@ -140,7 +129,7 @@
             padding: 14px 18px;
             text-align: left;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -159,7 +148,7 @@
             color: #fff;
             background: linear-gradient(90deg, rgba(255, 0, 85, 0.15) 0%, rgba(255, 0, 85, 0.02) 100%);
             border: 1px solid var(--neon-pink);
-            box-shadow: inset 0 0 15px rgba(255, 0, 85, 0.2), 0 0 15px rgba(255, 0, 85, 0.1);
+            box-shadow: inset 0 0 15px rgba(255, 0, 85, 0.2);
         }
 
         .nav-btn.exit {
@@ -168,27 +157,16 @@
             color: #777;
             padding: 18px 20px;
         }
+        .nav-btn.exit:hover { color: var(--neon-pink); }
 
-        .nav-btn.exit:hover {
-            color: var(--neon-pink);
-            border-color: var(--neon-pink);
-        }
-
-        /* === MAIN CONTENT WRAPPER === */
+        /* Main Content */
         .content-area {
             flex-grow: 1;
             padding: 36px 48px;
             overflow-y: auto;
-            max-width: 1500px;
+            max-width: 1600px;
         }
 
-        @media (max-width: 992px) {
-            .app-shell { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; position: relative; }
-            .content-area { padding: 24px 20px; }
-        }
-
-        /* Top Bar */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -211,7 +189,7 @@
             margin-top: 6px;
         }
 
-        /* === KPI CARDS === */
+        /* KPI Panels */
         .kpi-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -225,28 +203,13 @@
             backdrop-filter: blur(10px);
             padding: 24px;
             position: relative;
-            overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .kpi-panel:hover {
             border-color: #38384d;
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-
-        .kpi-panel::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--neon-pink), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .kpi-panel:hover::before { opacity: 1; }
 
         .kpi-title {
             font-size: 0.7rem;
@@ -260,7 +223,6 @@
             font-size: 2rem;
             font-weight: 900;
             margin: 12px 0 6px 0;
-            color: #ffffff;
             letter-spacing: 1px;
         }
 
@@ -275,103 +237,133 @@
         .text-pink { color: var(--neon-pink); }
         .text-cyan { color: var(--neon-cyan); }
 
-        /* === GRID SPLIT (CHART + ALERTS) === */
-        .insights-grid {
-            display: grid;
-            grid-template-columns: 1.6fr 1fr;
-            gap: 24px;
-            margin-bottom: 36px;
-        }
-
-        @media (max-width: 1100px) {
-            .insights-grid { grid-template-columns: 1fr; }
-        }
-
-        .glass-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-dim);
-            backdrop-filter: blur(10px);
-            padding: 24px;
-        }
-
-        .glass-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .glass-title {
-            font-family: var(--font-head);
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            color: #e0e0e0;
-        }
-
-        /* Glowing Chart Visualization */
-        .chart-visual {
-            position: relative;
-            height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .chart-svg {
+        /* Tables */
+        .table-wrap {
             width: 100%;
-            height: 140px;
-            overflow: visible;
+            overflow-x: auto;
+            border: 1px solid var(--border-dim);
+            background: var(--bg-card);
+            margin-top: 1.5rem;
         }
 
-        .chart-line {
-            fill: none;
-            stroke: var(--neon-pink);
-            stroke-width: 3;
-            filter: drop-shadow(0 0 8px rgba(255, 0, 85, 0.7));
+        .ad-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.8rem;
         }
 
-        .chart-area {
-            fill: url(#pinkGlow);
-            opacity: 0.2;
+        .ad-table th {
+            background: #09090c;
+            padding: 16px 20px;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-dim);
+            font-size: 0.75rem;
         }
 
-        .timeline-labels {
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid #1a1a24;
-            padding-top: 10px;
+        .ad-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #16161e;
+            vertical-align: middle;
+        }
+
+        .ad-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        .prod-thumb {
+            width: 48px;
+            height: 56px;
+            object-fit: cover;
+            border: 1px solid #333;
+            background: #000;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
             font-size: 0.7rem;
-            color: #666;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border: 1px solid;
+        }
+        .badge-green { color: var(--neon-green); border-color: var(--neon-green); background: rgba(0,255,102,0.08); }
+        .badge-pink { color: var(--neon-pink); border-color: var(--neon-pink); background: rgba(255,0,85,0.08); }
+        .badge-gray { color: #888; border-color: #444; background: rgba(255,255,255,0.02); }
+        .badge-cyan { color: var(--neon-cyan); border-color: var(--neon-cyan); background: rgba(0,240,255,0.08); }
+
+        /* Forms & Modals */
+        .form-drawer {
+            background: rgba(14, 14, 20, 0.95);
+            border: 1px solid var(--neon-pink);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.15);
+            display: none;
+        }
+        .form-drawer.active-form { display: block; animation: appear 0.3s ease; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        /* Terminal Alerts Feed */
-        .terminal-feed {
+        .form-group {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 0.5rem;
         }
 
-        .feed-card {
-            background: rgba(0, 0, 0, 0.4);
-            border-left: 3px solid #333;
-            padding: 14px 16px;
+        .form-group label {
             font-size: 0.75rem;
-            line-height: 1.5;
-            transition: transform 0.2s;
-        }
-
-        .feed-card:hover { transform: translateX(3px); }
-        .feed-card.critical { border-left-color: var(--neon-pink); background: rgba(255, 0, 85, 0.05); }
-        .feed-card.warning { border-left-color: #ffaa00; background: rgba(255, 170, 0, 0.05); }
-        .feed-card.ok { border-left-color: var(--neon-green); background: rgba(0, 255, 102, 0.05); }
-
-        .feed-time {
-            color: #666;
-            margin-right: 6px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
             font-weight: 700;
         }
 
-        /* === BRUTALIST BUTTONS & ACTIONS === */
+        .form-input, .form-select, .form-textarea {
+            background: #07070a;
+            border: 1px solid #2a2a38;
+            color: #fff;
+            padding: 12px 14px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+        }
+
+        /* Image Upload Box */
+        .upload-dropzone {
+            border: 2px dashed #333;
+            padding: 2rem;
+            text-align: center;
+            background: #09090e;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .upload-dropzone:hover, .upload-dropzone.dragover {
+            border-color: var(--neon-green);
+            background: rgba(0, 255, 102, 0.03);
+        }
+        .upload-preview {
+            max-width: 120px;
+            max-height: 140px;
+            object-fit: cover;
+            border: 1px solid var(--neon-green);
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Action Buttons */
         .btn-glitch {
             background: #fff;
             color: #000;
@@ -388,12 +380,10 @@
             align-items: center;
             gap: 8px;
         }
-
         .btn-glitch:hover {
             background: var(--neon-pink);
             color: #fff;
             box-shadow: 0 0 20px rgba(255, 0, 85, 0.6);
-            transform: translateY(-2px);
         }
 
         .btn-ghost {
@@ -406,89 +396,40 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-
         .btn-ghost:hover {
             border-color: var(--neon-cyan);
             color: var(--neon-cyan);
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
         }
-
-        /* === PRODUCT & DATA TABLE === */
-        .table-wrap {
-            width: 100%;
-            overflow-x: auto;
-            border: 1px solid var(--border-dim);
-            background: var(--bg-card);
-        }
-
-        .ad-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.8rem;
-        }
-
-        .ad-table th {
-            background: #09090c;
-            padding: 18px 20px;
-            color: var(--text-muted);
-            letter-spacing: 1.5px;
-            font-weight: 700;
-            border-bottom: 2px solid var(--border-dim);
-            font-size: 0.75rem;
-        }
-
-        .ad-table td {
-            padding: 18px 20px;
-            border-bottom: 1px solid #16161e;
-            vertical-align: middle;
-        }
-
-        .ad-table tr:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .prod-thumb {
-            width: 48px;
-            height: 48px;
-            object-fit: cover;
-            border: 1px solid #333;
-            background: #000;
-        }
-
-        /* Status Badges */
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            border: 1px solid;
-        }
-
-        .badge-green { color: var(--neon-green); border-color: var(--neon-green); background: rgba(0,255,102,0.08); }
-        .badge-pink { color: var(--neon-pink); border-color: var(--neon-pink); background: rgba(255,0,85,0.08); animation: pulse-glow 1.5s infinite; }
-        .badge-gray { color: #888; border-color: #444; background: rgba(255,255,255,0.02); }
 
         .btn-kill {
             background: transparent;
-            border: 1px solid #3a2028;
-            color: #aa5566;
-            padding: 6px 14px;
+            border: 1px solid #4a202c;
+            color: #ff5577;
+            padding: 6px 12px;
             font-family: var(--font-mono);
             font-size: 0.7rem;
             cursor: pointer;
             transition: all 0.2s;
         }
-
         .btn-kill:hover {
             background: var(--neon-pink);
-            border-color: var(--neon-pink);
             color: #fff;
-            box-shadow: 0 0 10px rgba(255,0,85,0.4);
+            border-color: var(--neon-pink);
         }
 
-        /* Section Switch Logic */
+        .btn-del {
+            background: transparent;
+            border: 1px solid #333;
+            color: #888;
+            padding: 6px 10px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+        .btn-del:hover { color: #fff; border-color: #fff; }
+
+        /* View Section Controller */
         .view-section { display: none; }
         .view-section.active-view { display: block; animation: appear 0.3s ease; }
 
@@ -496,10 +437,15 @@
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.4; transform: scale(0.9); }
         }
-
         @keyframes appear {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 992px) {
+            .app-shell { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .content-area { padding: 24px 16px; }
         }
     </style>
 </head>
@@ -513,21 +459,25 @@
                 <div class="brand-title">ADRASTIA//ROOT</div>
                 <div class="brand-subtitle">
                     <span class="pulse-dot"></span>
-                    SYSTEM_STABLE [ONLINE]
+                    SECURE_SOCKET [ONLINE]
                 </div>
             </div>
 
             <nav class="nav-menu">
-                <button class="nav-btn active" onclick="switchTab('dashboard', this)">
+                <button class="nav-btn active" data-target="dashboard">
                     <span>01. LIVE METRICS</span>
                     <span>&gt;</span>
                 </button>
-                <button class="nav-btn" onclick="switchTab('inventory', this)">
-                    <span>02. HARDWARE / STOCK</span>
+                <button class="nav-btn" data-target="inventory">
+                    <span>02. HARDWARE / DROPS</span>
                     <span>&gt;</span>
                 </button>
-                <button class="nav-btn" onclick="switchTab('orders', this)">
+                <button class="nav-btn" data-target="orders">
                     <span>03. DISPATCH LOG</span>
+                    <span>&gt;</span>
+                </button>
+                <button class="nav-btn" data-target="settings">
+                    <span>04. SYSTEM OVERRIDE</span>
                     <span>&gt;</span>
                 </button>
 
@@ -537,172 +487,187 @@
             </nav>
         </aside>
 
-        <!-- MAIN VIEW -->
+        <!-- MAIN VIEW AREA -->
         <main class="content-area">
             
-            <!-- SECTION 1: LIVE METRICS -->
+            <!-- ========================================================
+                 SECTION 1: LIVE METRICS & FEED
+                 ======================================================== -->
             <section id="view-dashboard" class="view-section active-view">
                 <div class="top-bar">
                     <div>
-                        <h1 class="page-headline">LIVE_SYSTEM // OVERVIEW</h1>
-                        <p class="page-tag">TIMESTAMP: 2024.11.08 // SECURE_SOCKET_ONLINE</p>
+                        <h1 class="page-headline">SYSTEM_METRICS // OVERVIEW</h1>
+                        <p class="page-tag">REAL-TIME TELEMETRY & TRANSACTION FLOW</p>
                     </div>
                     <button class="btn-ghost" onclick="location.reload()">&#x21bb; REFRESH FEED</button>
                 </div>
 
-                <!-- KPI Cards Row -->
+                <!-- KPI Cards -->
                 <div class="kpi-row">
                     <div class="kpi-panel">
-                        <div class="kpi-title">GROSS REVENUE (24H)</div>
-                        <div class="kpi-number text-green">$14,850.00</div>
-                        <div class="kpi-sub text-green">&#x2191; +28.4% FROM PREV DROP</div>
+                        <div class="kpi-title">GROSS REVENUE (ALL TIME)</div>
+                        <div class="kpi-number text-green" id="kpiGrossRevenue">$0.00</div>
+                        <div class="kpi-sub text-green">&#x2191; SYNCHRONIZED WITH STORE</div>
                     </div>
 
                     <div class="kpi-panel">
-                        <div class="kpi-title">ACTIVE DISPATCHES</div>
-                        <div class="kpi-number">47</div>
-                        <div class="kpi-sub text-cyan">&#9679; 12 PENDING SCAN</div>
+                        <div class="kpi-title">TOTAL DISPATCH ORDERS</div>
+                        <div class="kpi-number text-cyan" id="kpiTotalOrders">0</div>
+                        <div class="kpi-sub text-muted" id="kpiPendingOrders">0 PENDING DISPATCH</div>
                     </div>
 
                     <div class="kpi-panel">
-                        <div class="kpi-title">LIVE FOOT TRAFFIC</div>
-                        <div class="kpi-number text-cyan">184</div>
-                        <div class="kpi-sub text-muted">ACTIVE BROWSERS NOW</div>
+                        <div class="kpi-title">ACTIVE HARDWARE UNITS</div>
+                        <div class="kpi-number" id="kpiTotalProducts">0</div>
+                        <div class="kpi-sub text-muted">IN CATALOG REPOSITORY</div>
                     </div>
 
                     <div class="kpi-panel">
-                        <div class="kpi-title">CRITICAL STOCK ALERTS</div>
-                        <div class="kpi-number text-pink">02</div>
+                        <div class="kpi-title">CRITICAL STOCK BREACHES</div>
+                        <div class="kpi-number text-pink" id="kpiCriticalStock">0</div>
                         <div class="kpi-sub text-pink">&#9888; IMMEDIATE ACTION REQ</div>
                     </div>
                 </div>
 
-                <!-- Live Chart & Terminal Alerts -->
-                <div class="insights-grid">
-                    <!-- SVG Glowing Chart -->
-                    <div class="glass-box">
-                        <div class="glass-header">
-                            <h3 class="glass-title">// HOURLY_BANDWIDTH & SALES FLOW</h3>
+                <!-- CSS Terminal Bar Chart & Feed -->
+                <div style="display:grid; grid-template-columns: 1.6fr 1fr; gap: 24px;">
+                    <div style="background:var(--bg-card); border:1px solid var(--border-dim); padding:24px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                            <h3 style="font-family:var(--font-head); font-size:0.85rem; letter-spacing:2px;">// BANDWIDTH & SALES PULSE</h3>
                             <span class="badge badge-green">LIVE STREAM</span>
                         </div>
-
-                        <div class="chart-visual">
-                            <svg class="chart-svg" viewBox="0 0 500 140" preserveAspectRatio="none">
-                                <defs>
-                                    <linearGradient id="pinkGlow" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#ff0055" stop-opacity="0.5"/>
-                                        <stop offset="100%" stop-color="#ff0055" stop-opacity="0.0"/>
-                                    </linearGradient>
-                                </defs>
-                                <path class="chart-area" d="M 0 100 Q 80 40, 160 80 T 320 30 T 500 10 L 500 140 L 0 140 Z"></path>
-                                <path class="chart-line" d="M 0 100 Q 80 40, 160 80 T 320 30 T 500 10"></path>
-                            </svg>
-
-                            <div class="timeline-labels">
-                                <span>00:00</span>
-                                <span>04:00</span>
-                                <span>08:00</span>
-                                <span>12:00</span>
-                                <span>16:00</span>
-                                <span>20:00</span>
-                                <span class="text-pink">NOW [PEAK]</span>
-                            </div>
+                        <div class="css-chart">
+                            <div class="bar-wrap"><div class="bar b1"></div><span>00:00</span></div>
+                            <div class="bar-wrap"><div class="bar b2"></div><span>04:00</span></div>
+                            <div class="bar-wrap"><div class="bar b3"></div><span>08:00</span></div>
+                            <div class="bar-wrap"><div class="bar b4"></div><span>12:00</span></div>
+                            <div class="bar-wrap"><div class="bar b5"></div><span>16:00</span></div>
+                            <div class="bar-wrap"><div class="bar b6"></div><span>20:00</span></div>
+                            <div class="bar-wrap"><div class="bar b7 neon-pulse"></div><span class="text-pink">PEAK</span></div>
                         </div>
                     </div>
 
-                    <!-- Terminal Alerts -->
-                    <div class="glass-box">
-                        <div class="glass-header">
-                            <h3 class="glass-title">// DISPATCH_CONSOLE_FEED</h3>
-                            <span class="badge badge-pink">3 UNRESOLVED</span>
+                    <!-- Terminal Logs Feed -->
+                    <div style="background:var(--bg-card); border:1px solid var(--border-dim); padding:24px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                            <h3 style="font-family:var(--font-head); font-size:0.85rem; letter-spacing:2px;">// TERMINAL_ALERTS</h3>
+                            <span class="badge badge-pink" id="badgeLogCount">LIVE LOG</span>
                         </div>
-
-                        <div class="terminal-feed">
-                            <div class="feed-card critical">
-                                <span class="feed-time">[11:04:12]</span>
-                                <strong>STOCK_BREACH:</strong> CYBER_SKULL HOODIE (M) HIT 3 UNITS.
-                            </div>
-                            <div class="feed-card warning">
-                                <span class="feed-time">[10:48:30]</span>
-                                <strong>GATEWAY_SPIKE:</strong> +74 Checkout sessions initiated.
-                            </div>
-                            <div class="feed-card ok">
-                                <span class="feed-time">[09:30:15]</span>
-                                <strong>BATCH_DISPATCH:</strong> Manifest #ADR-882 released to DHL Express.
-                            </div>
+                        <div id="terminalAlertsFeed" style="display:flex; flex-direction:column; gap:10px; font-size:0.75rem;">
+                            <!-- Injected dynamically -->
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- SECTION 2: HARDWARE INVENTORY -->
+            <!-- ========================================================
+                 SECTION 2: HARDWARE / DROPS INVENTORY (With Upload)
+                 ======================================================== -->
             <section id="view-inventory" class="view-section">
                 <div class="top-bar">
                     <div>
-                        <h1 class="page-headline">HARDWARE // INVENTORY</h1>
-                        <p class="page-tag">MANAGE DROPS, CAPS & KILL SWITCHES</p>
+                        <h1 class="page-headline">HARDWARE // CATALOG</h1>
+                        <p class="page-tag">DEPLOY NEW DROPS, MANAGE INVENTORY & TOGGLE KILL SWITCHES</p>
                     </div>
-                    <button class="btn-glitch" onclick="alert('Drop initialized!')">+ INITIALIZE NEW DROP</button>
+                    <button class="btn-glitch" id="btnToggleAddForm">+ DEPLOY NEW HARDWARE</button>
                 </div>
 
+                <!-- ADD NEW PRODUCT FORM DRAWER -->
+                <div class="form-drawer" id="addProductDrawer">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; border-bottom:1px solid #333; padding-bottom:1rem;">
+                        <h2 style="font-family:var(--font-head); font-size:1.1rem; color:var(--neon-green);">// SPECIMEN INGESTION PROTOCOL</h2>
+                        <button class="btn-ghost" id="btnCloseAddForm">[ CANCEL / CLOSE ]</button>
+                    </div>
+
+                    <form id="newHardwareForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>HARDWARE NAME *</label>
+                                <input type="text" id="prodName" class="form-input" placeholder="e.g. CORRUPTED ACID HOODIE" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>COLLECTION / DROP *</label>
+                                <select id="prodCollection" class="form-select">
+                                    <option value="DIGITAL_DECAY">DIGITAL_DECAY</option>
+                                    <option value="VOID_CORE">VOID_CORE</option>
+                                    <option value="ARCHIVE">ARCHIVE / UNASSIGNED</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>UNIT PRICE ($ USD) *</label>
+                                <input type="number" id="prodPrice" class="form-input" placeholder="85.00" step="0.01" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>SCARCITY CAP (TOTAL UNITS) *</label>
+                                <input type="number" id="prodTotalStock" class="form-input" placeholder="50" required>
+                            </div>
+                        </div>
+
+                        <!-- Real Image Upload System -->
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>VISUAL ARTIFACT (IMAGE UPLOAD OR URL) *</label>
+                            
+                            <div class="upload-dropzone" id="uploadDropzone">
+                                <input type="file" id="prodImgFile" accept="image/*" style="display:none;">
+                                <p style="font-size:0.85rem; color:#aaa; margin-bottom:8px;">
+                                    <strong>CLICK TO BROWSE IMAGE</strong> OR DRAG & DROP FILE HERE
+                                </p>
+                                <span style="font-size:0.7rem; color:#666;">(AUTOMATICALLY ENCODED TO LOCAL SYSTEM STORAGE)</span>
+                                <div>
+                                    <img id="imgPreview" class="upload-preview" alt="Preview">
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top:8px;">
+                                <input type="url" id="prodImgUrl" class="form-input" placeholder="Or enter direct image URL (https://...)" style="width:100%;">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>TECHNICAL SPECIFICATION & DESCRIPTION</label>
+                            <textarea id="prodDesc" class="form-textarea" rows="3" placeholder="Oversized fit, corrupted raw hem..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-glitch" style="width:100%; justify-content:center; padding:16px;">
+                            DEPLOY TO STOREFRONT [COMMIT]
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Products Table -->
                 <div class="table-wrap">
                     <table class="ad-table">
                         <thead>
                             <tr>
-                                <th>SPECIMEN</th>
+                                <th>ARTIFACT</th>
                                 <th>HARDWARE CODE</th>
-                                <th>UNIT PRICE</th>
-                                <th>SCARCITY CAP</th>
+                                <th>COLLECTION</th>
+                                <th>PRICE</th>
+                                <th>STOCK LEVEL</th>
                                 <th>STATUS</th>
-                                <th>OVERRIDE</th>
+                                <th>ACTIONS</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=100&auto=format&fit=crop" class="prod-thumb" alt="Product"></td>
-                                <td><strong>ACID_WASH GRAPHIC TEE</strong><br><span style="color:#666; font-size:0.7rem;">SKU: #ADR-001</span></td>
-                                <td>$45.00</td>
-                                <td>24 / 50 REMAINING</td>
-                                <td><span class="badge badge-green">IN STOCK</span></td>
-                                <td><button class="btn-kill">TERMINATE</button></td>
-                            </tr>
-                            <tr>
-                                <td><img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=100&auto=format&fit=crop" class="prod-thumb" alt="Product"></td>
-                                <td><strong>CYBER_SKULL OVERSIZED HOODIE</strong><br><span style="color:#666; font-size:0.7rem;">SKU: #ADR-002</span></td>
-                                <td>$85.00</td>
-                                <td class="text-pink">03 / 50 REMAINING</td>
-                                <td><span class="badge badge-pink">CRITICAL</span></td>
-                                <td><button class="btn-kill">TERMINATE</button></td>
-                            </tr>
-                            <tr>
-                                <td><img src="https://images.unsplash.com/photo-1503342394128-c104d54dba01?q=80&w=100&auto=format&fit=crop" class="prod-thumb" alt="Product"></td>
-                                <td><strong>STATIC NOISE LONGSLEEVE</strong><br><span style="color:#666; font-size:0.7rem;">SKU: #ADR-003</span></td>
-                                <td>$55.00</td>
-                                <td style="color:#666;">00 / 50 [EXHAUSTED]</td>
-                                <td><span class="badge badge-gray">SOLD OUT</span></td>
-                                <td><button class="btn-kill" style="opacity:0.4; cursor:not-allowed;" disabled>LOCKED</button></td>
-                            </tr>
-                            <tr>
-                                <td><img src="https://images.unsplash.com/photo-1601115867451-24874b7117fa?q=80&w=100&auto=format&fit=crop" class="prod-thumb" alt="Product"></td>
-                                <td><strong>VOID_CARGO PANTS [TACTICAL]</strong><br><span style="color:#666; font-size:0.7rem;">SKU: #ADR-004</span></td>
-                                <td>$110.00</td>
-                                <td>18 / 50 REMAINING</td>
-                                <td><span class="badge badge-green">IN STOCK</span></td>
-                                <td><button class="btn-kill">TERMINATE</button></td>
-                            </tr>
+                        <tbody id="inventoryTableBody">
+                            <!-- Injected dynamically via JS -->
                         </tbody>
                     </table>
                 </div>
             </section>
 
-            <!-- SECTION 3: ORDERS DISPATCH -->
+            <!-- ========================================================
+                 SECTION 3: DISPATCH LOG / ORDERS
+                 ======================================================== -->
             <section id="view-orders" class="view-section">
                 <div class="top-bar">
                     <div>
                         <h1 class="page-headline">DISPATCH_LOG // REAL-TIME</h1>
                         <p class="page-tag">TRANSACTION GATEWAY & FULFILLMENT STREAM</p>
                     </div>
-                    <button class="btn-ghost" onclick="alert('Exporting manifest...')">EXPORT MANIFEST [CSV]</button>
+                    <button class="btn-ghost" id="exportCsvBtn">&#x2913; EXPORT MANIFEST [CSV]</button>
                 </div>
 
                 <div class="table-wrap">
@@ -710,57 +675,68 @@
                         <thead>
                             <tr>
                                 <th>ORDER REF</th>
-                                <th>RECIPIENT</th>
-                                <th>PAYLOAD</th>
-                                <th>AMOUNT</th>
+                                <th>RECIPIENT & DESTINATION</th>
+                                <th>PAYLOAD (ITEMS)</th>
+                                <th>TOTAL</th>
+                                <th>TIMESTAMP</th>
                                 <th>STATUS</th>
+                                <th>OVERRIDE STATUS</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td style="font-weight:700; color:var(--neon-cyan);">#ADR-98442</td>
-                                <td>k.valkyrie@mesh.io</td>
-                                <td>1x CYBER_SKULL HOODIE (L)</td>
-                                <td>$85.00</td>
-                                <td><span class="badge badge-green">DISPATCHED</span></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight:700; color:var(--neon-cyan);">#ADR-98441</td>
-                                <td>ghost_runner@tokyo.net</td>
-                                <td>2x ACID_WASH TEE (XL), 1x CARGO (34)</td>
-                                <td>$200.00</td>
-                                <td><span class="badge badge-pink">PROCESSING</span></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight:700; color:var(--neon-cyan);">#ADR-98440</td>
-                                <td>s.void@blackbox.org</td>
-                                <td>1x VOID_CARGO PANTS (30)</td>
-                                <td>$110.00</td>
-                                <td><span class="badge badge-green">DELIVERED</span></td>
-                            </tr>
+                        <tbody id="ordersTableBody">
+                            <!-- Injected dynamically via JS -->
                         </tbody>
                     </table>
+                </div>
+            </section>
+
+            <!-- ========================================================
+                 SECTION 4: SYSTEM OVERRIDE / SETTINGS
+                 ======================================================== -->
+            <section id="view-settings" class="view-section">
+                <div class="top-bar">
+                    <div>
+                        <h1 class="page-headline">SYSTEM_OVERRIDE // SETTINGS</h1>
+                        <p class="page-tag">EMERGENCY PROTOCOLS, PROMO DECRYPT KEYS & STORE PURGE</p>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:24px;">
+                    
+                    <!-- Promo Code Manager -->
+                    <div style="background:var(--bg-card); border:1px solid var(--border-dim); padding:24px;">
+                        <h3 style="font-family:var(--font-head); font-size:0.9rem; margin-bottom:1rem; color:var(--neon-green);">
+                            // ACTIVE BYPASS CODES (PROMO)
+                        </h3>
+                        <p style="font-size:0.75rem; color:#888; margin-bottom:1.5rem;">
+                            Customers can apply these codes in the Terminal Checkout drawer for instant discounts.
+                        </p>
+                        <div id="promoCodesList" style="display:flex; flex-direction:column; gap:8px; font-size:0.8rem;">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Factory Purge / Reset -->
+                    <div style="background:var(--bg-card); border:1px solid #4a1520; padding:24px;">
+                        <h3 style="font-family:var(--font-head); font-size:0.9rem; margin-bottom:1rem; color:var(--neon-pink);">
+                            // DANGER ZONE: FACTORY PURGE
+                        </h3>
+                        <p style="font-size:0.75rem; color:#888; margin-bottom:1.5rem; line-height:1.6;">
+                            Reset all products, drops, orders, and cart items to original factory defaults. This clears LocalStorage state.
+                        </p>
+                        <button class="btn-kill" id="btnFactoryReset" style="width:100%; padding:14px; font-weight:700;">
+                            &#9888; PURGE ALL & RESTORE DEFAULTS
+                        </button>
+                    </div>
+
                 </div>
             </section>
 
         </main>
     </div>
 
-    <!-- TAB SWITCHING LOGIC -->
-    <script>
-        function switchTab(tabName, btnElement) {
-            // Remove active from buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            // Remove active from sections
-            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active-view'));
-
-            // Activate button & target section
-            btnElement.classList.add('active');
-            const target = document.getElementById('view-' + tabName);
-            if (target) {
-                target.classList.add('active-view');
-            }
-        }
-    </script>
+    <!-- Scripts -->
+    <script src="js/store.js"></script>
+    <script src="js/admin.js"></script>
 </body>
 </html>
