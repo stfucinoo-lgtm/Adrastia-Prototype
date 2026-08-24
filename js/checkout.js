@@ -1,26 +1,22 @@
 /**
  * ==========================================================================
  * ADRASTIA // CHECKOUT & DISPATCH AUTHORIZATION ENGINE (js/checkout.js)
- * Features: Live Cart Ingestion, Bypass Promo Key Engine, Stock Deduction,
- *           Order Creation & Dynamic ASCII Terminal Receipt Generator
- * Version: 2.0.0
+ * Currency: Algerian Dinar (DA) Localization
+ * Version: 2.1.0
  * ==========================================================================
  */
 
 document.addEventListener("DOMContentLoaded", () => {
     'use strict';
 
-    // Verify Store Module
     if (!window.AdrastiaStore) {
         console.error("FATAL: AdrastiaStore is missing.");
         return;
     }
 
-    // State Variables
     let appliedDiscountPercent = 0;
     let appliedPromoCode = "";
 
-    // DOM Elements
     const checkoutSection = document.getElementById("checkoutSection");
     const orderSuccessSection = document.getElementById("orderSuccessSection");
     const itemsListContainer = document.getElementById("checkoutItemsList");
@@ -39,13 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const asciiReceiptContainer = document.getElementById("asciiReceiptContainer");
     const btnPrintReceipt = document.getElementById("btnPrintReceipt");
 
-    // --- 1. Ingest Cart and Render Items ---
+    // --- 1. Ingest Cart and Render Items in DA ---
     const renderCheckoutItems = () => {
         const cart = window.AdrastiaStore.getCart();
 
         if (!itemsListContainer) return;
 
-        // Empty Cart Check
         if (cart.length === 0) {
             itemsListContainer.innerHTML = `
                 <div style="text-align:center; padding:3rem 1rem; color:#888;">
@@ -64,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Render Cards
         itemsListContainer.innerHTML = cart.map(item => `
             <div class="chk-item-card">
                 <img src="${item.image}" alt="${item.name}" class="chk-item-img">
@@ -75,37 +69,36 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span>// QTY: <strong style="color:#fff;">${item.qty}</strong></span>
                     </div>
                 </div>
-                <div class="chk-item-price">$${(item.price * item.qty).toFixed(2)}</div>
+                <div class="chk-item-price">${window.AdrastiaStore.formatMoney(item.price * item.qty)}</div>
             </div>
         `).join("");
 
-        // Calculate Totals
         const subtotal = window.AdrastiaStore.getCartTotal();
         updateTotals(subtotal);
     };
 
-    // --- 2. Calculate and Update Prices ---
+    // --- 2. Calculate and Update Prices in DA ---
     const updateTotals = (subtotal) => {
         const settings = window.AdrastiaStore.getSettings();
-        const baseShipping = settings.shippingFee || 15.00;
-        const freeThreshold = settings.freeShippingThreshold || 150.00;
+        const baseShipping = settings.shippingFee || 800;
+        const freeThreshold = settings.freeShippingThreshold || 15000;
 
-        let shippingFee = subtotal >= freeThreshold || subtotal === 0 ? 0.00 : baseShipping;
+        let shippingFee = subtotal >= freeThreshold || subtotal === 0 ? 0 : baseShipping;
         let discountAmount = 0;
 
         if (appliedDiscountPercent > 0) {
             discountAmount = (subtotal * appliedDiscountPercent) / 100;
             if (discountRow) discountRow.style.display = "flex";
-            if (discountValEl) discountValEl.innerText = `-$${discountAmount.toFixed(2)} (${appliedDiscountPercent}%)`;
+            if (discountValEl) discountValEl.innerText = `-${window.AdrastiaStore.formatMoney(discountAmount)} (${appliedDiscountPercent}%)`;
         } else {
             if (discountRow) discountRow.style.display = "none";
         }
 
         const grandTotal = Math.max(0, subtotal - discountAmount + shippingFee);
 
-        if (subtotalEl) subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
-        if (shippingEl) shippingEl.innerText = shippingFee === 0 ? "FREE [WAIVED]" : `$${shippingFee.toFixed(2)}`;
-        if (grandTotalEl) grandTotalEl.innerText = `$${grandTotal.toFixed(2)}`;
+        if (subtotalEl) subtotalEl.innerText = window.AdrastiaStore.formatMoney(subtotal);
+        if (shippingEl) shippingEl.innerText = shippingFee === 0 ? "FREE [WAIVED]" : window.AdrastiaStore.formatMoney(shippingFee);
+        if (grandTotalEl) grandTotalEl.innerText = window.AdrastiaStore.formatMoney(grandTotal);
     };
 
     // --- 3. Promo / Bypass Code Handler ---
@@ -124,7 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 promoMessage.className = "promo-msg success";
                 promoMessage.innerText = `// OVERRIDE GRANTED: ${result.code} applied (${result.discount}% OFF)`;
                 
-                // Recalculate
                 const subtotal = window.AdrastiaStore.getCartTotal();
                 updateTotals(subtotal);
             } else {
@@ -150,7 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Extract Customer Info
             const name = document.getElementById("custName").value.trim();
             const email = document.getElementById("custEmail").value.trim();
             const phone = document.getElementById("custPhone").value.trim();
@@ -159,10 +150,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const paymentMethodInput = document.querySelector('input[name="paymentMethod"]:checked');
             const paymentMethod = paymentMethodInput ? paymentMethodInput.value : "COD";
 
-            const fullDestination = `${address}, Sector: ${city}`;
+            const fullDestination = `${address}, Sector: ${city} (Algeria)`;
 
             try {
-                // Submit order to central store (Deducts stock automatically)
                 const newOrder = window.AdrastiaStore.createOrder({
                     customer: {
                         name: name,
@@ -175,7 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     paymentMethod: paymentMethod
                 });
 
-                // Transition to Confirmation Screen & Generate ASCII Receipt
                 showSuccessScreen(newOrder);
 
             } catch (err) {
@@ -185,15 +174,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 5. Generate Dynamic ASCII Terminal Receipt ---
+    // --- 5. Generate ASCII Terminal Receipt in DA ---
     const generateAsciiReceipt = (order) => {
         const timestamp = new Date(order.timestamp).toUTCString();
         const divider = "================================================================";
         const subDivider = "----------------------------------------------------------------";
 
-        // Generate Itemized rows
         const itemsRows = order.items.map(item => {
-            const line = `${item.qty}x ${item.name} (${item.size})`.padEnd(46, ' ') + `$${(item.price * item.qty).toFixed(2).padStart(8, ' ')}`;
+            const itemPriceStr = `${(item.price * item.qty).toLocaleString()} DA`;
+            const line = `${item.qty}x ${item.name} (${item.size})`.padEnd(46, ' ') + itemPriceStr.padStart(12, ' ');
             return line;
         }).join("\n");
 
@@ -216,11 +205,11 @@ ${subDivider}
 PAYLOAD SPECIFICATIONS:
 ${itemsRows}
 ${subDivider}
-SUBTOTAL     : $${order.subtotal.toFixed(2).padStart(10, ' ')}
-DISCOUNT     : -$${order.discount.toFixed(2).padStart(9, ' ')} ${appliedPromoCode ? `(${appliedPromoCode})` : ''}
-DISPATCH FEE : ${order.subtotal >= 150 ? 'FREE / WAIVED' : '$15.00'.padStart(10, ' ')}
+SUBTOTAL     : ${(order.subtotal.toLocaleString() + ' DA').padStart(14, ' ')}
+DISCOUNT     : -${(order.discount.toLocaleString() + ' DA').padStart(13, ' ')} ${appliedPromoCode ? `(${appliedPromoCode})` : ''}
+DISPATCH FEE : ${order.shippingFee === 0 ? 'FREE / WAIVED' : (order.shippingFee.toLocaleString() + ' DA').padStart(14, ' ')}
 ${divider}
-TOTAL CHARGED: $${order.totalAmount.toFixed(2).padStart(10, ' ')} USD
+TOTAL CHARGED: ${(order.totalAmount.toLocaleString() + ' DA').padStart(14, ' ')}
 ${divider}
 SECURITY HASH: SHA256-${Math.random().toString(36).substring(2)}${Math.random().toString(36).substring(2).toUpperCase()}
 BARCODE      : ||| ||||| |||| || |||||| |||| ||| ||||| || |||||||
@@ -230,7 +219,6 @@ ${divider}
 `.trim();
     };
 
-    // --- 6. Success Screen Switcher ---
     const showSuccessScreen = (order) => {
         if (checkoutSection) checkoutSection.style.display = "none";
         if (orderSuccessSection) orderSuccessSection.style.display = "block";
@@ -244,17 +232,14 @@ ${divider}
             asciiReceiptContainer.innerText = generateAsciiReceipt(order);
         }
 
-        // Scroll to top
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    // --- 7. Print Manifest Listener ---
     if (btnPrintReceipt) {
         btnPrintReceipt.addEventListener("click", () => {
             window.print();
         });
     }
 
-    // Initial Execution
     renderCheckoutItems();
 });
