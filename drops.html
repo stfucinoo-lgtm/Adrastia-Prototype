@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADRASTIA // HARDWARE DROPS REGISTRY</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    
+    <style>
+        .drops-directory-header {
+            padding: 120px 5% 40px 5%;
+            background: #000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+        }
+
+        .drops-title-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--neon-green, #00ff66);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .drops-main-headline {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(2.2rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .drops-meta-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .drops-grid-section {
+            padding: 60px 5% 100px 5%;
+            background: #050508;
+            min-height: 60vh;
+        }
+
+        .drops-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 40px;
+        }
+
+        .drop-card {
+            background: #0b0b10;
+            border: 1px solid #1f1f2c;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .drop-card:hover {
+            border-color: var(--neon-pink, #ff0055);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(255, 0, 85, 0.2);
+        }
+
+        .drop-card-media {
+            position: relative;
+            aspect-ratio: 16 / 10;
+            background: #000;
+            overflow: hidden;
+            border-bottom: 1px solid #1f1f2c;
+        }
+
+        .drop-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(80%) contrast(120%);
+            transition: transform 0.6s ease, filter 0.3s ease;
+        }
+
+        .drop-card:hover .drop-card-img {
+            transform: scale(1.05);
+            filter: grayscale(0%) contrast(105%);
+        }
+
+        .drop-badge-status {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .status-live {
+            color: var(--neon-green, #00ff66);
+            border-color: var(--neon-green, #00ff66);
+        }
+
+        .status-soldout {
+            color: #777;
+            border-color: #444;
+        }
+
+        .status-critical {
+            color: var(--neon-pink, #ff0055);
+            border-color: var(--neon-pink, #ff0055);
+        }
+
+        .drop-card-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .drop-card-header {
+            margin-bottom: 16px;
+        }
+
+        .drop-code {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--neon-cyan, #00f0ff);
+            margin-bottom: 6px;
+        }
+
+        .drop-name {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .drop-desc {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.78rem;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .drop-card-footer {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #161622;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drop-stats {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            color: #666;
+        }
+
+        .drop-enter-cta {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .drop-card:hover .drop-enter-cta {
+            color: var(--neon-pink, #ff0055);
+        }
+
+        @media (max-width: 768px) {
+            .drops-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-mono antialiased selection:bg-neon-lime selection:text-black">
+
+    <!-- UI Overlays -->
+    <div class="noise-overlay"></div>
+    <div class="custom-cursor"></div>
+
+    <!-- Sticky Brutalist Navigation -->
+    <nav class="brutalist-nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand-logo glitch-hover" data-text="ADRASTIA">ADRASTIA</a>
+        </div>
+        <div class="nav-center hidden-mobile">
+            <a href="products.html" class="nav-link">SHOP_ALL</a>
+            <a href="drops.html" class="nav-link neon-green">ALL_DROPS</a>
+            <a href="collection.html?drop=VOID_CORE" class="nav-link">LATEST_DROP</a>
+            <a href="lookbook.html" class="nav-link">ARCHIVE</a>
+            <a href="admin.html" class="nav-link">DASHBOARD</a>
+        </div>
+        <div class="nav-right">
+            <a href="about.html" class="nav-link hidden-mobile">MANIFESTO</a>
+            <button class="cart-toggle">
+                CART [<span class="cart-count">0</span>]
+            </button>
+        </div>
+    </nav>
+
+    <!-- Drops Directory Header -->
+    <header class="drops-directory-header">
+        <div class="drops-title-tag">// ARCHIVE_INDEX :: HARDWARE_RELEASES</div>
+        <h1 class="drops-main-headline glitch" data-text="DROPS_DIRECTORY">DROPS_<br>DIRECTORY</h1>
+        <div class="drops-meta-summary">
+            <span>TOTAL_RELEASES: [ <span id="totalDropsCount">02</span> ]</span>
+            <span>SYSTEM: [ PRODUCTION_NODE ]</span>
+            <span>POLICY: [ STRICTLY LIMITED // NO RESTOCKS ]</span>
+        </div>
+    </header>
+
+    <!-- Ticker Separator -->
+    <div class="marquee-container border-bottom">
+        <div class="marquee-track">
+            <span>// SELECT DROP TO ACCESS ISOLATED SPECIMEN REGISTRY // NO RESTOCKS // 100% HEAVYWEIGHT RAW COTTON // ENCRYPTED DISPATCH //</span>
+            <span>// SELECT DROP TO ACCESS ISOLATED SPECIMEN REGISTRY // NO RESTOCKS // 100% HEAVYWEIGHT RAW COTTON // ENCRYPTED DISPATCH //</span>
+        </div>
+    </div>
+
+    <!-- Main Drops Grid -->
+    <main class="drops-grid-section">
+        <div class="drops-grid" id="dropsMasterGrid">
+            
+            <!-- Drop 1: DIGITAL_DECAY -->
+            <a href="collection.html?drop=DIGITAL_DECAY" class="drop-card">
+                <div class="drop-card-media">
+                    <span class="drop-badge-status status-live">// STATUS: ACTIVE_FEED</span>
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop" alt="DIGITAL_DECAY" class="drop-card-img">
+                </div>
+                <div class="drop-card-body">
+                    <div class="drop-card-header">
+                        <div class="drop-code">RELEASE_REF: VOL.3 // 2024</div>
+                        <h2 class="drop-name">DIGITAL_DECAY</h2>
+                        <p class="drop-desc">A visual exploration of urban corruption and Y2K analog noise. Acid-washed tees, heavy fleeces, and hand-pulled inks.</p>
+                    </div>
+                    <div class="drop-card-footer">
+                        <span class="drop-stats" id="stats-DIGITAL_DECAY">HARDWARE: ACTIVE</span>
+                        <span class="drop-enter-cta">[ ENTER DROP ↗ ]</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Drop 2: VOID_CORE -->
+            <a href="collection.html?drop=VOID_CORE" class="drop-card">
+                <div class="drop-card-media">
+                    <span class="drop-badge-status status-critical">// STATUS: CRITICAL_STOCK</span>
+                    <img src="https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop" alt="VOID_CORE" class="drop-card-img">
+                </div>
+                <div class="drop-card-body">
+                    <div class="drop-card-header">
+                        <div class="drop-code">RELEASE_REF: VOL.4 // 2024</div>
+                        <h2 class="drop-name">VOID_CORE</h2>
+                        <p class="drop-desc">Brutalist garments inspired by the wreckage of collapsed data centers. Corroded hardware, tactical pockets, and raw hems.</p>
+                    </div>
+                    <div class="drop-card-footer">
+                        <span class="drop-stats" id="stats-VOID_CORE">HARDWARE: CRITICAL</span>
+                        <span class="drop-enter-cta">[ ENTER DROP ↗ ]</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="brutalist-footer border-top">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h2>ADRASTIA</h2>
+                <p>EST. 2024 // SYSTEM OVERRIDE</p>
+            </div>
+            <div class="footer-links">
+                <a href="products.html">SHOP ALL</a>
+                <a href="drops.html">ALL DROPS</a>
+                <a href="lookbook.html">ARCHIVE</a>
+            </div>
+            <div class="footer-legal">
+                <a href="#">SHIPPING & RETURNS</a>
+                <a href="#">TERMS OF SERVICE</a>
+                <p>&copy; 2024 ADRASTIA REPOSITORY.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Central Store, Audio and Global Scripts -->
+    <script src="js/store.js"></script>
+    <script src="js/global.js"></script>
+    <script src="js/glitch.js"></script>
+    <script src="js/audio.js"></script>
+
+    <!-- Dynamic Inventory Stats Hydration -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            'use strict';
+
+            const updateDropInventoryStats = () => {
+                if (!window.AdrastiaStore) return;
+                const products = window.AdrastiaStore.getActiveProducts();
+
+                const digitalDecayItems = products.filter(p => p.collection === "DIGITAL_DECAY");
+                const voidCoreItems = products.filter(p => p.collection === "VOID_CORE");
+
+                const ddStatsEl = document.getElementById("stats-DIGITAL_DECAY");
+                const vcStatsEl = document.getElementById("stats-VOID_CORE");
+
+                if (ddStatsEl) {
+                    ddStatsEl.textContent = `SPECIMENS: [ ${digitalDecayItems.length} ACTIVE ]`;
+                }
+
+                if (vcStatsEl) {
+                    vcStatsEl.textContent = `SPECIMENS: [ ${voidCoreItems.length} ACTIVE ]`;
+                }
+            };
+
+            updateDropInventoryStats();
+            window.addEventListener("adr:products-updated", updateDropInventoryStats);
+        });
+    </script>
+</body>
+</html>
