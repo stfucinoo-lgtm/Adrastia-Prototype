@@ -196,6 +196,14 @@
             color: var(--neon-pink, #ff0055);
         }
 
+        .empty-drops-box {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            border: 1px dashed #333;
+            background: #0a0a0f;
+        }
+
         @media (max-width: 768px) {
             .drops-grid {
                 grid-template-columns: 1fr;
@@ -234,7 +242,7 @@
         <div class="drops-title-tag">// ARCHIVE_INDEX :: HARDWARE_RELEASES</div>
         <h1 class="drops-main-headline glitch" data-text="DROPS_DIRECTORY">DROPS_<br>DIRECTORY</h1>
         <div class="drops-meta-summary">
-            <span>TOTAL_RELEASES: [ <span id="totalDropsCount">02</span> ]</span>
+            <span>TOTAL_RELEASES: [ <span id="totalDropsCount">0</span> ]</span>
             <span>SYSTEM: [ PRODUCTION_NODE ]</span>
             <span>POLICY: [ STRICTLY LIMITED // NO RESTOCKS ]</span>
         </div>
@@ -248,48 +256,10 @@
         </div>
     </div>
 
-    <!-- Main Drops Grid -->
+    <!-- Main Drops Grid (Dynamic Hydration) -->
     <main class="drops-grid-section">
         <div class="drops-grid" id="dropsMasterGrid">
-            
-            <!-- Drop 1: DIGITAL_DECAY -->
-            <a href="collection.html?drop=DIGITAL_DECAY" class="drop-card">
-                <div class="drop-card-media">
-                    <span class="drop-badge-status status-live">// STATUS: ACTIVE_FEED</span>
-                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop" alt="DIGITAL_DECAY" class="drop-card-img">
-                </div>
-                <div class="drop-card-body">
-                    <div class="drop-card-header">
-                        <div class="drop-code">RELEASE_REF: VOL.3 // 2024</div>
-                        <h2 class="drop-name">DIGITAL_DECAY</h2>
-                        <p class="drop-desc">A visual exploration of urban corruption and Y2K analog noise. Acid-washed tees, heavy fleeces, and hand-pulled inks.</p>
-                    </div>
-                    <div class="drop-card-footer">
-                        <span class="drop-stats" id="stats-DIGITAL_DECAY">HARDWARE: ACTIVE</span>
-                        <span class="drop-enter-cta">[ ENTER DROP ↗ ]</span>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Drop 2: VOID_CORE -->
-            <a href="collection.html?drop=VOID_CORE" class="drop-card">
-                <div class="drop-card-media">
-                    <span class="drop-badge-status status-critical">// STATUS: CRITICAL_STOCK</span>
-                    <img src="https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop" alt="VOID_CORE" class="drop-card-img">
-                </div>
-                <div class="drop-card-body">
-                    <div class="drop-card-header">
-                        <div class="drop-code">RELEASE_REF: VOL.4 // 2024</div>
-                        <h2 class="drop-name">VOID_CORE</h2>
-                        <p class="drop-desc">Brutalist garments inspired by the wreckage of collapsed data centers. Corroded hardware, tactical pockets, and raw hems.</p>
-                    </div>
-                    <div class="drop-card-footer">
-                        <span class="drop-stats" id="stats-VOID_CORE">HARDWARE: CRITICAL</span>
-                        <span class="drop-enter-cta">[ ENTER DROP ↗ ]</span>
-                    </div>
-                </div>
-            </a>
-
+            <!-- Rendered dynamically from AdrastiaStore -->
         </div>
     </main>
 
@@ -304,6 +274,7 @@
                 <a href="products.html">SHOP ALL</a>
                 <a href="drops.html">ALL DROPS</a>
                 <a href="lookbook.html">ARCHIVE</a>
+                <a href="admin.html">DASHBOARD</a>
             </div>
             <div class="footer-legal">
                 <a href="#">SHIPPING & RETURNS</a>
@@ -323,32 +294,80 @@
     <script src="js/glitch.js"></script>
     <script src="js/audio.js"></script>
 
-    <!-- Dynamic Inventory Stats Hydration -->
+    <!-- Dynamic Drops Grid Engine -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             'use strict';
 
-            const updateDropInventoryStats = () => {
-                if (!window.AdrastiaStore) return;
+            const gridContainer = document.getElementById("dropsMasterGrid");
+            const countEl = document.getElementById("totalDropsCount");
+
+            const renderDropsDirectory = () => {
+                if (!gridContainer || !window.AdrastiaStore) return;
+
+                const drops = window.AdrastiaStore.getDrops();
                 const products = window.AdrastiaStore.getActiveProducts();
 
-                const digitalDecayItems = products.filter(p => p.collection === "DIGITAL_DECAY");
-                const voidCoreItems = products.filter(p => p.collection === "VOID_CORE");
-
-                const ddStatsEl = document.getElementById("stats-DIGITAL_DECAY");
-                const vcStatsEl = document.getElementById("stats-VOID_CORE");
-
-                if (ddStatsEl) {
-                    ddStatsEl.textContent = `SPECIMENS: [ ${digitalDecayItems.length} ACTIVE ]`;
+                if (countEl) {
+                    countEl.textContent = String(drops.length).padStart(2, '0');
                 }
 
-                if (vcStatsEl) {
-                    vcStatsEl.textContent = `SPECIMENS: [ ${voidCoreItems.length} ACTIVE ]`;
+                if (drops.length === 0) {
+                    gridContainer.innerHTML = `
+                        <div class="empty-drops-box">
+                            <p style="color:var(--neon-pink); font-size:1.1rem; margin-bottom:8px;">// NO_DROPS_REGISTERED</p>
+                            <p style="color:#888; font-size:0.8rem; margin-bottom:1.5rem;">CREATE AND DEPLOY NEW DROPS VIA THE DASHBOARD CONSOLE.</p>
+                            <a href="admin.html" class="btn-primary" style="display:inline-block;">[ OPEN DASHBOARD ]</a>
+                        </div>
+                    `;
+                    return;
                 }
+
+                gridContainer.innerHTML = drops.map(drop => {
+                    const dropName = drop.name || 'UNTITLED_DROP';
+                    const dropCode = drop.code || 'VOL.0';
+                    const dropStatus = (drop.status || 'LIVE').toUpperCase();
+                    const dropDesc = drop.description || 'Exclusive underground hardware release. Limited run.';
+                    const dropImg = drop.image || 'https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop';
+                    
+                    // Count items in this drop
+                    const dropItems = products.filter(p => (p.collection || '').toUpperCase() === dropName.toUpperCase());
+                    
+                    let statusClass = 'status-live';
+                    let statusText = `// STATUS: ${dropStatus}`;
+                    if (dropStatus === 'CRITICAL' || dropStatus === 'CRITICAL_STOCK') {
+                        statusClass = 'status-critical';
+                    } else if (dropStatus === 'SOLD_OUT' || dropStatus === 'ARCHIVED') {
+                        statusClass = 'status-soldout';
+                    }
+
+                    return `
+                        <a href="collection.html?drop=${encodeURIComponent(dropName)}" class="drop-card">
+                            <div class="drop-card-media">
+                                <span class="drop-badge-status ${statusClass}">${statusText}</span>
+                                <img src="${dropImg}" alt="${dropName}" class="drop-card-img" loading="lazy">
+                            </div>
+                            <div class="drop-card-body">
+                                <div class="drop-card-header">
+                                    <div class="drop-code">RELEASE_REF: ${dropCode} // ${drop.launchDate || '2024'}</div>
+                                    <h2 class="drop-name">${dropName}</h2>
+                                    <p class="drop-desc">${dropDesc}</p>
+                                </div>
+                                <div class="drop-card-footer">
+                                    <span class="drop-stats">SPECIMENS: [ ${dropItems.length} ACTIVE ]</span>
+                                    <span class="drop-enter-cta">[ ENTER DROP ↗ ]</span>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join("");
+
+                if (window.attachCursorHoverListeners) window.attachCursorHoverListeners();
             };
 
-            updateDropInventoryStats();
-            window.addEventListener("adr:products-updated", updateDropInventoryStats);
+            renderDropsDirectory();
+            window.addEventListener("adr:drops-updated", renderDropsDirectory);
+            window.addEventListener("adr:products-updated", renderDropsDirectory);
         });
     </script>
 </body>
