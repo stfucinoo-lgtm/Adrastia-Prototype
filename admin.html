@@ -389,6 +389,13 @@
             object-fit: cover;
         }
 
+        .sub-card {
+            background: rgba(8, 8, 12, 0.9);
+            border: 1px solid #222;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
         /* Buttons */
         .btn-glitch {
             background: #fff;
@@ -1399,31 +1406,10 @@
         window.AdrastiaIDB = AdrastiaIDB;
     </script>
 
-    <!-- Native Direct Controller for Drops, Collection Hero, Homepage Manifesto, Archive Lookbook, Manifesto & Audio Engine -->
+    <!-- Native Unified Controller for Drops, Hardware Deploy, Collection Hero, Homepage Manifesto, Archive Lookbook, Manifesto & Audio Engine -->
     <script>
         (function() {
             // === 1. DROPS DIRECTORY & MANAGEMENT CONTROLLER ===
-            const DEFAULT_SEED_DROPS = [
-                {
-                    id: 'drop-01',
-                    name: 'DIGITAL_DECAY',
-                    code: 'VOL.3',
-                    status: 'LIVE',
-                    launchDate: '2024',
-                    description: 'A visual exploration of urban corruption and Y2K analog noise.',
-                    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop'
-                },
-                {
-                    id: 'drop-02',
-                    name: 'VOID_CORE',
-                    code: 'VOL.4',
-                    status: 'CRITICAL',
-                    launchDate: '2024',
-                    description: 'Brutalist garments inspired by the wreckage of collapsed data centers.',
-                    image: 'https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop'
-                }
-            ];
-
             let currentDropImageBase64 = "";
 
             const btnToggleAddDropForm = document.getElementById("btnToggleAddDropForm");
@@ -1439,15 +1425,25 @@
             const dropPreviewWrap = document.getElementById("dropPreviewWrap");
             const dropMediaDropBox = document.getElementById("dropMediaDropBox");
 
-            function getActiveDropsList() {
-                try {
-                    const raw = localStorage.getItem('ADRASTIA_DROPS_V3');
-                    if (raw) {
+            // Reads ONLY actual drops stored, with zero dummy resurrection
+            function getActualDrops() {
+                const raw = localStorage.getItem('ADRASTIA_DROPS_V3');
+                if (raw !== null) {
+                    try {
                         const parsed = JSON.parse(raw);
-                        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-                    }
-                } catch(e) {}
-                return DEFAULT_SEED_DROPS;
+                        if (Array.isArray(parsed)) return parsed;
+                    } catch(e) {}
+                }
+                return [];
+            }
+
+            function saveDropsList(drops) {
+                localStorage.setItem('ADRASTIA_DROPS_V3', JSON.stringify(drops));
+                window.dispatchEvent(new CustomEvent('adr:drops-updated', { detail: { drops } }));
+                // Push to server sync
+                if (window.AdrastiaStore && window.AdrastiaStore.saveMetaSection) {
+                    window.AdrastiaStore.saveMetaSection('drops', drops);
+                }
             }
 
             const toggleDropDrawer = (show) => {
@@ -1523,23 +1519,27 @@
             }
 
             const renderDropsTableAndSelect = () => {
-                const drops = getActiveDropsList();
+                const drops = getActualDrops();
                 let products = [];
                 try {
                     products = JSON.parse(localStorage.getItem('ADRASTIA_PRODUCTS_V3') || '[]');
                 } catch(e) {}
 
-                // 1. Update Product Assign Dropdown
+                // 1. Update Product Assign Dropdown with Active Drops
                 if (prodCollectionSelect) {
-                    prodCollectionSelect.innerHTML = drops.map(d => `
-                        <option value="${d.name}">${d.name} [${d.code || 'VOL'}]</option>
-                    `).join("") + `<option value="ARCHIVE">ARCHIVE / UNASSIGNED</option>`;
+                    if (drops.length === 0) {
+                        prodCollectionSelect.innerHTML = `<option value="UNASSIGNED">DEFAULT / UNASSIGNED</option>`;
+                    } else {
+                        prodCollectionSelect.innerHTML = drops.map(d => `
+                            <option value="${d.name}">${d.name} [${d.code || 'VOL'}]</option>
+                        `).join("") + `<option value="ARCHIVE">ARCHIVE / UNASSIGNED</option>`;
+                    }
                 }
 
                 // 2. Render Drops Table
                 if (dropsTableBody) {
                     if (drops.length === 0) {
-                        dropsTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#666; padding:30px;">NO DROPS CREATED YET.</td></tr>`;
+                        dropsTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#666; padding:30px;">NO DROPS IN REPOSITORY. CLICK "+ CREATE NEW DROP" ABOVE.</td></tr>`;
                         return;
                     }
 
@@ -1572,10 +1572,9 @@
                     dropsTableBody.querySelectorAll(".btn-del-drop").forEach(btn => {
                         btn.addEventListener("click", () => {
                             const id = btn.getAttribute("data-id");
-                            if (confirm("PURGE DROP WARNING: Permanently delete this drop release from directory?")) {
-                                let curDrops = getActiveDropsList().filter(d => d.id !== id);
-                                localStorage.setItem('ADRASTIA_DROPS_V3', JSON.stringify(curDrops));
-                                window.dispatchEvent(new CustomEvent('adr:drops-updated', { detail: { drops: curDrops } }));
+                            if (confirm("PURGE DROP WARNING: Permanently delete this drop release?")) {
+                                let curDrops = getActualDrops().filter(d => d.id !== id);
+                                saveDropsList(curDrops);
                                 renderDropsTableAndSelect();
                             }
                         });
@@ -1612,10 +1611,9 @@
                         image: finalImg
                     };
 
-                    const currentDrops = getActiveDropsList();
-                    currentDrops.push(newDrop);
-                    localStorage.setItem('ADRASTIA_DROPS_V3', JSON.stringify(currentDrops));
-                    window.dispatchEvent(new CustomEvent('adr:drops-updated', { detail: { drops: currentDrops } }));
+                    const currentDrops = getActualDrops();
+                    currentDrops.unshift(newDrop);
+                    saveDropsList(currentDrops);
 
                     alert(`SYSTEM_DEPLOY: Drop release [${newDrop.name}] deployed successfully.`);
                     toggleDropDrawer(false);
@@ -2307,6 +2305,7 @@
             loadAudioData();
 
             window.addEventListener('adr:drops-updated', renderDropsTableAndSelect);
+            window.addEventListener('adr:products-updated', renderDropsTableAndSelect);
         })();
     </script>
 </body>
