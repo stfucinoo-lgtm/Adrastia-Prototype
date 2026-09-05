@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEW DROP: VOID_CORE | ADRASTIA</title>
+    <title>DROP SPECIMENS | ADRASTIA</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,7 +28,8 @@
         </div>
         <div class="nav-center hidden-mobile">
             <a href="products.html" class="nav-link">SHOP_ALL</a>
-            <a href="collection.html" class="nav-link neon-green">NEW_DROP</a>
+            <a href="drops.html" class="nav-link">ALL_DROPS</a>
+            <a href="collection.html?drop=VOID_CORE" class="nav-link neon-green" id="navActiveDropLink">ACTIVE_DROP</a>
             <a href="lookbook.html" class="nav-link">ARCHIVE</a>
             <a href="admin.html" class="nav-link">DASHBOARD</a>
         </div>
@@ -55,15 +56,15 @@
     <!-- Scarcity E-Commerce Grid (Dynamic Hydration) -->
     <section class="collection-products border-bottom">
         <div class="grid-layout" id="dropProductsGrid">
-            <!-- Injected dynamically via JS from AdrastiaStore -->
+            <!-- Injected dynamically via JS based on selected Drop -->
         </div>
     </section>
 
     <!-- Inverted Manifesto Deep Dive -->
     <section class="inverted-feature border-bottom">
-        <h2 class="massive-text glitch" data-text="NOTHING BESIDES REMAINS">NOTHING BESIDES REMAINS</h2>
+        <h2 class="massive-text glitch" id="dropFeatureHeading" data-text="NOTHING BESIDES REMAINS">NOTHING BESIDES REMAINS</h2>
         <div class="feature-text">
-            <p>VOID_CORE is a reflection on digital impermanence. Everything you post will be deleted. Every server will eventually crash. We designed this collection to look like it was pulled from the wreckage of a collapsed data center. Heavyweight fabrics. Corroded hardware. Toxic dyes.</p>
+            <p id="dropFeatureText">This release is a reflection on digital impermanence. Everything you post will be deleted. Every server will eventually crash. We designed this collection to look like it was pulled from the wreckage of a collapsed data center. Heavyweight fabrics. Corroded hardware. Toxic dyes.</p>
         </div>
     </section>
 
@@ -72,7 +73,8 @@
         <div class="cta-banner">
             <h2>DROPPING NOW — <span class="neon-pink">DON'T SLEEP</span></h2>
             <p>ONCE IT'S GONE, IT'S GONE FOREVER. SECURE YOUR HARDWARE BEFORE THE BOTS DO.</p>
-            <a href="#top" class="btn-primary" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;">BACK TO COLLECTION ^</a>
+            <a href="drops.html" class="btn-primary" style="margin-right:12px;">← VIEW ALL DROPS</a>
+            <a href="#top" class="btn-primary" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;">BACK TO TOP ^</a>
         </div>
     </section>
 
@@ -85,8 +87,9 @@
             </div>
             <div class="footer-links">
                 <a href="products.html">SHOP ALL</a>
-                <a href="collection.html">NEW DROP</a>
+                <a href="drops.html">ALL DROPS</a>
                 <a href="lookbook.html">ARCHIVE</a>
+                <a href="admin.html">DASHBOARD</a>
             </div>
             <div class="footer-legal">
                 <a href="#">SHIPPING & RETURNS</a>
@@ -106,53 +109,85 @@
     <script src="js/glitch.js"></script>
     <script src="js/audio.js"></script>
 
-    <!-- Dynamic Collection Grid & Hero Metadata Engine -->
+    <!-- Universal Drop Engine -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             'use strict';
 
-            // 1. Hydrate Collection Hero Metadata
-            const hydrateCollectionHero = () => {
-                const titleEl = document.getElementById("dropHeroTitle");
-                const statusEl = document.getElementById("dropHeroStatus");
-                const descEl = document.getElementById("dropHeroDesc");
-                const imgEl = document.getElementById("dropHeroImage");
+            // Get target drop name from URL query parameter (e.g. collection.html?drop=DIGITAL_DECAY)
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeDropQuery = (urlParams.get('drop') || 'VOID_CORE').trim();
 
-                const rawMeta = localStorage.getItem("adrastia_collection_meta");
-                if (rawMeta) {
-                    try {
-                        const meta = JSON.parse(rawMeta);
-                        if (meta.title && titleEl) {
-                            titleEl.textContent = meta.title;
-                            titleEl.setAttribute("data-text", meta.title);
-                        }
-                        if (meta.status && statusEl) {
-                            statusEl.textContent = meta.status;
-                        }
-                        if (meta.description && descEl) {
-                            descEl.textContent = meta.description;
-                        }
-                        if (meta.image && imgEl) {
-                            imgEl.src = meta.image;
-                        }
-                    } catch (e) {
-                        console.error("[ADRASTIA] Error loading collection meta:", e);
+            const titleEl = document.getElementById("dropHeroTitle");
+            const statusEl = document.getElementById("dropHeroStatus");
+            const descEl = document.getElementById("dropHeroDesc");
+            const imgEl = document.getElementById("dropHeroImage");
+            const gridContainer = document.getElementById("dropProductsGrid");
+            const navActiveLink = document.getElementById("navActiveDropLink");
+
+            // 1. Hydrate Drop Meta Header
+            const hydrateDropHeader = () => {
+                if (!window.AdrastiaStore) return;
+                const drops = window.AdrastiaStore.getDrops();
+                const matchedDrop = drops.find(d => (d.name || '').toUpperCase() === activeDropQuery.toUpperCase());
+
+                if (navActiveLink) {
+                    navActiveLink.textContent = activeDropQuery.toUpperCase();
+                    navActiveLink.href = `collection.html?drop=${encodeURIComponent(activeDropQuery)}`;
+                }
+
+                if (matchedDrop) {
+                    document.title = `DROP: ${matchedDrop.name} | ADRASTIA`;
+                    if (titleEl) {
+                        titleEl.textContent = matchedDrop.name;
+                        titleEl.setAttribute("data-text", matchedDrop.name);
+                    }
+                    if (statusEl) {
+                        statusEl.textContent = `// STATUS: ${matchedDrop.status || 'LIVE'} // CODE: ${matchedDrop.code || 'VOL.0'}`;
+                    }
+                    if (descEl) {
+                        descEl.textContent = matchedDrop.description || 'Exclusive underground hardware release. Limited run.';
+                    }
+                    if (imgEl && matchedDrop.image) {
+                        imgEl.src = matchedDrop.image;
+                    }
+                } else {
+                    // Fallback to custom collection meta or default VOID_CORE
+                    const rawMeta = localStorage.getItem("adrastia_collection_meta");
+                    if (rawMeta) {
+                        try {
+                            const meta = JSON.parse(rawMeta);
+                            if (meta.title && titleEl) {
+                                titleEl.textContent = meta.title;
+                                titleEl.setAttribute("data-text", meta.title);
+                            }
+                            if (meta.status && statusEl) statusEl.textContent = meta.status;
+                            if (meta.description && descEl) descEl.textContent = meta.description;
+                            if (meta.image && imgEl) imgEl.src = meta.image;
+                        } catch (e) {}
                     }
                 }
             };
 
-            hydrateCollectionHero();
-
-            // 2. Render Real Products from Store
-            const gridContainer = document.getElementById("dropProductsGrid");
-            if (!gridContainer || !window.AdrastiaStore) return;
-
+            // 2. Render Products Belonging to This Drop
             const renderDropGrid = () => {
+                if (!gridContainer || !window.AdrastiaStore) return;
+
                 const activeProducts = window.AdrastiaStore.getActiveProducts();
                 
-                let dropItems = activeProducts.filter(p => p.collection === "VOID_CORE");
+                // Filter products that belong to this specific drop
+                let dropItems = activeProducts.filter(p => (p.collection || '').toUpperCase() === activeDropQuery.toUpperCase());
+                
+                // Fallback: if no products tagged for this drop, show first available items or empty state
                 if (dropItems.length === 0) {
-                    dropItems = activeProducts.slice(0, 4);
+                    gridContainer.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                            <p style="color:var(--neon-pink); font-size:1.1rem; margin-bottom:8px;">// DROP_SPECIMENS_EMPTY</p>
+                            <p style="color:#888; font-size:0.8rem; margin-bottom:1.5rem;">NO HARDWARE SPECIMENS CURRENTLY ASSIGNED TO [ ${activeDropQuery} ].</p>
+                            <a href="admin.html" class="btn-primary" style="display:inline-block;">[ DEPLOY HARDWARE TO THIS DROP ]</a>
+                        </div>
+                    `;
+                    return;
                 }
 
                 gridContainer.innerHTML = dropItems.map(prod => {
@@ -193,11 +228,16 @@
                 if (window.attachCursorHoverListeners) window.attachCursorHoverListeners();
             };
 
+            hydrateDropHeader();
             renderDropGrid();
 
-            // Listen for store updates
+            // Listen for Real-Time Updates
             window.addEventListener("adr:products-updated", renderDropGrid);
-            window.addEventListener("adr:collection-updated", hydrateCollectionHero);
+            window.addEventListener("adr:drops-updated", () => {
+                hydrateDropHeader();
+                renderDropGrid();
+            });
+            window.addEventListener("adr:collection-updated", hydrateDropHeader);
         });
     </script>
 </body>
