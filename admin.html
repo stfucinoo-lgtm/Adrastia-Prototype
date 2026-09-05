@@ -512,35 +512,39 @@
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="inventory">
-                    <span>02. HARDWARE / DROPS</span>
+                    <span>02. HARDWARE // CATALOG</span>
+                    <span>&gt;</span>
+                </button>
+                <button class="nav-btn" data-target="drops-manager">
+                    <span>03. DROPS // RELEASES</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="collection-config">
-                    <span>03. NEW DROP // HERO</span>
+                    <span>04. ACTIVE DROP // HERO</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="home-manifesto-config">
-                    <span>04. HOMEPAGE // MANIFESTO</span>
+                    <span>05. HOMEPAGE // MANIFESTO</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="lookbook-config">
-                    <span>05. ARCHIVE // LOOKBOOK</span>
+                    <span>06. ARCHIVE // LOOKBOOK</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="manifesto-config">
-                    <span>06. MANIFESTO // ABOUT</span>
+                    <span>07. MANIFESTO // ABOUT</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="audio-config">
-                    <span>07. AUDIO // SOUNDTRACK</span>
+                    <span>08. AUDIO // SOUNDTRACK</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="orders">
-                    <span>08. DISPATCH LOG</span>
+                    <span>09. DISPATCH LOG</span>
                     <span>&gt;</span>
                 </button>
                 <button class="nav-btn" data-target="settings">
-                    <span>09. SYSTEM OVERRIDE</span>
+                    <span>10. SYSTEM OVERRIDE</span>
                     <span>&gt;</span>
                 </button>
 
@@ -621,7 +625,7 @@
                 <div class="top-bar">
                     <div>
                         <h1 class="page-headline">HARDWARE // CATALOG</h1>
-                        <p class="page-tag">DEPLOY NEW DROPS, MANAGE INVENTORY & TOGGLE KILL SWITCHES</p>
+                        <p class="page-tag">DEPLOY NEW HARDWARE SPECIMENS TO STORE & ASSIGN TO DROPS</p>
                     </div>
                     <button class="btn-glitch" id="btnToggleAddForm">+ DEPLOY NEW HARDWARE</button>
                 </div>
@@ -640,11 +644,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label>COLLECTION / DROP *</label>
+                                <label>ASSIGN TO DROP / COLLECTION *</label>
                                 <select id="prodCollection" class="form-select">
-                                    <option value="DIGITAL_DECAY">DIGITAL_DECAY</option>
-                                    <option value="VOID_CORE">VOID_CORE</option>
-                                    <option value="ARCHIVE">ARCHIVE / UNASSIGNED</option>
+                                    <!-- Populated dynamically with active Drops -->
                                 </select>
                             </div>
 
@@ -691,7 +693,7 @@
                             <tr>
                                 <th>ARTIFACT</th>
                                 <th>HARDWARE CODE</th>
-                                <th>COLLECTION</th>
+                                <th>ASSIGNED DROP</th>
                                 <th>PRICE</th>
                                 <th>STOCK LEVEL</th>
                                 <th>STATUS</th>
@@ -703,16 +705,110 @@
                 </div>
             </section>
 
-            <!-- SECTION 3: NEW DROP // HERO CONTROLLER -->
+            <!-- SECTION 3: DROPS // RELEASES MANAGER -->
+            <section id="view-drops-manager" class="view-section">
+                <div class="top-bar">
+                    <div>
+                        <h1 class="page-headline">DROPS // RELEASES MANAGER</h1>
+                        <p class="page-tag">CREATE NEW DROPS, CONFIGURE RELEASE CODES & MANAGE ACTIVE RELEASES</p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <a href="drops.html" target="_blank" class="btn-ghost" style="color:var(--neon-green); border-color:var(--neon-green);">
+                            [ VIEW DROPS DIRECTORY ↗ ]
+                        </a>
+                        <button class="btn-glitch" id="btnToggleAddDropForm">+ CREATE NEW DROP</button>
+                    </div>
+                </div>
+
+                <!-- ADD DROP DRAWER FORM -->
+                <div class="form-drawer" id="addDropDrawer">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; border-bottom:1px solid #333; padding-bottom:1rem;">
+                        <h2 style="font-family:var(--font-head); font-size:1.1rem; color:var(--neon-pink);">// NEW DROP INGESTION PROTOCOL</h2>
+                        <button class="btn-ghost" id="btnCloseAddDropForm">[ CANCEL / CLOSE ]</button>
+                    </div>
+
+                    <form id="newDropForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>DROP NAME (IDENTIFIER) *</label>
+                                <input type="text" id="dropNameInput" class="form-input" placeholder="e.g. CYBER_ACID" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>RELEASE CODE *</label>
+                                <input type="text" id="dropCodeInput" class="form-input" placeholder="VOL.5" value="VOL.5" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>DROP STATUS *</label>
+                                <select id="dropStatusSelect" class="form-select">
+                                    <option value="LIVE">LIVE (ACTIVE FEED)</option>
+                                    <option value="CRITICAL">CRITICAL_STOCK</option>
+                                    <option value="SOLD_OUT">SOLD_OUT</option>
+                                    <option value="ARCHIVED">ARCHIVED</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>LAUNCH DATE / YEAR *</label>
+                                <input type="text" id="dropDateInput" class="form-input" value="2024" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>DROP MANIFESTO & DESCRIPTION *</label>
+                            <textarea id="dropDescInput" class="form-textarea" rows="3" placeholder="A brutalist exploration of..." required></textarea>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:1.5rem;">
+                            <label>DROP COVER / HERO IMAGE *</label>
+                            <div class="upload-box" id="dropMediaDropBox">
+                                <label for="dropImgFileInput" class="btn-upload-file">[ 📁 SELECT COVER IMAGE ]</label>
+                                <input type="file" id="dropImgFileInput" accept="image/*" style="display:none;">
+                                <p style="font-size:0.75rem; color:#888;">OR DRAG AND DROP FILE HERE</p>
+                                <div class="preview-img-wrap" id="dropPreviewWrap" style="display:none;">
+                                    <img id="dropImgPreview" alt="Drop Preview">
+                                </div>
+                            </div>
+                            <div style="margin-top:8px;">
+                                <input type="url" id="dropImgUrlInput" class="form-input" placeholder="Or enter direct image URL (https://...)" style="width:100%;">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-glitch" style="width:100%; justify-content:center; padding:16px;">
+                            COMMIT & DEPLOY DROP TO DIRECTORY
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Drops Table -->
+                <div class="table-wrap">
+                    <table class="ad-table">
+                        <thead>
+                            <tr>
+                                <th>COVER</th>
+                                <th>DROP NAME</th>
+                                <th>CODE</th>
+                                <th>STATUS</th>
+                                <th>ASSIGNED ITEMS</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dropsTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION 4: ACTIVE DROP // HERO CONTROLLER -->
             <section id="view-collection-config" class="view-section">
                 <div class="top-bar">
                     <div>
-                        <h1 class="page-headline">COLLECTION_HERO // CONTROLLER</h1>
-                        <p class="page-tag">OVERRIDE VOID_CORE DROP TITLE, BADGE, DESCRIPTION & HERO IMAGE</p>
+                        <h1 class="page-headline">ACTIVE_DROP_HERO // CONTROLLER</h1>
+                        <p class="page-tag">OVERRIDE DEFAULT HERO SECTION DETAILS FOR VOID_CORE</p>
                     </div>
                     <div style="display:flex; gap:10px;">
-                        <a href="collection.html" target="_blank" class="btn-ghost" style="color:var(--neon-green); border-color:var(--neon-green);">
-                            [ VIEW LIVE COLLECTION ↗ ]
+                        <a href="collection.html?drop=VOID_CORE" target="_blank" class="btn-ghost" style="color:var(--neon-green); border-color:var(--neon-green);">
+                            [ VIEW LIVE DROP ↗ ]
                         </a>
                         <button type="button" class="btn-ghost" id="btnResetCollHero">
                             &#x21bb; RESTORE DEFAULTS
@@ -768,7 +864,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 4: HOMEPAGE // MANIFESTO FEATURE CONTROLLER -->
+            <!-- SECTION 5: HOMEPAGE // MANIFESTO FEATURE CONTROLLER -->
             <section id="view-home-manifesto-config" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -824,7 +920,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 5: ARCHIVE // LOOKBOOK CONTROLLER -->
+            <!-- SECTION 6: ARCHIVE // LOOKBOOK CONTROLLER -->
             <section id="view-lookbook-config" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -883,7 +979,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 6: MANIFESTO // ABOUT CONTROLLER -->
+            <!-- SECTION 7: MANIFESTO // ABOUT CONTROLLER -->
             <section id="view-manifesto-config" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -1139,7 +1235,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 7: AUDIO // SOUNDTRACK CONTROLLER (INDEXEDDB UNLIMITED CAPACITY) -->
+            <!-- SECTION 8: AUDIO // SOUNDTRACK CONTROLLER (INDEXEDDB UNLIMITED CAPACITY) -->
             <section id="view-audio-config" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -1194,7 +1290,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 8: DISPATCH LOG / ORDERS -->
+            <!-- SECTION 9: DISPATCH LOG / ORDERS -->
             <section id="view-orders" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -1222,7 +1318,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 9: SYSTEM OVERRIDE / SETTINGS -->
+            <!-- SECTION 10: SYSTEM OVERRIDE / SETTINGS -->
             <section id="view-settings" class="view-section">
                 <div class="top-bar">
                     <div>
@@ -1312,10 +1408,191 @@
         window.AdrastiaIDB = AdrastiaIDB;
     </script>
 
-    <!-- Native Direct Controller for Collection Hero, Homepage Manifesto, Archive Lookbook, Manifesto & Audio Engine -->
+    <!-- Native Direct Controller for Drops, Collection Hero, Homepage Manifesto, Archive Lookbook, Manifesto & Audio Engine -->
     <script>
         (function() {
-            // === 1. COLLECTION HERO CONTROLLER ===
+            // === 1. DROPS DIRECTORY & MANAGEMENT CONTROLLER ===
+            let currentDropImageBase64 = "";
+
+            const btnToggleAddDropForm = document.getElementById("btnToggleAddDropForm");
+            const btnCloseAddDropForm = document.getElementById("btnCloseAddDropForm");
+            const addDropDrawer = document.getElementById("addDropDrawer");
+            const newDropForm = document.getElementById("newDropForm");
+            const dropsTableBody = document.getElementById("dropsTableBody");
+            const prodCollectionSelect = document.getElementById("prodCollection");
+
+            const dropImgFileInput = document.getElementById("dropImgFileInput");
+            const dropImgUrlInput = document.getElementById("dropImgUrlInput");
+            const dropImgPreview = document.getElementById("dropImgPreview");
+            const dropPreviewWrap = document.getElementById("dropPreviewWrap");
+            const dropMediaDropBox = document.getElementById("dropMediaDropBox");
+
+            const toggleDropDrawer = (show) => {
+                if (!addDropDrawer) return;
+                if (show) {
+                    addDropDrawer.classList.add("active-form");
+                    if (btnToggleAddDropForm) btnToggleAddDropForm.innerText = "- CANCEL INGESTION";
+                    document.getElementById("dropNameInput").focus();
+                } else {
+                    addDropDrawer.classList.remove("active-form");
+                    if (btnToggleAddDropForm) btnToggleAddDropForm.innerText = "+ CREATE NEW DROP";
+                    if (newDropForm) newDropForm.reset();
+                    currentDropImageBase64 = "";
+                    if (dropPreviewWrap) dropPreviewWrap.style.display = "none";
+                }
+            };
+
+            if (btnToggleAddDropForm) {
+                btnToggleAddDropForm.addEventListener("click", () => {
+                    const isOpen = addDropDrawer.classList.contains("active-form");
+                    toggleDropDrawer(!isOpen);
+                });
+            }
+
+            if (btnCloseAddDropForm) {
+                btnCloseAddDropForm.addEventListener("click", () => toggleDropDrawer(false));
+            }
+
+            if (dropImgFileInput) {
+                dropImgFileInput.addEventListener("change", function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        currentDropImageBase64 = evt.target.result;
+                        if (dropImgPreview) dropImgPreview.src = evt.target.result;
+                        if (dropPreviewWrap) dropPreviewWrap.style.display = "block";
+                        if (dropImgUrlInput) dropImgUrlInput.value = "";
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            if (dropMediaDropBox) {
+                dropMediaDropBox.addEventListener("dragover", (e) => { e.preventDefault(); dropMediaDropBox.style.borderColor = "var(--neon-green)"; });
+                dropMediaDropBox.addEventListener("dragleave", () => { dropMediaDropBox.style.borderColor = "#333"; });
+                dropMediaDropBox.addEventListener("drop", (e) => {
+                    e.preventDefault();
+                    dropMediaDropBox.style.borderColor = "#333";
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith("image/")) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            currentDropImageBase64 = evt.target.result;
+                            if (dropImgPreview) dropImgPreview.src = evt.target.result;
+                            if (dropPreviewWrap) dropPreviewWrap.style.display = "block";
+                            if (dropImgUrlInput) dropImgUrlInput.value = "";
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            if (dropImgUrlInput) {
+                dropImgUrlInput.addEventListener("input", function(e) {
+                    const val = e.target.value.trim();
+                    if (val) {
+                        currentDropImageBase64 = val;
+                        if (dropImgPreview) dropImgPreview.src = val;
+                        if (dropPreviewWrap) dropPreviewWrap.style.display = "block";
+                    }
+                });
+            }
+
+            const renderDropsTableAndSelect = () => {
+                if (!window.AdrastiaStore) return;
+                const drops = window.AdrastiaStore.getDrops();
+                const products = window.AdrastiaStore.getActiveProducts();
+
+                // 1. Update Product Assign Dropdown
+                if (prodCollectionSelect) {
+                    prodCollectionSelect.innerHTML = drops.map(d => `
+                        <option value="${d.name}">${d.name} [${d.code || 'VOL'}]</option>
+                    `).join("") + `<option value="ARCHIVE">ARCHIVE / UNASSIGNED</option>`;
+                }
+
+                // 2. Render Drops Table
+                if (dropsTableBody) {
+                    if (drops.length === 0) {
+                        dropsTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#666; padding:30px;">NO DROPS CREATED YET.</td></tr>`;
+                        return;
+                    }
+
+                    dropsTableBody.innerHTML = drops.map(drop => {
+                        const dropItems = products.filter(p => (p.collection || '').toUpperCase() === (drop.name || '').toUpperCase());
+                        const dropImg = drop.image || 'https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop';
+                        
+                        let badgeClass = 'badge-green';
+                        if (drop.status === 'CRITICAL') badgeClass = 'badge-pink';
+                        if (drop.status === 'SOLD_OUT' || drop.status === 'ARCHIVED') badgeClass = 'badge-gray';
+
+                        return `
+                            <tr>
+                                <td><img src="${dropImg}" class="prod-thumb" alt="Drop Cover"></td>
+                                <td>
+                                    <strong>${drop.name}</strong><br>
+                                    <span style="color:#888; font-size:0.7rem;">LAUNCH: ${drop.launchDate || '2024'}</span>
+                                </td>
+                                <td><span class="badge badge-cyan">${drop.code || 'VOL.0'}</span></td>
+                                <td><span class="badge ${badgeClass}">${drop.status || 'LIVE'}</span></td>
+                                <td><strong>${dropItems.length} ACTIVE SPECIMENS</strong></td>
+                                <td>
+                                    <a href="collection.html?drop=${encodeURIComponent(drop.name)}" target="_blank" class="btn-ghost" style="color:var(--neon-green); border-color:var(--neon-green); padding:4px 8px; font-size:0.7rem;">[ VIEW LIVE ↗ ]</a>
+                                    <button class="btn-del btn-del-drop" data-id="${drop.id}" title="Delete Drop Permanently">&times;</button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join("");
+
+                    dropsTableBody.querySelectorAll(".btn-del-drop").forEach(btn => {
+                        btn.addEventListener("click", () => {
+                            const id = btn.getAttribute("data-id");
+                            if (confirm("PURGE DROP WARNING: Permanently delete this drop release from directory?")) {
+                                let curDrops = window.AdrastiaStore.getDrops().filter(d => d.id !== id);
+                                localStorage.setItem('ADRASTIA_DROPS_V3', JSON.stringify(curDrops));
+                                window.dispatchEvent(new CustomEvent('adr:drops-updated', { detail: { drops: curDrops } }));
+                                renderDropsTableAndSelect();
+                            }
+                        });
+                    });
+                }
+            };
+
+            // Submit New Drop
+            if (newDropForm) {
+                newDropForm.addEventListener("submit", function(e) {
+                    e.preventDefault();
+
+                    const name = document.getElementById("dropNameInput").value.trim().toUpperCase();
+                    const code = document.getElementById("dropCodeInput").value.trim().toUpperCase();
+                    const status = document.getElementById("dropStatusSelect").value;
+                    const launchDate = document.getElementById("dropDateInput").value.trim();
+                    const description = document.getElementById("dropDescInput").value.trim();
+                    const manualUrl = dropImgUrlInput ? dropImgUrlInput.value.trim() : "";
+
+                    const finalImg = currentDropImageBase64 || manualUrl || "https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop";
+
+                    if (!name) {
+                        alert("VALIDATION_ERROR: Drop name is required.");
+                        return;
+                    }
+
+                    const newDrop = window.AdrastiaStore.addDrop({
+                        name,
+                        code,
+                        status,
+                        launchDate,
+                        description,
+                        image: finalImg
+                    });
+
+                    alert(`SYSTEM_DEPLOY: Drop release [${newDrop.name}] deployed successfully.`);
+                    toggleDropDrawer(false);
+                    renderDropsTableAndSelect();
+                });
+            }
+
+            // === 2. COLLECTION HERO CONTROLLER ===
             const STORAGE_KEY_COLL = 'adrastia_collection_meta';
             const DEFAULT_COLL_META = {
                 title: "VOID_CORE",
@@ -1432,7 +1709,7 @@
                 });
             }
 
-            // === 2. HOMEPAGE MANIFESTO CONTROLLER ===
+            // === 3. HOMEPAGE MANIFESTO CONTROLLER ===
             const STORAGE_KEY_HOME_MAN = 'adrastia_home_manifesto_meta';
             const DEFAULT_HOME_MAN_META = {
                 title: 'WE ARE <br><span class="neon-pink">THE GLITCH</span> <br>IN THE SYSTEM.',
@@ -1545,7 +1822,7 @@
                 });
             }
 
-            // === 3. ARCHIVE // LOOKBOOK TEXTS CONTROLLER ===
+            // === 4. ARCHIVE // LOOKBOOK TEXTS CONTROLLER ===
             const STORAGE_KEY_LB = 'adrastia_lookbook_meta';
             const DEFAULT_LB_META = {
                 title: "// VOL.2: DIGITAL_DECAY",
@@ -1617,7 +1894,7 @@
                 });
             }
 
-            // === 4. MANIFESTO // FULL SUITE CONTROLLER ===
+            // === 5. MANIFESTO // FULL SUITE CONTROLLER ===
             const STORAGE_KEY_MAN = 'adrastia_manifesto_meta';
             const DEFAULT_MAN_META = {
                 heroTitle: "SYSTEM_FAILURE",
@@ -1843,7 +2120,7 @@
                 });
             }
 
-            // === 5. SOUNDTRACK // INDEXEDDB PERSISTENT ENGINE ===
+            // === 6. SOUNDTRACK // INDEXEDDB PERSISTENT ENGINE ===
             const DEFAULT_AUDIO_TRACK = 'https://assets.mixkit.co/music/preview/mixkit-cyber-city-dark-synthwave-1188.mp3';
             let activeAudioBlobOrUrl = null;
 
@@ -1991,11 +2268,14 @@
             }
 
             // Initial Load
+            renderDropsTableAndSelect();
             loadCollData();
             loadHomeManData();
             loadLbData();
             loadManData();
             loadAudioData();
+
+            window.addEventListener('adr:drops-updated', renderDropsTableAndSelect);
         })();
     </script>
 </body>
