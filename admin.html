@@ -389,13 +389,6 @@
             object-fit: cover;
         }
 
-        .sub-card {
-            background: rgba(8, 8, 12, 0.9);
-            border: 1px solid #222;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
         /* Buttons */
         .btn-glitch {
             background: #fff;
@@ -645,9 +638,7 @@
 
                             <div class="form-group">
                                 <label>ASSIGN TO DROP / COLLECTION *</label>
-                                <select id="prodCollection" class="form-select">
-                                    <!-- Populated dynamically with active Drops -->
-                                </select>
+                                <select id="prodCollection" class="form-select"></select>
                             </div>
 
                             <div class="form-group">
@@ -757,7 +748,7 @@
 
                         <div class="form-group" style="margin-bottom:1.5rem;">
                             <label>DROP MANIFESTO & DESCRIPTION *</label>
-                            <textarea id="dropDescInput" class="form-textarea" rows="3" placeholder="A brutalist exploration of..." required></textarea>
+                            <textarea id="dropDescInput" class="form-textarea" rows="3" placeholder="A brutalist exploration of..." required>Exclusive underground hardware release. Strictly limited run. No restocks.</textarea>
                         </div>
 
                         <div class="form-group" style="margin-bottom:1.5rem;">
@@ -1412,6 +1403,27 @@
     <script>
         (function() {
             // === 1. DROPS DIRECTORY & MANAGEMENT CONTROLLER ===
+            const DEFAULT_SEED_DROPS = [
+                {
+                    id: 'drop-01',
+                    name: 'DIGITAL_DECAY',
+                    code: 'VOL.3',
+                    status: 'LIVE',
+                    launchDate: '2024',
+                    description: 'A visual exploration of urban corruption and Y2K analog noise.',
+                    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop'
+                },
+                {
+                    id: 'drop-02',
+                    name: 'VOID_CORE',
+                    code: 'VOL.4',
+                    status: 'CRITICAL',
+                    launchDate: '2024',
+                    description: 'Brutalist garments inspired by the wreckage of collapsed data centers.',
+                    image: 'https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?q=80&w=1200&auto=format&fit=crop'
+                }
+            ];
+
             let currentDropImageBase64 = "";
 
             const btnToggleAddDropForm = document.getElementById("btnToggleAddDropForm");
@@ -1426,6 +1438,17 @@
             const dropImgPreview = document.getElementById("dropImgPreview");
             const dropPreviewWrap = document.getElementById("dropPreviewWrap");
             const dropMediaDropBox = document.getElementById("dropMediaDropBox");
+
+            function getActiveDropsList() {
+                try {
+                    const raw = localStorage.getItem('ADRASTIA_DROPS_V3');
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                    }
+                } catch(e) {}
+                return DEFAULT_SEED_DROPS;
+            }
 
             const toggleDropDrawer = (show) => {
                 if (!addDropDrawer) return;
@@ -1500,9 +1523,11 @@
             }
 
             const renderDropsTableAndSelect = () => {
-                if (!window.AdrastiaStore) return;
-                const drops = window.AdrastiaStore.getDrops();
-                const products = window.AdrastiaStore.getActiveProducts();
+                const drops = getActiveDropsList();
+                let products = [];
+                try {
+                    products = JSON.parse(localStorage.getItem('ADRASTIA_PRODUCTS_V3') || '[]');
+                } catch(e) {}
 
                 // 1. Update Product Assign Dropdown
                 if (prodCollectionSelect) {
@@ -1548,7 +1573,7 @@
                         btn.addEventListener("click", () => {
                             const id = btn.getAttribute("data-id");
                             if (confirm("PURGE DROP WARNING: Permanently delete this drop release from directory?")) {
-                                let curDrops = window.AdrastiaStore.getDrops().filter(d => d.id !== id);
+                                let curDrops = getActiveDropsList().filter(d => d.id !== id);
                                 localStorage.setItem('ADRASTIA_DROPS_V3', JSON.stringify(curDrops));
                                 window.dispatchEvent(new CustomEvent('adr:drops-updated', { detail: { drops: curDrops } }));
                                 renderDropsTableAndSelect();
@@ -1577,14 +1602,20 @@
                         return;
                     }
 
-                    const newDrop = window.AdrastiaStore.addDrop({
-                        name,
-                        code,
-                        status,
-                        launchDate,
-                        description,
+                    const newDrop = {
+                        id: 'drop-' + Date.now(),
+                        name: name,
+                        code: code || 'VOL.1',
+                        status: status || 'LIVE',
+                        launchDate: launchDate || '2024',
+                        description: description || 'Exclusive underground hardware release. Limited run.',
                         image: finalImg
-                    });
+                    };
+
+                    const currentDrops = getActiveDropsList();
+                    currentDrops.push(newDrop);
+                    localStorage.setItem('ADRASTIA_DROPS_V3', JSON.stringify(currentDrops));
+                    window.dispatchEvent(new CustomEvent('adr:drops-updated', { detail: { drops: currentDrops } }));
 
                     alert(`SYSTEM_DEPLOY: Drop release [${newDrop.name}] deployed successfully.`);
                     toggleDropDrawer(false);
